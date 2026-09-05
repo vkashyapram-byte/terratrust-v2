@@ -1,0 +1,149 @@
+{
+  "name": "TerraTrust AI — Property Verification Orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "terratrust/verify",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Property Submitted (Webhook)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-560, 0],
+      "webhookId": "terratrust-verify"
+    },
+    {
+      "parameters": {
+        "jsCode": "const p = $json.body ?? $json;\nreturn [{ json: { propertyId: p.propertyId, passportId: p.passportId, property: p.property, documents: p.documents ?? [], existingScores: p.existingScores ?? {} } }];"
+      },
+      "id": "normalize",
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-340, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $json.documents;\nconst verified = d.filter(x => x.verified).length;\nconst ocrConfidence = d.length ? Math.round(60 + 40 * (verified / d.length)) : 40;\nreturn [{ json: { ...$json, ocrConfidence, documentsVerified: d.length > 0 && verified === d.length } }];"
+      },
+      "id": "ocr",
+      "name": "Document OCR",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-120, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const disputed = $json.property.status === 'disputed';\nconst fraudScore = disputed ? 86 : 12;\nconst fraudBand = fraudScore >= 80 ? 'Critical' : fraudScore >= 50 ? 'Elevated' : fraudScore >= 25 ? 'Watch' : 'Clear';\nreturn [{ json: { ...$json, fraudScore, fraudBand } }];"
+      },
+      "id": "fraud",
+      "name": "Fraud Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [100, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const v = $json.property.boundaryVertices ?? 0;\nconst boundaryScore = v >= 3 ? 94 : 55;\nreturn [{ json: { ...$json, boundaryScore, boundaryVerified: v >= 3 && boundaryScore >= 70 } }];"
+      },
+      "id": "boundary",
+      "name": "Boundary Verification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [320, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const disputed = $json.property.status === 'disputed';\nconst riskScore = disputed ? 62 : 18;\nreturn [{ json: { ...$json, riskScore, registryCrossCheck: !disputed && $json.property.status !== 'pending' } }];"
+      },
+      "id": "risk",
+      "name": "Risk Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [540, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const w = { docs: 0.29, boundary: 0.22, risk: 0.2, fraud: 0.29 };\nconst confidenceScore = Math.round(\n  $json.ocrConfidence * w.docs +\n  $json.boundaryScore * w.boundary +\n  (100 - $json.riskScore) * w.risk +\n  (100 - $json.fraudScore) * w.fraud\n);\nreturn [{ json: { ...$json, confidenceScore } }];"
+      },
+      "id": "confidence",
+      "name": "Confidence Engine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [760, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "version": 2 },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.confidenceScore }}",
+              "rightValue": 78,
+              "operator": { "type": "number", "operation": "gte" }
+            },
+            {
+              "leftValue": "={{ $json.fraudScore }}",
+              "rightValue": 25,
+              "operator": { "type": "number", "operation": "lt" }
+            },
+            {
+              "leftValue": "={{ $json.boundaryVerified }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "gate",
+      "name": "Automated Decision Gate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [980, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const s = $json;\nreturn [{ json: { workflowId: 'WF-N8N-' + s.passportId.replace(/[^A-Z0-9]/gi,'') + '-' + Date.now().toString(36).toUpperCase(), propertyId: s.propertyId, passportId: s.passportId, status: 'verified', confidenceScore: s.confidenceScore, fraudScore: s.fraudScore, fraudBand: s.fraudBand, boundaryScore: s.boundaryScore, riskScore: s.riskScore, ocrConfidence: s.ocrConfidence, documentsVerified: s.documentsVerified, boundaryVerified: s.boundaryVerified, registryCrossCheck: s.registryCrossCheck, decisionReason: 'All gates passed — passport ready to issue.', completedAt: new Date().toISOString(), steps: [ { name: 'Property submitted', status: 'completed' }, { name: 'Document / OCR check', status: 'completed', score: s.ocrConfidence }, { name: 'Fraud analysis', status: 'completed', score: s.fraudScore }, { name: 'Boundary verification', status: 'completed', score: s.boundaryScore }, { name: 'Risk analysis', status: 'completed', score: s.riskScore }, { name: 'Confidence engine', status: 'completed', score: s.confidenceScore }, { name: 'Automated decision', status: 'completed' }, { name: 'Passport readiness', status: 'completed' } ] } }];"
+      },
+      "id": "approve",
+      "name": "Issue Passport",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1220, -140]
+    },
+    {
+      "parameters": {
+        "jsCode": "const s = $json;\nconst rejected = s.fraudBand === 'Critical' && s.fraudScore >= 80;\nconst reasons = [];\nif (s.fraudScore >= 25) reasons.push('fraud band ' + s.fraudBand);\nif (s.confidenceScore < 78) reasons.push('confidence ' + s.confidenceScore + ' below the 78 auto-approve threshold');\nif (!s.boundaryVerified) reasons.push('boundary polygon not hardened by field capture');\nif (!s.documentsVerified) reasons.push('one or more documents unverified');\nreturn [{ json: { workflowId: 'WF-N8N-' + s.passportId.replace(/[^A-Z0-9]/gi,'') + '-' + Date.now().toString(36).toUpperCase(), propertyId: s.propertyId, passportId: s.passportId, status: rejected ? 'rejected' : 'manual_review', confidenceScore: s.confidenceScore, fraudScore: s.fraudScore, fraudBand: s.fraudBand, boundaryScore: s.boundaryScore, riskScore: s.riskScore, ocrConfidence: s.ocrConfidence, documentsVerified: s.documentsVerified, boundaryVerified: s.boundaryVerified, registryCrossCheck: s.registryCrossCheck, decisionReason: (rejected ? 'Automated approval blocked: ' : 'Human review required — ') + reasons.join('; ') + '.', completedAt: new Date().toISOString(), steps: [ { name: 'Property submitted', status: 'completed' }, { name: 'Document / OCR check', status: s.documentsVerified ? 'completed' : 'attention', score: s.ocrConfidence }, { name: 'Fraud analysis', status: s.fraudScore >= 25 ? 'attention' : 'completed', score: s.fraudScore }, { name: 'Boundary verification', status: s.boundaryVerified ? 'completed' : 'attention', score: s.boundaryScore }, { name: 'Risk analysis', status: s.riskScore >= 45 ? 'attention' : 'completed', score: s.riskScore }, { name: 'Confidence engine', status: 'completed', score: s.confidenceScore }, { name: 'Automated decision', status: 'attention' }, { name: 'Passport readiness', status: 'attention' } ] } }];"
+      },
+      "id": "review",
+      "name": "Escalate to Human Review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1220, 140]
+    }
+  ],
+  "connections": {
+    "Property Submitted (Webhook)": { "main": [[{ "node": "Normalize Payload", "type": "main", "index": 0 }]] },
+    "Normalize Payload": { "main": [[{ "node": "Document OCR", "type": "main", "index": 0 }]] },
+    "Document OCR": { "main": [[{ "node": "Fraud Analysis", "type": "main", "index": 0 }]] },
+    "Fraud Analysis": { "main": [[{ "node": "Boundary Verification", "type": "main", "index": 0 }]] },
+    "Boundary Verification": { "main": [[{ "node": "Risk Analysis", "type": "main", "index": 0 }]] },
+    "Risk Analysis": { "main": [[{ "node": "Confidence Engine", "type": "main", "index": 0 }]] },
+    "Confidence Engine": { "main": [[{ "node": "Automated Decision Gate", "type": "main", "index": 0 }]] },
+    "Automated Decision Gate": {
+      "main": [
+        [{ "node": "Issue Passport", "type": "main", "index": 0 }],
+        [{ "node": "Escalate to Human Review", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {},
+  "meta": { "instanceId": "terratrust-gdta-phase2" },
+  "tags": [{ "name": "TerraTrust" }, { "name": "GDTA 2026" }]
+}
