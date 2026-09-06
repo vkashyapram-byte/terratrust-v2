@@ -11,7 +11,7 @@ describe("GIS boundary analysis", () => {
   });
 
   test("escalates a disputed boundary", () => {
-    const property = properties.find(item => item.status === "disputed") ?? properties[0];
+    const property = properties.find((item) => item.status === "disputed") ?? properties[0];
     const { registeredBoundary, submittedBoundary } = demoBoundaryFeatures(property);
     expect(analyzeBoundaries(registeredBoundary, submittedBoundary).boundaryVerified).toBe(false);
   });
@@ -25,11 +25,14 @@ describe("GIS boundary analysis", () => {
   });
 
   test("closes submitted GeoJSON rings", () => {
-    const boundary = boundaryFromCoordinates([
-      [77.5946, 12.9716],
-      [77.5956, 12.9716],
-      [77.5956, 12.9726],
-    ], "test-property");
+    const boundary = boundaryFromCoordinates(
+      [
+        [77.5946, 12.9716],
+        [77.5956, 12.9716],
+        [77.5956, 12.9726],
+      ],
+      "test-property",
+    );
     const ring = boundary.geometry.coordinates[0];
     expect(ring[0]).toEqual(ring[ring.length - 1]);
   });

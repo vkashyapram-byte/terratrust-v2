@@ -128,13 +128,21 @@
     }
   ],
   "connections": {
-    "Property Submitted (Webhook)": { "main": [[{ "node": "Normalize Payload", "type": "main", "index": 0 }]] },
+    "Property Submitted (Webhook)": {
+      "main": [[{ "node": "Normalize Payload", "type": "main", "index": 0 }]]
+    },
     "Normalize Payload": { "main": [[{ "node": "Document OCR", "type": "main", "index": 0 }]] },
     "Document OCR": { "main": [[{ "node": "Fraud Analysis", "type": "main", "index": 0 }]] },
-    "Fraud Analysis": { "main": [[{ "node": "Boundary Verification", "type": "main", "index": 0 }]] },
-    "Boundary Verification": { "main": [[{ "node": "Risk Analysis", "type": "main", "index": 0 }]] },
+    "Fraud Analysis": {
+      "main": [[{ "node": "Boundary Verification", "type": "main", "index": 0 }]]
+    },
+    "Boundary Verification": {
+      "main": [[{ "node": "Risk Analysis", "type": "main", "index": 0 }]]
+    },
     "Risk Analysis": { "main": [[{ "node": "Confidence Engine", "type": "main", "index": 0 }]] },
-    "Confidence Engine": { "main": [[{ "node": "Automated Decision Gate", "type": "main", "index": 0 }]] },
+    "Confidence Engine": {
+      "main": [[{ "node": "Automated Decision Gate", "type": "main", "index": 0 }]]
+    },
     "Automated Decision Gate": {
       "main": [
         [{ "node": "Issue Passport", "type": "main", "index": 0 }],

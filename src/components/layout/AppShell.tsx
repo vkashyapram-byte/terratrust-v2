@@ -1,13 +1,36 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard, Map, FileBadge, Sparkles, Users2, Briefcase,
-  Building2, BarChart3, ShieldCheck, Bell, User, Settings, HelpCircle, LogOut,
-  Search, MessageSquare, FileText, Gavel, ShieldAlert, Banknote, LifeBuoy,
-  Brain, ScanLine, Activity, Compass, ListChecks, Lightbulb,
+  LayoutDashboard,
+  Map,
+  FileBadge,
+  Sparkles,
+  Users2,
+  Briefcase,
+  Building2,
+  BarChart3,
+  ShieldCheck,
+  Bell,
+  User,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Search,
+  MessageSquare,
+  FileText,
+  Gavel,
+  ShieldAlert,
+  Banknote,
+  LifeBuoy,
+  Brain,
+  ScanLine,
+  Activity,
+  Compass,
+  ListChecks,
+  Lightbulb,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { currentUser, notifications } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
@@ -15,51 +38,66 @@ import { Badge } from "@/components/ui/badge";
 import { canAccessPath, useAccessControl } from "@/lib/access-control";
 
 const nav = [
-  { group: "Workspace", items: [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/properties", label: "Properties", icon: FileBadge },
-    { to: "/map", label: "GIS Map", icon: Map },
-    { to: "/valuation", label: "AI Valuation", icon: Sparkles },
-    { to: "/assistant", label: "AI Assistant", icon: MessageSquare },
-    { to: "/search", label: "Search", icon: Search },
-  ]},
-  { group: "AI Intelligence", items: [
-    { to: "/ai", label: "AI Overview", icon: Brain },
-    { to: "/ai-passport", label: "AI Passport", icon: FileBadge },
-    { to: "/ai-valuation", label: "Valuation engine", icon: Sparkles },
-    { to: "/ai-ocr", label: "Document OCR", icon: FileText },
-    { to: "/ai-fraud", label: "Fraud detection", icon: ShieldAlert },
-    { to: "/ai-risk", label: "Risk analysis", icon: Activity },
-    { to: "/ai-confidence", label: "Confidence score", icon: ShieldCheck },
-    { to: "/ai-boundary", label: "Boundary detection", icon: Compass },
-    { to: "/ai-timeline", label: "Ownership timeline", icon: ListChecks },
-    { to: "/ai-recommendations", label: "Recommendations", icon: Lightbulb },
-    { to: "/ai-summary", label: "Document summary", icon: FileText },
-    { to: "/ai-suggestions", label: "Verification AI", icon: Sparkles },
-  ]},
-  { group: "Trust", items: [
-    { to: "/verification", label: "Verification", icon: Users2 },
-    { to: "/community", label: "Community", icon: Users2 },
-    { to: "/fraud", label: "Fraud detection", icon: ShieldAlert },
-    { to: "/disputes", label: "Disputes", icon: Gavel },
-    { to: "/reports", label: "Reports", icon: FileText },
-    { to: "/impact", label: "Impact", icon: Sparkles },
-  ]},
-  { group: "Roles", items: [
-    { to: "/surveyor", label: "Surveyor", icon: Briefcase },
-    { to: "/government", label: "Government", icon: Building2 },
-    { to: "/bank", label: "Bank", icon: Banknote },
-    { to: "/analytics", label: "Analytics", icon: BarChart3 },
-    { to: "/admin", label: "Admin", icon: ShieldCheck },
-  ]},
+  {
+    group: "Workspace",
+    items: [
+      { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/properties", label: "Properties", icon: FileBadge },
+      { to: "/map", label: "GIS Map", icon: Map },
+      { to: "/valuation", label: "AI Valuation", icon: Sparkles },
+      { to: "/assistant", label: "AI Assistant", icon: MessageSquare },
+      { to: "/search", label: "Search", icon: Search },
+    ],
+  },
+  {
+    group: "AI Intelligence",
+    items: [
+      { to: "/ai", label: "AI Overview", icon: Brain },
+      { to: "/ai-passport", label: "AI Passport", icon: FileBadge },
+      { to: "/ai-valuation", label: "Valuation engine", icon: Sparkles },
+      { to: "/ai-ocr", label: "Document OCR", icon: FileText },
+      { to: "/ai-fraud", label: "Fraud detection", icon: ShieldAlert },
+      { to: "/ai-risk", label: "Risk analysis", icon: Activity },
+      { to: "/ai-confidence", label: "Confidence score", icon: ShieldCheck },
+      { to: "/ai-boundary", label: "Boundary detection", icon: Compass },
+      { to: "/ai-timeline", label: "Ownership timeline", icon: ListChecks },
+      { to: "/ai-recommendations", label: "Recommendations", icon: Lightbulb },
+      { to: "/ai-summary", label: "Document summary", icon: FileText },
+      { to: "/ai-suggestions", label: "Verification AI", icon: Sparkles },
+    ],
+  },
+  {
+    group: "Trust",
+    items: [
+      { to: "/verification", label: "Verification", icon: Users2 },
+      { to: "/community", label: "Community", icon: Users2 },
+      { to: "/fraud", label: "Fraud detection", icon: ShieldAlert },
+      { to: "/disputes", label: "Disputes", icon: Gavel },
+      { to: "/reports", label: "Reports", icon: FileText },
+      { to: "/impact", label: "Impact", icon: Sparkles },
+    ],
+  },
+  {
+    group: "Roles",
+    items: [
+      { to: "/surveyor", label: "Surveyor", icon: Briefcase },
+      { to: "/government", label: "Government", icon: Building2 },
+      { to: "/bank", label: "Bank", icon: Banknote },
+      { to: "/analytics", label: "Analytics", icon: BarChart3 },
+      { to: "/admin", label: "Admin", icon: ShieldCheck },
+    ],
+  },
 
-  { group: "Account", items: [
-    { to: "/profile", label: "Profile", icon: User },
-    { to: "/notifications", label: "Notifications", icon: Bell },
-    { to: "/settings", label: "Settings", icon: Settings },
-    { to: "/support", label: "Support", icon: LifeBuoy },
-    { to: "/help", label: "Help center", icon: HelpCircle },
-  ]},
+  {
+    group: "Account",
+    items: [
+      { to: "/profile", label: "Profile", icon: User },
+      { to: "/notifications", label: "Notifications", icon: Bell },
+      { to: "/settings", label: "Settings", icon: Settings },
+      { to: "/support", label: "Support", icon: LifeBuoy },
+      { to: "/help", label: "Help center", icon: HelpCircle },
+    ],
+  },
 ] as const;
 
 export function AppShell({
@@ -73,44 +111,78 @@ export function AppShell({
   subtitle?: string;
   actions?: ReactNode;
 }) {
-  const pathname = useRouterState({ select: s => s.location.pathname });
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
   const { role, signOut } = useAccessControl();
-  const unread = notifications.filter(n => !n.read).length;
+  const unread = notifications.filter((n) => !n.read).length;
   const canAccess = canAccessPath(role, pathname);
+  const [searchTerm, setSearchTerm] = useState("");
+  const search = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigate({ to: "/search", search: { q: searchTerm.trim() } });
+  };
 
   return (
     <div className="grid min-h-screen w-full grid-cols-[260px_1fr] bg-background">
       <aside className="sticky top-0 h-screen border-r border-border bg-surface-elevated">
         <div className="flex h-16 items-center px-5">
-          <Link to="/"><Logo /></Link>
+          <Link to="/">
+            <Logo />
+          </Link>
         </div>
         <nav className="flex h-[calc(100vh-4rem-3.5rem)] flex-col gap-6 overflow-y-auto px-3 py-3">
-          {nav.filter(group => group.group !== "Roles" || role !== "citizen").map(group => (
-            <div key={group.group}>
-              <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{group.group}</p>
-              <div className="flex flex-col gap-0.5">
-                {group.items.filter(item => canAccessPath(role, item.to)).map(item => {
-                  const active = pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(item.to));
-                  return (
-                    <Link key={item.to} to={item.to}
-                      className={cn(
-                        "group flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition",
-                        active ? "bg-primary/8 text-foreground ring-1 ring-primary/15" : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                      )}>
-                      <item.icon className={cn("h-4 w-4", active ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
-                      <span className="truncate">{item.label}</span>
-                      {item.to === "/notifications" && unread > 0 && (
-                        <span className="ml-auto rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">{unread}</span>
-                      )}
-                    </Link>
-                  );
-                })}
+          {nav
+            .filter((group) => group.group !== "Roles" || role !== "citizen")
+            .map((group) => (
+              <div key={group.group}>
+                <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  {group.group}
+                </p>
+                <div className="flex flex-col gap-0.5">
+                  {group.items
+                    .filter((item) => canAccessPath(role, item.to))
+                    .map((item) => {
+                      const active =
+                        pathname === item.to ||
+                        (item.to !== "/dashboard" && pathname.startsWith(item.to));
+                      return (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          className={cn(
+                            "group flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition",
+                            active
+                              ? "bg-primary/8 text-foreground ring-1 ring-primary/15"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                          )}
+                        >
+                          <item.icon
+                            className={cn(
+                              "h-4 w-4",
+                              active
+                                ? "text-primary"
+                                : "text-muted-foreground group-hover:text-foreground",
+                            )}
+                          />
+                          <span className="truncate">{item.label}</span>
+                          {item.to === "/notifications" && unread > 0 && (
+                            <span className="ml-auto rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
+                              {unread}
+                            </span>
+                          )}
+                        </Link>
+                      );
+                    })}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </nav>
         <div className="border-t border-border p-3">
-          <Link to="/login" onClick={signOut} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted">
+          <Link
+            to="/login"
+            onClick={signOut}
+            className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted"
+          >
             <LogOut className="h-4 w-4" /> Sign out
           </Link>
         </div>
@@ -118,18 +190,28 @@ export function AppShell({
 
       <div className="flex min-w-0 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/80 px-8 backdrop-blur-xl">
-          <div className="relative w-full max-w-md">
+          <form onSubmit={search} className="relative w-full max-w-md">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input className="h-9 pl-9" placeholder="Search properties, passport IDs, regions…" />
-          </div>
+            <Input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              className="h-9 pl-9"
+              placeholder="Search properties, passport IDs, regions…"
+              aria-label="Search properties"
+            />
+          </form>
           <div className="ml-auto flex items-center gap-3">
             <Link to="/notifications" className="relative rounded-full p-2 hover:bg-muted">
               <Bell className="h-4 w-4" />
-              {unread > 0 && <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />}
+              {unread > 0 && (
+                <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />
+              )}
             </Link>
             <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-2 py-1 pr-3">
               <Avatar className="h-7 w-7">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs">AO</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                  AO
+                </AvatarFallback>
               </Avatar>
               <div className="hidden text-left md:block">
                 <p className="text-xs font-medium leading-tight">{currentUser.name}</p>
@@ -163,9 +245,13 @@ function AccessDenied({ role }: { role: string }) {
       <ShieldCheck className="mx-auto h-8 w-8 text-primary" />
       <h2 className="font-display mt-4 text-3xl text-foreground">Workspace restricted</h2>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        Your current {role} account does not have access to this workspace. Switch to an authorized account to continue.
+        Your current {role} account does not have access to this workspace. Switch to an authorized
+        account to continue.
       </p>
-      <Link to="/login" className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+      <Link
+        to="/login"
+        className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+      >
         Switch account
       </Link>
     </div>
@@ -181,7 +267,8 @@ export function StatusBadge({ status }: { status: "verified" | "pending" | "disp
   } as const;
   return (
     <Badge variant="outline" className={cn("rounded-full ring-1", map[status].cls)}>
-      <span className="mr-1 h-1.5 w-1.5 rounded-full bg-current" />{map[status].label}
+      <span className="mr-1 h-1.5 w-1.5 rounded-full bg-current" />
+      {map[status].label}
     </Badge>
   );
 }

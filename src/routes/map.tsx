@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Layers, Filter, Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/map")({
   head: () => ({ meta: [{ title: "GIS Map — TerraTrust AI" }] }),
@@ -15,26 +16,94 @@ export const Route = createFileRoute("/map")({
 
 function MapPage() {
   const [sel, setSel] = useState(properties[0]);
+  const [query, setQuery] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const visibleProperties = useMemo(
+    () =>
+      properties.filter((property) => {
+        const term = query.trim().toLowerCase();
+        return (
+          (!term ||
+            [property.title, property.passportId, property.region].some((value) =>
+              value.toLowerCase().includes(term),
+            )) &&
+          (!verifiedOnly || property.status === "verified")
+        );
+      }),
+    [query, verifiedOnly],
+  );
   return (
-    <AppShell title="GIS Map" subtitle="Spatial view of every parcel in your portfolio and pilot regions."
-      actions={<><Button variant="outline" className="rounded-full"><Layers className="h-4 w-4" /> Layers</Button><Button className="rounded-full"><Plus className="h-4 w-4" /> Add boundary</Button></>}>
+    <AppShell
+      title="GIS Map"
+      subtitle="Spatial view of every parcel in your portfolio and pilot regions."
+      actions={
+        <>
+          <Button
+            variant="outline"
+            className="rounded-full"
+            onClick={() => setFilterOpen((open) => !open)}
+          >
+            <Layers className="h-4 w-4" /> Layers
+          </Button>
+          <Button asChild className="rounded-full">
+            <Link to="/properties/$id/boundary" params={{ id: sel.id }}>
+              <Plus className="h-4 w-4" /> Add boundary
+            </Link>
+          </Button>
+        </>
+      }
+    >
       <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
         <aside className="surface-card flex h-fit flex-col gap-3 p-4">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input className="h-9 pl-9" placeholder="Search parcels…" />
+            <Input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              className="h-9 pl-9"
+              placeholder="Search parcels…"
+            />
           </div>
-          <Button variant="outline" size="sm"><Filter className="h-4 w-4" /> Filter parcels</Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setFilterOpen((open) => !open)}
+            aria-expanded={filterOpen}
+          >
+            <Filter className="h-4 w-4" /> Filter parcels
+          </Button>
+          {filterOpen && (
+            <label className="flex items-center gap-2 text-xs text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={verifiedOnly}
+                onChange={(event) => setVerifiedOnly(event.target.checked)}
+              />{" "}
+              Verified only
+            </label>
+          )}
           <div className="-mx-1 max-h-[480px] divide-y divide-border overflow-y-auto">
-            {properties.map(p => (
-              <button key={p.id} onClick={() => setSel(p)} className={`flex w-full flex-col items-start gap-1 px-3 py-3 text-left text-sm hover:bg-muted ${sel.id === p.id ? "bg-primary/5" : ""}`}>
+            {visibleProperties.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setSel(p)}
+                className={`flex w-full flex-col items-start gap-1 px-3 py-3 text-left text-sm hover:bg-muted ${sel.id === p.id ? "bg-primary/5" : ""}`}
+              >
                 <div className="flex w-full items-center justify-between">
                   <p className="font-medium">{p.title}</p>
                   <StatusBadge status={p.status} />
                 </div>
-                <p className="text-xs text-muted-foreground">{p.passportId} · {p.region}</p>
+                <p className="text-xs text-muted-foreground">
+                  {p.passportId} · {p.region}
+                </p>
               </button>
             ))}
+            {visibleProperties.length === 0 && (
+              <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+                No parcels match this filter.
+              </p>
+            )}
           </div>
         </aside>
 
@@ -45,16 +114,26 @@ function MapPage() {
             submittedBoundary={demoBoundaryFeatures(sel).submittedBoundary}
             latitude={sel.coords.lat}
             longitude={sel.coords.lng}
-            analysis={analyzeBoundaries(demoBoundaryFeatures(sel).registeredBoundary, demoBoundaryFeatures(sel).submittedBoundary)}
+            analysis={analyzeBoundaries(
+              demoBoundaryFeatures(sel).registeredBoundary,
+              demoBoundaryFeatures(sel).submittedBoundary,
+            )}
             className="min-h-[560px]"
           />
           <div className="surface-card flex items-center justify-between p-4">
             <div>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">Selected parcel</p>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                Selected parcel
+              </p>
               <p className="font-display text-xl">{sel.title}</p>
-              <p className="text-xs text-muted-foreground">{sel.coords.lat.toFixed(4)}, {sel.coords.lng.toFixed(4)} · {sel.area.toLocaleString()} m²</p>
+              <p className="text-xs text-muted-foreground">
+                {sel.coords.lat.toFixed(4)}, {sel.coords.lng.toFixed(4)} ·{" "}
+                {sel.area.toLocaleString()} m²
+              </p>
             </div>
-            <Link to="/properties/$id" params={{ id: sel.id }}><Button>Open passport</Button></Link>
+            <Link to="/properties/$id" params={{ id: sel.id }}>
+              <Button>Open passport</Button>
+            </Link>
           </div>
         </div>
       </div>

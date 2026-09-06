@@ -8,6 +8,7 @@ const protectedAreas: Array<{ prefix: string; roles: Role[] }> = [
   { prefix: "/government", roles: ["officer"] },
   { prefix: "/bank", roles: ["bank"] },
   { prefix: "/admin", roles: ["admin"] },
+  { prefix: "/attestations", roles: ["citizen", "verifier"] },
 ];
 
 const roleContext = createContext<{
@@ -43,7 +44,9 @@ export function useAccessControl() {
 
 export function canAccessPath(role: Role, pathname: string) {
   if (role === "admin") return true;
-  const area = protectedAreas.find(({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+  const area = protectedAreas.find(
+    ({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
   return !area || area.roles.includes(role);
 }
 

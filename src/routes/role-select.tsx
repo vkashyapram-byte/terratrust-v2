@@ -15,9 +15,24 @@ export const Route = createFileRoute("/role-select")({
 const roles: Array<{ id: Role; icon: typeof Users2; t: string; d: string }> = [
   { id: "citizen", icon: Users2, t: "Citizen", d: "Manage and verify your own land." },
   { id: "surveyor", icon: Briefcase, t: "Surveyor", d: "Capture GIS boundaries on assignment." },
-  { id: "officer", icon: Building2, t: "Government officer", d: "Operate registries and resolve disputes." },
-  { id: "verifier", icon: HeartHandshake, t: "Community verifier", d: "Attest occupancy in your neighborhood." },
-  { id: "admin", icon: ShieldCheck, t: "Administrator", d: "Manage platform operations and policy." },
+  {
+    id: "officer",
+    icon: Building2,
+    t: "Government officer",
+    d: "Operate registries and resolve disputes.",
+  },
+  {
+    id: "verifier",
+    icon: HeartHandshake,
+    t: "Community verifier",
+    d: "Attest occupancy in your neighborhood.",
+  },
+  {
+    id: "admin",
+    icon: ShieldCheck,
+    t: "Administrator",
+    d: "Manage platform operations and policy.",
+  },
 ];
 
 function RoleSelect() {
@@ -25,25 +40,49 @@ function RoleSelect() {
   const navigate = useNavigate();
   const { setRole } = useAccessControl();
   return (
-    <AuthLayout title="Pick your role" subtitle="This shapes the workspace we build for you. You can change it later.">
+    <AuthLayout
+      title="Pick your role"
+      subtitle="This shapes the workspace we build for you. You can change it later."
+    >
       <div className="grid gap-3">
-        {roles.map(r => (
-          <button key={r.id} disabled={r.id === "bank"} onClick={() => setPicked(r.id)}
+        {roles.map((r) => (
+          <button
+            key={r.id}
+            disabled={r.id === "bank"}
+            onClick={() => setPicked(r.id)}
             className={cn(
               "flex items-start gap-4 rounded-xl border p-4 text-left transition",
-              picked === r.id ? "border-primary bg-primary/5 ring-2 ring-primary/15" : "border-border hover:bg-muted",
+              picked === r.id
+                ? "border-primary bg-primary/5 ring-2 ring-primary/15"
+                : "border-border hover:bg-muted",
               r.id === "bank" && "opacity-50",
-            )}>
-            <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary"><r.icon className="h-5 w-5" /></div>
+            )}
+          >
+            <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary">
+              <r.icon className="h-5 w-5" />
+            </div>
             <div className="flex-1">
               <p className="font-medium text-foreground">{r.t}</p>
               <p className="text-sm text-muted-foreground">{r.d}</p>
             </div>
-            <span className={cn("mt-1 h-4 w-4 rounded-full border-2", picked === r.id ? "border-primary bg-primary" : "border-border")} />
+            <span
+              className={cn(
+                "mt-1 h-4 w-4 rounded-full border-2",
+                picked === r.id ? "border-primary bg-primary" : "border-border",
+              )}
+            />
           </button>
         ))}
       </div>
-      <Button className="mt-6 h-11 w-full" onClick={() => { setRole(picked); navigate({ to: "/complete-profile" }); }}>Continue</Button>
+      <Button
+        className="mt-6 h-11 w-full"
+        onClick={() => {
+          setRole(picked);
+          navigate({ to: "/complete-profile" });
+        }}
+      >
+        Continue
+      </Button>
     </AuthLayout>
   );
 }

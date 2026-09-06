@@ -19,9 +19,19 @@ function TimelinePage() {
     >
       <div className="grid gap-4 md:grid-cols-4">
         <AIInsightCard title="Transfers detected" value="4" hint="1998 → 2019" tone="primary" />
-        <AIInsightCard title="Chain confidence" value="94%" delta={{ value: 6, label: "MoM" }} tone="success" />
+        <AIInsightCard
+          title="Chain confidence"
+          value="94%"
+          delta={{ value: 6, label: "MoM" }}
+          tone="success"
+        />
         <AIInsightCard title="Gaps" value="0" hint="No unexplained periods" tone="success" />
-        <AIInsightCard title="Sources" value="7" hint="Land records, gazette, Aadhaar, court" tone="accent" />
+        <AIInsightCard
+          title="Sources"
+          value="7"
+          hint="Land records, gazette, Aadhaar, court"
+          tone="accent"
+        />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
@@ -42,9 +52,15 @@ function TimelinePage() {
                   <p className="mt-1 text-sm font-medium text-foreground">{e.owner}</p>
                   <p className="text-xs text-muted-foreground">{e.event}</p>
                   <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-muted-foreground">
-                    <Pill><FileText className="h-3 w-3" /> Source: Bureau gazette</Pill>
-                    <Pill><ShieldCheck className="h-3 w-3" /> Notarized</Pill>
-                    <Pill><ListChecks className="h-3 w-3" /> 3 corroborating docs</Pill>
+                    <Pill>
+                      <FileText className="h-3 w-3" /> Source: Bureau gazette
+                    </Pill>
+                    <Pill>
+                      <ShieldCheck className="h-3 w-3" /> Notarized
+                    </Pill>
+                    <Pill>
+                      <ListChecks className="h-3 w-3" /> 3 corroborating docs
+                    </Pill>
                   </div>
                 </div>
               </li>
@@ -56,8 +72,12 @@ function TimelinePage() {
           <div className="surface-card p-5">
             <SectionTitle eyebrow="Per-event certainty" title="Confidence by transfer" />
             <div className="space-y-3">
-              {ownershipChain.map(e => (
-                <ConfidenceMeter key={e.year} value={e.confidence} label={`${e.year} · ${e.owner.split(" ")[0]}`} />
+              {ownershipChain.map((e) => (
+                <ConfidenceMeter
+                  key={e.year}
+                  value={e.confidence}
+                  label={`${e.year} · ${e.owner.split(" ")[0]}`}
+                />
               ))}
             </div>
           </div>
