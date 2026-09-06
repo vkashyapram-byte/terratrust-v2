@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { currentUser } from "./mock-data";
 import type { Role } from "./types";
+import { canAccessNavItem } from "./navAccessConfig";
 
 const ROLE_STORAGE_KEY = "terratrust.role";
 
@@ -75,10 +76,17 @@ export function useAccessControl() {
 
 export function canAccessPath(role: Role, pathname: string) {
   if (role === "admin") return true;
+
+  // Check role-specific workspace prefixes (existing logic)
   const area = protectedAreas.find(
     ({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-  return !area || area.roles.includes(role);
+  if (area && !area.roles.includes(role)) return false;
+
+  // Check nav access matrix (new — covers AI pages, map, valuation, etc.)
+  if (!canAccessNavItem(role, pathname)) return false;
+
+  return true;
 }
 
 function isRole(value: string): value is Role {

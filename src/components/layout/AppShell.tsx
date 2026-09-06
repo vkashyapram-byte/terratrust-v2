@@ -36,6 +36,7 @@ import { notifications } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { canAccessPath, useAccessControl } from "@/lib/access-control";
+import { canAccessNavItem } from "@/lib/navAccessConfig";
 
 const nav = [
   {
@@ -132,16 +133,20 @@ export function AppShell({
         </div>
         <nav className="flex h-[calc(100vh-4rem-3.5rem)] flex-col gap-6 overflow-y-auto px-3 py-3">
           {nav
-            .filter((group) => group.group !== "Roles" || role !== "citizen")
-            .map((group) => (
-              <div key={group.group}>
-                <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  {group.group}
-                </p>
-                <div className="flex flex-col gap-0.5">
-                  {group.items
-                    .filter((item) => canAccessPath(role, item.to))
-                    .map((item) => {
+            .map((group) => {
+              // Filter items by both nav access matrix AND role-workspace guards
+              const visibleItems = group.items.filter(
+                (item) => canAccessNavItem(role, item.to) && canAccessPath(role, item.to),
+              );
+              // Hide entire group if no items are visible for this role
+              if (visibleItems.length === 0) return null;
+              return (
+                <div key={group.group}>
+                  <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    {group.group}
+                  </p>
+                  <div className="flex flex-col gap-0.5">
+                    {visibleItems.map((item) => {
                       const active =
                         pathname === item.to ||
                         (item.to !== "/dashboard" && pathname.startsWith(item.to));
@@ -173,9 +178,10 @@ export function AppShell({
                         </Link>
                       );
                     })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
         </nav>
         <div className="border-t border-border p-3">
           <Link
