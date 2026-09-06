@@ -142,7 +142,7 @@ function SearchPage() {
             </div>
             <div className="text-right">
               <p className="text-[10px] uppercase text-muted-foreground">Valuation</p>
-              <p className="font-display text-xl">${(p.valuation/1000).toFixed(0)}k</p>
+              <p className="font-display text-xl">₹{(p.valuation/1000).toFixed(0)}k</p>
             </div>
           </Link>
         ))}

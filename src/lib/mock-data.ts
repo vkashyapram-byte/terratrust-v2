@@ -136,7 +136,7 @@ export const notifications: NotificationItem[] = [
 export const citizenKpis: KPI[] = [
   { label: "Properties", value: "4", delta: "+1", trend: "up", hint: "in your portfolio" },
   { label: "Avg. trust score", value: "74", delta: "+6", trend: "up", hint: "rolling 30 days" },
-  { label: "Portfolio value", value: "$1.08M", delta: "+4.2%", trend: "up", hint: "AI estimate" },
+  { label: "Portfolio value", value: "₹1.08M", delta: "+4.2%", trend: "up", hint: "AI estimate" },
   { label: "Open actions", value: "3", delta: "-1", trend: "down", hint: "verification tasks" },
 ];
 

@@ -26,7 +26,7 @@ function Page() {
               <Field label="Property title"><Input placeholder="e.g. Lekki Phase 1 Residence" /></Field>
               <Field label="Property type"><Input defaultValue="Residential" /></Field>
               <Field label="Area (sqm)"><Input defaultValue="540" /></Field>
-              <Field label="Estimated value (USD)"><Input defaultValue="280000" /></Field>
+              <Field label="Estimated value (INR)"><Input defaultValue="280000" /></Field>
             </div>
             <Field label="Description"><Textarea rows={3} placeholder="Describe the property…" /></Field>
           </div>

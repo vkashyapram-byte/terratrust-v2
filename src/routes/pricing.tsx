@@ -12,8 +12,8 @@ export const Route = createFileRoute("/pricing")({
 
 const plans = [
   { name: "Citizen", price: "Free", desc: "For individuals registering their land.", popular: false, features: ["1 Property Passport","AI valuation (monthly)","Community attestations","Mobile app"] },
-  { name: "Trust Pro", price: "$29/mo", desc: "For owners with multiple properties.", popular: true, features: ["Up to 25 Property Passports","On-demand AI valuation","Boundary comparison","Verifiable share links","Priority support"] },
-  { name: "Surveyor", price: "$59/mo", desc: "For licensed field surveyors.", popular: false, features: ["Field toolkit","Mobile GeoJSON upload","Report builder","Signed PDF outputs","Mediation queue access"] },
+  { name: "Trust Pro", price: "₹29/mo", desc: "For owners with multiple properties.", popular: true, features: ["Up to 25 Property Passports","On-demand AI valuation","Boundary comparison","Verifiable share links","Priority support"] },
+  { name: "Surveyor", price: "₹59/mo", desc: "For licensed field surveyors.", popular: false, features: ["Field toolkit","Mobile GeoJSON upload","Report builder","Signed PDF outputs","Mediation queue access"] },
   { name: "Institution", price: "Talk to us", desc: "Governments, banks, NGOs.", popular: false, features: ["Bulk registry sync","SLA & dedicated support","Audit-grade exports","SSO + role policies"] },
 ];
 

@@ -17,7 +17,7 @@ function Page() {
       <Crumbs items={[{ label: "Reports", to: "/reports" }, { label: id }]} />
       <KpiRow items={[
         { label: "Parcels analysed", value: "412,388" },
-        { label: "Median value", value: "$184k", hint: "+6.4% YoY" },
+        { label: "Median value", value: "₹184k", hint: "+6.4% YoY" },
         { label: "Verified rate", value: "91.5%" },
         { label: "AI confidence", value: "94%" },
       ]} />
@@ -26,7 +26,7 @@ function Page() {
         <p className="mt-2 text-sm text-muted-foreground leading-relaxed">Property values in Lagos State rose 6.4% year-over-year, driven primarily by Lekki Phase 1, Victoria Island, and the Ibeju-Lekki corridor. Verification throughput improved by 18% as more surveyors onboarded, and disputed parcels fell to 1.2% of the active inventory — the lowest since Q1 2022.</p>
         <h3 className="mt-6 font-display text-xl">Key findings</h3>
         <ul className="mt-2 list-disc space-y-1 pl-6 text-sm text-muted-foreground">
-          <li>Lekki Phase 1 median valuation: $312k (up from $268k)</li>
+          <li>Lekki Phase 1 median valuation: ₹312k (up from ₹268k)</li>
           <li>Boundary disputes concentrated in Epe LGA (62% of regional total)</li>
           <li>AI confidence on agricultural parcels improved from 71 → 84 after new satellite imagery</li>
           <li>Fraud flag rate fell to 0.07% — a 3-year low</li>

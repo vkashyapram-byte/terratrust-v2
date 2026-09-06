@@ -35,7 +35,7 @@ function PassportPage() {
               {[
                 { icon: MapPin, k: "Coordinates", v: "6.4413° N, 3.4709° E" },
                 { icon: Calendar, k: "Owner since", v: "14 June 2019" },
-                { icon: Coins, k: "AI valuation", v: "₦312,000,000" },
+                { icon: Coins, k: "AI valuation", v: "₹312,000,000" },
                 { icon: Layers, k: "Documents", v: "3 verified" },
                 { icon: ShieldCheck, k: "Last verified", v: "20 Mar 2024" },
               ].map(r => (

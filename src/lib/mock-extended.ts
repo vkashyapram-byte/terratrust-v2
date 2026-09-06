@@ -56,7 +56,7 @@ export interface PropertyLite {
   trust: number;
   confidence: number;
   area: number;          // sqm
-  valuation: number;     // USD
+  valuation: number;     // INR
   owner: string;
   ownerId: string;
   region: string;

@@ -62,9 +62,9 @@ function ValuationEnginePage() {
 
         <div className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3">
-            <AIInsightCard icon={<TrendingUp className="h-3 w-3 text-success" />} title="Point estimate" value="₦312M" delta={{ value: 8.4, label: "YoY" }} tone="success" />
-            <AIInsightCard icon={<Building2 className="h-3 w-3 text-primary" />} title="Range" value="₦298M – ₦326M" hint="80% confidence interval" tone="primary" />
-            <AIInsightCard icon={<MapPin className="h-3 w-3 text-primary" />} title="Price / m²" value="₦577K" hint="vs. corridor median ₦548K" tone="accent" />
+            <AIInsightCard icon={<TrendingUp className="h-3 w-3 text-success" />} title="Point estimate" value="₹312M" delta={{ value: 8.4, label: "YoY" }} tone="success" />
+            <AIInsightCard icon={<Building2 className="h-3 w-3 text-primary" />} title="Range" value="₹298M – ₹326M" hint="80% confidence interval" tone="primary" />
+            <AIInsightCard icon={<MapPin className="h-3 w-3 text-primary" />} title="Price / m²" value="₹577K" hint="vs. corridor median ₹548K" tone="accent" />
           </div>
 
           <div className="surface-card p-6">
@@ -98,7 +98,7 @@ function ValuationEnginePage() {
                 {comps.map(c => (
                   <li key={c.id} className="flex items-center justify-between rounded-lg bg-surface p-2.5 ring-1 ring-border">
                     <span className="flex items-center gap-2 text-foreground"><Pill>{c.id}</Pill> {c.addr}</span>
-                    <span className="text-muted-foreground">{c.area} m² · ₦{c.price}M · {c.dist}km</span>
+                    <span className="text-muted-foreground">{c.area} m² · ₹{c.price}M · {c.dist}km</span>
                   </li>
                 ))}
               </ul>
@@ -106,13 +106,13 @@ function ValuationEnginePage() {
           </div>
 
           <div className="surface-card p-5">
-            <SectionTitle eyebrow="Reasoning" title="How the engine arrived at ₦312M" />
+            <SectionTitle eyebrow="Reasoning" title="How the engine arrived at ₹312M" />
             <ReasoningTrace steps={[
               { label: "Pull comparable sales", detail: "12 candidates → 5 retained after recency, type & distance filters." },
               { label: "Geographic adjustment", detail: "Lekki Phase 1 corridor premium: +18% over Lagos median." },
               { label: "Document trust adjustment", detail: "+3% for verified C-of-O and clean survey chain." },
-              { label: "Macro overlay", detail: "Applied -3.1% FX volatility damper (60-day NGN/USD vol)." },
-              { label: "Calibration", detail: "Model RMSE 4.2% on holdout comps. Final: ₦312M ±₦14M." },
+              { label: "Macro overlay", detail: "Applied -3.1% currency volatility damper (60-day local-currency volatility)." },
+              { label: "Calibration", detail: "Model RMSE 4.2% on holdout comps. Final: ₹312M ±₹14M." },
             ]} />
           </div>
         </div>

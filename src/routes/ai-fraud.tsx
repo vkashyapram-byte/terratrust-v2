@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { AIBadge, RiskGauge, ExplainabilityPanel, AIInsightCard, VerdictBanner } from "@/components/ai/AIPrimitives";
 import { SectionTitle, Pill, DataTable } from "@/components/ui-ext/Scaffold";
@@ -19,6 +20,12 @@ const cases = [
 ];
 
 function FraudPage() {
+  const [isScanning, setIsScanning] = useState(false);
+  const runScan = () => {
+    setIsScanning(true);
+    window.setTimeout(() => setIsScanning(false), 1400);
+  };
+
   return (
     <AppShell
       title="AI Fraud Detection"
@@ -76,7 +83,9 @@ function FraudPage() {
                 </li>
               ))}
             </ul>
-            <Button variant="outline" className="mt-4 w-full"><AlertTriangle className="h-4 w-4" /> Run full re-scan</Button>
+            <Button variant="outline" className="mt-4 w-full" disabled={isScanning} onClick={runScan}>
+              <AlertTriangle className="h-4 w-4" /> {isScanning ? "Scanning models…" : "Run full re-scan"}
+            </Button>
           </div>
         </div>
       </div>

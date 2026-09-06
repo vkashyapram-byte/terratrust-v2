@@ -98,7 +98,7 @@ function Dashboard() {
                     <td className="px-2 py-3 font-mono text-xs">{p.passportId}</td>
                     <td className="px-2 py-3"><StatusBadge status={p.status} /></td>
                     <td className="px-2 py-3"><TrustPill v={p.trustScore} /></td>
-                    <td className="px-2 py-3 text-right font-medium">${(p.valuation/1000).toFixed(0)}k</td>
+                    <td className="px-2 py-3 text-right font-medium">₹{(p.valuation/1000).toFixed(0)}k</td>
                   </tr>
                 ))}
               </tbody>

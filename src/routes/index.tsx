@@ -100,7 +100,7 @@ function Hero() {
                 <p className="mt-1 font-display text-2xl">Amara Okonkwo</p>
                 <p className="text-sm text-muted-foreground">12 Admiralty Way, Lekki Phase 1 · Lagos</p>
                 <div className="mt-5 grid grid-cols-2 gap-4 text-sm">
-                  <KV k="AI valuation" v="$285,000" tone="primary" />
+                  <KV k="AI valuation" v="₹285,000" tone="primary" />
                   <KV k="Plot area" v="540 m²" />
                   <KV k="Type" v="Residential" />
                   <KV k="Owned since" v="Jun 2019" />
@@ -311,7 +311,7 @@ function HowItWorks() {
 function Stats() {
   const items = [
     { v: "2.4M+", l: "Parcels indexed", s: "Across 6 states in pilot" },
-    { v: "$1.8B", l: "Asset value verified", s: "Tied to live property passports" },
+    { v: "₹1.8B", l: "Asset value verified", s: "Tied to live property passports" },
     { v: "612", l: "Disputes resolved", s: "Using GIS conflict detection" },
     { v: "4.92/5", l: "Surveyor quality", s: "Avg rating, past 12 months" },
   ];

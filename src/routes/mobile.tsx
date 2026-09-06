@@ -20,7 +20,7 @@ function Page() {
               <p className="font-display text-2xl">Amara</p>
               <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
                 <div className="rounded-lg bg-muted p-2"><p className="text-muted-foreground">Trust</p><p className="font-display text-xl">74</p></div>
-                <div className="rounded-lg bg-muted p-2"><p className="text-muted-foreground">Value</p><p className="font-display text-xl">$1.08M</p></div>
+                  <div className="rounded-lg bg-muted p-2"><p className="text-muted-foreground">Value</p><p className="font-display text-xl">₹1.08M</p></div>
               </div>
               <p className="mt-4 text-xs font-medium">Your passports</p>
               <div className="mt-2 space-y-2">
@@ -44,7 +44,7 @@ function Page() {
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Tablet · landscape</p>
                 <p className="font-display text-3xl">Portfolio overview</p>
                 <div className="mt-4 grid grid-cols-4 gap-2 text-[11px]">
-                  {["Properties · 4","Trust · 74","Value · $1.08M","Open · 3"].map(x => <div key={x} className="rounded-lg bg-muted p-3"><p>{x}</p></div>)}
+                  {["Properties · 4","Trust · 74","Value · ₹1.08M","Open · 3"].map(x => <div key={x} className="rounded-lg bg-muted p-3"><p>{x}</p></div>)}
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-2">
                   <div className="h-40 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20" />

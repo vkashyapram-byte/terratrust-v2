@@ -25,7 +25,7 @@ function Page() {
       <KpiRow items={[
         { label: "Trust score", value: "96", hint: "+4 since last analysis" },
         { label: "AI confidence", value: "92%", hint: "high" },
-        { label: "AI valuation", value: "$285k", hint: "± $14k" },
+        { label: "AI valuation", value: "₹285k", hint: "± ₹14k" },
         { label: "Model", value: "Geo-LLM v2.1" },
       ]} />
       <div className="mt-6 grid gap-4 lg:grid-cols-3">

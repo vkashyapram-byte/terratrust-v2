@@ -50,7 +50,7 @@ function PropertiesPage() {
                 <div className="mt-4 flex items-end justify-between">
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground">AI valuation</p>
-                    <p className="font-display text-xl">${(p.valuation/1000).toFixed(0)}k</p>
+                    <p className="font-display text-xl">₹{(p.valuation/1000).toFixed(0)}k</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Trust</p>
@@ -82,7 +82,7 @@ function PropertiesPage() {
                   <td className="px-4 py-3 capitalize text-muted-foreground">{p.type}</td>
                   <td className="px-4 py-3"><StatusBadge status={p.status} /></td>
                   <td className="px-4 py-3">{p.trustScore}</td>
-                  <td className="px-4 py-3 text-right font-medium">${(p.valuation/1000).toFixed(0)}k</td>
+                  <td className="px-4 py-3 text-right font-medium">₹{(p.valuation/1000).toFixed(0)}k</td>
                 </tr>
               ))}
             </tbody>

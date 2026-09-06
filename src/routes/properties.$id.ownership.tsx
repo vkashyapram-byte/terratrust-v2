@@ -8,9 +8,9 @@ export const Route = createFileRoute("/properties/$id/ownership")({
 });
 
 const rows = [
-  { from: "2019-06-14", to: "—", owner: "Amara Okonkwo", method: "Purchase", price: "$268,000", source: "Lagos Land Registry" },
+  { from: "2019-06-14", to: "—", owner: "Amara Okonkwo", method: "Purchase", price: "₹268,000", source: "Lagos Land Registry" },
   { from: "2009-04-22", to: "2019-06-14", owner: "S. Adesanya", method: "Inheritance", price: "—", source: "Lagos Probate Court" },
-  { from: "1994-11-08", to: "2009-04-22", owner: "M. Adesanya", method: "Purchase", price: "₦1.2M", source: "Lagos State Allocation" },
+  { from: "1994-11-08", to: "2009-04-22", owner: "M. Adesanya", method: "Purchase", price: "₹1.2M", source: "Lagos State Allocation" },
   { from: "1978-01-15", to: "1994-11-08", owner: "Government of Lagos State", method: "C of O issued", price: "—", source: "Federal Gazette" },
 ];
 

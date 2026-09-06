@@ -49,7 +49,7 @@ export interface Property {
   country: string;
   owner: string;
   ownerSince: string;
-  valuation: number; // USD
+  valuation: number; // INR
   aiConfidence: number; // 0-100
   coords: { lat: number; lng: number };
   boundary: PropertyBoundary[];

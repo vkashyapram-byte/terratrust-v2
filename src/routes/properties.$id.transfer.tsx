@@ -20,7 +20,7 @@ function Page() {
         <Field label="Recipient email or wallet"><Input placeholder="ben@terratrust.ai" /></Field>
         <Field label="Recipient legal name"><Input placeholder="Ben Adekola" /></Field>
         <Field label="Transfer type"><Input defaultValue="Sale" /></Field>
-        <Field label="Agreed price (USD)"><Input defaultValue="285000" /></Field>
+        <Field label="Agreed price (INR)"><Input defaultValue="285000" /></Field>
         <div className="md:col-span-2"><Field label="Notes"><Textarea rows={3} placeholder="Additional clauses, payment terms…" /></Field></div>
         <div className="md:col-span-2 flex justify-end gap-2">
           <Link to="/properties/$id" params={{ id }}><Button variant="outline">Cancel</Button></Link>

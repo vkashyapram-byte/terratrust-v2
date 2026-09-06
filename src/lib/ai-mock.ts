@@ -2,9 +2,9 @@
 
 export const valuationFactors = [
   { label: "Location desirability (Lekki Phase 1)", weight: 32, direction: "up" as const, note: "Top 5% premium corridor in Lagos coastal zone." },
-  { label: "Recent comparable sales (12 nearby)", weight: 24, direction: "up" as const, note: "Median sale ₦125M · 90-day window." },
+  { label: "Recent comparable sales (12 nearby)", weight: 24, direction: "up" as const, note: "Median sale ₹125M · 90-day window." },
   { label: "Verified title chain", weight: 14, direction: "up" as const, note: "Unbroken transfer history since 2002." },
-  { label: "Macro headwinds (FX volatility)", weight: -9, direction: "down" as const, note: "USD/NGN swings reduce dollar-equivalent value." },
+  { label: "Macro headwinds (FX volatility)", weight: -9, direction: "down" as const, note: "Currency swings reduce local-currency value." },
   { label: "Distance to flood risk zone", weight: -4, direction: "down" as const, note: "1.8km from 100-year floodplain." },
   { label: "Infrastructure (road + utilities)", weight: 11, direction: "up" as const, note: "Tarred dual carriageway, public water grid." },
 ];

@@ -41,10 +41,10 @@ function ValuationPage() {
             <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
             <p className="text-xs uppercase tracking-wider text-muted-foreground">AI valuation result</p>
             <div className="mt-2 flex flex-wrap items-end gap-4">
-              <p className="font-display text-6xl">$285,000</p>
+              <p className="font-display text-6xl">₹285,000</p>
               <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs text-success"><TrendingUp className="h-3 w-3" /> +9.2% YoY</span>
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">95% confidence interval · $268k – $302k</p>
+              <p className="mt-2 text-sm text-muted-foreground">95% confidence interval · ₹268k – ₹302k</p>
             <div className="mt-6 h-44">
               <ResponsiveContainer>
                 <AreaChart data={valuationTrend}>
@@ -62,10 +62,10 @@ function ValuationPage() {
             <p className="font-medium">What drives this valuation?</p>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               {[
-                ["Local comparables", "+$112k", "From 28 nearby transactions in the last 24 months."],
-                ["Infrastructure quality", "+$48k", "Paved access, water, grid power."],
-                ["Macro & FX adjustment", "-$12k", "Inflation and currency effects, last 12 months."],
-                ["Zoning & permitted use", "+$22k", "Mixed-use residential overlay."],
+                ["Local comparables", "+₹112k", "From 28 nearby transactions in the last 24 months."],
+                ["Infrastructure quality", "+₹48k", "Paved access, water, grid power."],
+                ["Macro & FX adjustment", "-₹12k", "Inflation and currency effects, last 12 months."],
+                ["Zoning & permitted use", "+₹22k", "Mixed-use residential overlay."],
               ].map(([t, v, d]) => (
                 <div key={t} className="rounded-lg border border-border p-4">
                   <div className="flex items-center justify-between">
