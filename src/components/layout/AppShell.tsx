@@ -45,13 +45,13 @@ const nav = [
     { to: "/fraud", label: "Fraud detection", icon: ShieldAlert },
     { to: "/disputes", label: "Disputes", icon: Gavel },
     { to: "/reports", label: "Reports", icon: FileText },
+    { to: "/impact", label: "Impact", icon: Sparkles },
   ]},
   { group: "Roles", items: [
     { to: "/surveyor", label: "Surveyor", icon: Briefcase },
     { to: "/government", label: "Government", icon: Building2 },
     { to: "/bank", label: "Bank", icon: Banknote },
     { to: "/analytics", label: "Analytics", icon: BarChart3 },
-    { to: "/impact", label: "Impact", icon: Sparkles },
     { to: "/admin", label: "Admin", icon: ShieldCheck },
   ]},
 
@@ -87,7 +87,7 @@ export function AppShell({
           <Link to="/"><Logo /></Link>
         </div>
         <nav className="flex h-[calc(100vh-4rem-3.5rem)] flex-col gap-6 overflow-y-auto px-3 py-3">
-          {nav.map(group => (
+          {nav.filter(group => group.group !== "Roles" || role !== "citizen").map(group => (
             <div key={group.group}>
               <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{group.group}</p>
               <div className="flex flex-col gap-0.5">
