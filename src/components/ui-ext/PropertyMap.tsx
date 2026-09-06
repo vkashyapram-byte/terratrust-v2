@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { GeoJSON, MapContainer, CircleMarker, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import { GeoJSON, MapContainer, CircleMarker, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Feature, Polygon, MultiPolygon } from "geojson";
@@ -138,7 +138,27 @@ function DrawBoundary({ points, onChange }: { points: Position[]; onChange: (poi
       onChange([...points, [event.latlng.lat, event.latlng.lng]]);
     },
   });
-  return null;
+  return (
+    <>
+      {points.map((position, index) => (
+        <Marker
+          key={`${position[0]}-${position[1]}-${index}`}
+          position={position}
+          draggable
+          icon={L.divIcon({ className: "gis-vertex-handle", html: "<span></span>", iconSize: [16, 16], iconAnchor: [8, 8] })}
+          eventHandlers={{
+            dragend: event => {
+              const marker = event.target as L.Marker;
+              const next = [...points];
+              const moved = marker.getLatLng();
+              next[index] = [moved.lat, moved.lng];
+              onChange(next);
+            },
+          }}
+        />
+      ))}
+    </>
+  );
 }
 
 function LegendDot({ color, label }: { color: string; label: string }) {
