@@ -24,9 +24,9 @@ function Page() {
           <Button onClick={() => window.location.reload()}>
             <RefreshCw className="h-4 w-4" /> Try again
           </Button>
-          <Link to="/dashboard">
-            <Button variant="outline">Go home</Button>
-          </Link>
+          <Button asChild variant="outline">
+            <Link to="/dashboard">Go home</Link>
+          </Button>
         </div>
       </div>
     </AppShell>

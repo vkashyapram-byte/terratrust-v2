@@ -50,11 +50,11 @@ function Page() {
       title="Disputes"
       subtitle="Track and resolve property disputes with full audit history."
       actions={
-        <Link to="/disputes/new">
-          <Button className="rounded-full">
+        <Button asChild className="rounded-full">
+          <Link to="/disputes/new">
             <Plus className="h-4 w-4" /> File dispute
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       }
     >
       <KpiRow

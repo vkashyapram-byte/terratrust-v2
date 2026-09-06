@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { AIBadge, ConfidenceMeter, AIInsightCard } from "@/components/ai/AIPrimitives";
 import { SectionTitle, Pill } from "@/components/ui-ext/Scaffold";
@@ -11,6 +12,9 @@ export const Route = createFileRoute("/ai-timeline")({
 });
 
 function TimelinePage() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedEvent = ownershipChain[selectedIndex];
+
   return (
     <AppShell
       title="AI Ownership Timeline"
@@ -18,19 +22,35 @@ function TimelinePage() {
       actions={<AIBadge tone="success">Chain verified</AIBadge>}
     >
       <div className="grid gap-4 md:grid-cols-4">
-        <AIInsightCard title="Transfers detected" value="4" hint="1998 → 2019" tone="primary" />
+        <AIInsightCard
+          title="Transfers detected"
+          value="4"
+          hint="1998 → 2019"
+          tone="primary"
+          onClick={() => setSelectedIndex(0)}
+        />
         <AIInsightCard
           title="Chain confidence"
           value="94%"
           delta={{ value: 6, label: "MoM" }}
           tone="success"
+          onClick={() => setSelectedIndex(ownershipChain.length - 1)}
         />
-        <AIInsightCard title="Gaps" value="0" hint="No unexplained periods" tone="success" />
+        <AIInsightCard
+          title="Gaps"
+          value="0"
+          hint="No unexplained periods"
+          tone="success"
+          onClick={() => setSelectedIndex(selectedIndex)}
+        />
         <AIInsightCard
           title="Sources"
           value="7"
           hint="Land records, gazette, Aadhaar, court"
           tone="accent"
+          onClick={() =>
+            document.getElementById("source-documents")?.scrollIntoView({ behavior: "smooth" })
+          }
         />
       </div>
 
@@ -44,7 +64,12 @@ function TimelinePage() {
                 <span className="absolute -left-8 grid h-6 w-6 place-items-center rounded-full bg-surface ring-2 ring-primary/30">
                   <Calendar className="h-3 w-3 text-primary" />
                 </span>
-                <div className="surface-card p-4">
+                <button
+                  type="button"
+                  onClick={() => setSelectedIndex(i)}
+                  aria-pressed={selectedIndex === i}
+                  className={`surface-card w-full p-4 text-left transition hover:border-primary/40 hover:shadow-[var(--shadow-elev)] ${selectedIndex === i ? "border-primary ring-1 ring-primary/30" : ""}`}
+                >
                   <div className="flex items-center justify-between">
                     <p className="font-display text-xl text-foreground">{e.year}</p>
                     <Pill tone="primary">AI conf. {e.confidence}%</Pill>
@@ -62,7 +87,7 @@ function TimelinePage() {
                       <ListChecks className="h-3 w-3" /> 3 corroborating docs
                     </Pill>
                   </div>
-                </div>
+                </button>
               </li>
             ))}
           </ol>
@@ -72,16 +97,34 @@ function TimelinePage() {
           <div className="surface-card p-5">
             <SectionTitle eyebrow="Per-event certainty" title="Confidence by transfer" />
             <div className="space-y-3">
-              {ownershipChain.map((e) => (
-                <ConfidenceMeter
+              {ownershipChain.map((e, i) => (
+                <button
                   key={e.year}
-                  value={e.confidence}
-                  label={`${e.year} · ${e.owner.split(" ")[0]}`}
-                />
+                  type="button"
+                  onClick={() => setSelectedIndex(i)}
+                  className="w-full rounded-md p-1 text-left transition hover:bg-muted"
+                  aria-pressed={selectedIndex === i}
+                >
+                  <ConfidenceMeter
+                    value={e.confidence}
+                    label={`${e.year} · ${e.owner.split(" ")[0]}`}
+                  />
+                </button>
               ))}
             </div>
           </div>
-          <div className="surface-card p-5">
+          <div className="surface-card p-5" aria-live="polite">
+            <SectionTitle
+              eyebrow="Selected transfer"
+              title={`${selectedEvent.year} · ${selectedEvent.owner}`}
+            />
+            <p className="mt-2 text-sm text-muted-foreground">{selectedEvent.event}</p>
+            <p className="mt-3 text-xs text-muted-foreground">
+              AI confidence:{" "}
+              <span className="font-medium text-foreground">{selectedEvent.confidence}%</span>
+            </p>
+          </div>
+          <div id="source-documents" className="surface-card p-5">
             <SectionTitle eyebrow="Evidence base" title="Source documents" />
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>· 1998 Federal allocation gazette (vol. 89, no. 14)</li>

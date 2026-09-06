@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell, StatusBadge } from "@/components/layout/AppShell";
 import { StatCard } from "@/components/ui-ext/StatCard";
 import { TrustScore } from "@/components/ui-ext/TrustScore";
@@ -22,6 +23,9 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function Dashboard() {
+  const [timeRange, setTimeRange] = useState<"8" | "12">("8");
+  const chartData = timeRange === "8" ? verificationsOverTime : twelveMonthVerifications;
+
   return (
     <AppShell
       title="Good morning, Ananya"
@@ -54,14 +58,19 @@ function Dashboard() {
               <p className="font-medium">Verifications over time</p>
               <p className="text-xs text-muted-foreground">Across all your registered properties</p>
             </div>
-            <select className="h-8 rounded-md border border-border bg-surface px-2 text-xs">
-              <option>Last 8 months</option>
-              <option>Last 12 months</option>
+            <select
+              value={timeRange}
+              onChange={(event) => setTimeRange(event.target.value as "8" | "12")}
+              className="h-8 rounded-md border border-border bg-surface px-2 text-xs"
+              aria-label="Verification chart time range"
+            >
+              <option value="8">Last 8 months</option>
+              <option value="12">Last 12 months</option>
             </select>
           </div>
           <div className="mt-4 h-64">
             <ResponsiveContainer>
-              <AreaChart data={verificationsOverTime}>
+              <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="v" x1="0" x2="0" y1="0" y2="1">
                     <stop offset="0%" stopColor="oklch(0.45 0.08 195)" stopOpacity={0.4} />
@@ -225,6 +234,14 @@ function Dashboard() {
     </AppShell>
   );
 }
+
+const twelveMonthVerifications = [
+  { month: "Sep", verified: 4300, pending: 2100, disputed: 290 },
+  { month: "Oct", verified: 4700, pending: 2050, disputed: 280 },
+  { month: "Nov", verified: 5100, pending: 1980, disputed: 270 },
+  { month: "Dec", verified: 5600, pending: 1900, disputed: 250 },
+  ...verificationsOverTime,
+];
 
 function Row({ label, value, color }: { label: string; value: string; color: string }) {
   return (

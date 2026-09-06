@@ -21,12 +21,14 @@ function Page() {
           within 24 hours.
         </p>
         <div className="mt-2 flex gap-2">
-          <Link to="/properties/$id" params={{ id: "p_001" }}>
-            <Button>View passport</Button>
-          </Link>
-          <Link to="/dashboard">
-            <Button variant="outline">Back to dashboard</Button>
-          </Link>
+          <Button asChild>
+            <Link to="/properties/$id" params={{ id: "p_001" }}>
+              View passport
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/dashboard">Back to dashboard</Link>
+          </Button>
         </div>
       </div>
     </AppShell>

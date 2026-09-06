@@ -17,11 +17,11 @@ function Page() {
         title="No properties yet"
         description="Register your first property to mint a verifiable Property Passport in minutes."
         action={
-          <Link to="/properties/new">
-            <Button>
+          <Button asChild>
+            <Link to="/properties/new">
               <Plus className="h-4 w-4" /> Register property
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         }
       />
     </AppShell>

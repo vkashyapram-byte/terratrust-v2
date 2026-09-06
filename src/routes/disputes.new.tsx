@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Crumbs, Field, Stepper } from "@/components/ui-ext/Scaffold";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/disputes/new")({
   head: () => ({ meta: [{ title: "File dispute — TerraTrust AI" }] }),
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/disputes/new")({
 });
 
 function Page() {
+  const [submitted, setSubmitted] = useState(false);
   return (
     <AppShell
       title="File a dispute"
@@ -22,9 +23,7 @@ function Page() {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          toast.error(
-            "Dispute creation requires the authenticated disputes service, which is not configured in this build.",
-          );
+          setSubmitted(true);
         }}
         className="surface-card space-y-4 p-6"
       >
@@ -46,11 +45,20 @@ function Page() {
           <Input placeholder="Name or registered ID" />
         </Field>
         <div className="flex justify-end gap-2">
-          <Link to="/disputes">
-            <Button variant="outline">Cancel</Button>
-          </Link>
+          <Button asChild variant="outline">
+            <Link to="/disputes">Cancel</Link>
+          </Button>
           <Button type="submit">Continue to evidence</Button>
         </div>
+        {submitted && (
+          <p
+            className="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-foreground"
+            role="status"
+          >
+            Your draft is ready for evidence. Connect the authenticated disputes workflow before it
+            can be filed.
+          </p>
+        )}
       </form>
     </AppShell>
   );

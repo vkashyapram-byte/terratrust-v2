@@ -53,9 +53,11 @@ function Page() {
           </Field>
         </div>
         <div className="md:col-span-2 flex justify-end gap-2">
-          <Link to="/properties/$id" params={{ id }}>
-            <Button variant="outline">Cancel</Button>
-          </Link>
+          <Button asChild variant="outline">
+            <Link to="/properties/$id" params={{ id }}>
+              Cancel
+            </Link>
+          </Button>
           <Button type="submit">Send for recipient signature</Button>
         </div>
       </form>

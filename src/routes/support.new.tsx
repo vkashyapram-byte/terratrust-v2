@@ -50,9 +50,9 @@ function Page() {
           <Input defaultValue="Medium" />
         </Field>
         <div className="md:col-span-2 flex justify-end gap-2">
-          <Link to="/support">
-            <Button variant="outline">Cancel</Button>
-          </Link>
+          <Button asChild variant="outline">
+            <Link to="/support">Cancel</Link>
+          </Button>
           <Button type="submit" disabled={submitting}>
             {submitting ? "Opening email client…" : "Submit ticket"}
           </Button>

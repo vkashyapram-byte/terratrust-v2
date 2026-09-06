@@ -85,11 +85,11 @@ function Page() {
             4 properties · ₹1.08M total estimated value · 3 verified, 1 pending
           </p>
           <p className="text-xs text-muted-foreground">Estimated generation: ~12 seconds</p>
-          <Link to="/reports/$id" params={{ id: "R-2242" }} className="mt-2">
-            <Button className="w-full">
+          <Button asChild className="mt-2 w-full">
+            <Link to="/reports/$id" params={{ id: "R-2242" }}>
               <Sparkles className="h-4 w-4" /> Generate report
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </AppShell>

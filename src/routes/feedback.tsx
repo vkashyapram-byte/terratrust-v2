@@ -62,9 +62,9 @@ function Page() {
           <Input placeholder="if you'd like a reply" />
         </Field>
         <div className="md:col-span-2 flex justify-end gap-2">
-          <Link to="/dashboard">
-            <Button variant="outline">Cancel</Button>
-          </Link>
+          <Button asChild variant="outline">
+            <Link to="/dashboard">Cancel</Link>
+          </Button>
           <Button type="submit" disabled={submitting || rating === 0}>
             {submitting ? "Opening email client…" : "Send feedback"}
           </Button>

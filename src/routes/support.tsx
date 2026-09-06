@@ -50,11 +50,11 @@ function Page() {
       title="Support"
       subtitle="Reach the TerraTrust team and track your tickets."
       actions={
-        <Link to="/support/new">
-          <Button className="rounded-full">
+        <Button asChild className="rounded-full">
+          <Link to="/support/new">
             <Plus className="h-4 w-4" /> New ticket
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       }
     >
       <KpiRow

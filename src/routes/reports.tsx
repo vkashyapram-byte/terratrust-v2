@@ -73,11 +73,11 @@ function Page() {
       title="Reports"
       subtitle="Auto-generated and on-demand reports across your portfolio."
       actions={
-        <Link to="/reports/new">
-          <Button className="rounded-full">
+        <Button asChild className="rounded-full">
+          <Link to="/reports/new">
             <Plus className="h-4 w-4" /> New report
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       }
     >
       <DataTable

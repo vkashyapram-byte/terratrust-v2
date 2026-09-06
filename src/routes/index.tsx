@@ -112,17 +112,15 @@ function Hero() {
             transition={{ delay: 0.25 }}
             className="mt-8 flex flex-wrap gap-3"
           >
-            <Link to="/register">
-              <Button size="lg" className="rounded-full px-6 shadow-[var(--shadow-glow)]">
+            <Button asChild size="lg" className="rounded-full px-6 shadow-[var(--shadow-glow)]">
+              <Link to="/register">
                 Create a Property Passport <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             <StartDemoButton className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90" />
-            <Link to="/dashboard">
-              <Button size="lg" variant="ghost" className="rounded-full px-6">
-                Skip the tour →
-              </Button>
-            </Link>
+            <Button asChild size="lg" variant="ghost" className="rounded-full px-6">
+              <Link to="/dashboard">Skip the tour →</Link>
+            </Button>
           </motion.div>
           <div className="mt-10 grid max-w-md grid-cols-3 gap-6 text-sm">
             <Quick stat="2.4M" label="parcels indexed" />
@@ -475,11 +473,11 @@ function HowItWorks() {
               From paper claim to verified passport — in days.
             </h2>
           </div>
-          <Link to="/register">
-            <Button variant="outline" className="rounded-full">
+          <Button asChild variant="outline" className="rounded-full">
+            <Link to="/register">
               Start a passport <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
         <div className="grid gap-4 md:grid-cols-5">
           {steps.map((s, i) => (
@@ -721,16 +719,12 @@ function Contact() {
             first Property Passport today.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link to="/register">
-              <Button size="lg" className="rounded-full px-6">
-                Create a passport
-              </Button>
-            </Link>
-            <a href="mailto:hello@terratrust.ai">
-              <Button size="lg" variant="outline" className="rounded-full px-6">
-                Contact sales
-              </Button>
-            </a>
+            <Button asChild size="lg" className="rounded-full px-6">
+              <Link to="/register">Create a passport</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="rounded-full px-6">
+              <a href="mailto:hello@terratrust.ai">Contact sales</a>
+            </Button>
           </div>
         </div>
       </div>

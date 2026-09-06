@@ -131,9 +131,11 @@ function MapPage() {
                 {sel.area.toLocaleString()} m²
               </p>
             </div>
-            <Link to="/properties/$id" params={{ id: sel.id }}>
-              <Button>Open passport</Button>
-            </Link>
+            <Button asChild>
+              <Link to="/properties/$id" params={{ id: sel.id }}>
+                Open passport
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

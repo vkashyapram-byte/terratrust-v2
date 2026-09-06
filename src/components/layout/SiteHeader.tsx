@@ -31,16 +31,12 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
-          <Link to="/login">
-            <Button variant="ghost" size="sm">
-              Sign in
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button size="sm" className="rounded-full px-4">
-              Get started
-            </Button>
-          </Link>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/login">Sign in</Link>
+          </Button>
+          <Button asChild size="sm" className="rounded-full px-4">
+            <Link to="/register">Get started</Link>
+          </Button>
         </div>
         <button className="md:hidden" onClick={() => setOpen((v) => !v)} aria-label="Menu">
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -57,11 +53,9 @@ export function SiteHeader() {
             <Link to="/login" className="text-sm">
               Sign in
             </Link>
-            <Link to="/register">
-              <Button size="sm" className="w-full">
-                Get started
-              </Button>
-            </Link>
+            <Button asChild size="sm" className="w-full">
+              <Link to="/register">Get started</Link>
+            </Button>
           </div>
         </div>
       )}

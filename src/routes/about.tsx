@@ -78,11 +78,9 @@ function Page() {
           <p className="mt-2 text-sm opacity-90">
             We're hiring engineers, surveyors, and policy minds.
           </p>
-          <Link to="/contact">
-            <Button variant="secondary" className="mt-5">
-              Get in touch
-            </Button>
-          </Link>
+          <Button asChild variant="secondary" className="mt-5">
+            <Link to="/contact">Get in touch</Link>
+          </Button>
         </div>
       </main>
       <SiteFooter />

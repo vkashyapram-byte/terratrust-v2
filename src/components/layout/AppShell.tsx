@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { currentUser, notifications } from "@/lib/mock-data";
+import { notifications } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { canAccessPath, useAccessControl } from "@/lib/access-control";
@@ -113,7 +113,7 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
-  const { role, signOut } = useAccessControl();
+  const { role, signOut, profile } = useAccessControl();
   const unread = notifications.filter((n) => !n.read).length;
   const canAccess = canAccessPath(role, pathname);
   const [searchTerm, setSearchTerm] = useState("");
@@ -210,11 +210,16 @@ export function AppShell({
             <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-2 py-1 pr-3">
               <Avatar className="h-7 w-7">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                  AO
+                  {profile.name
+                    .split(" ")
+                    .map((part) => part[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden text-left md:block">
-                <p className="text-xs font-medium leading-tight">{currentUser.name}</p>
+                <p className="text-xs font-medium leading-tight">{profile.name}</p>
                 <p className="text-[10px] capitalize text-muted-foreground">{role}</p>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { currentUser } from "./mock-data";
 import type { Role } from "./types";
 
 const ROLE_STORAGE_KEY = "terratrust.role";
@@ -11,14 +12,39 @@ const protectedAreas: Array<{ prefix: string; roles: Role[] }> = [
   { prefix: "/attestations", roles: ["citizen", "verifier"] },
 ];
 
+export type ProfileDetails = {
+  name: string;
+  email: string;
+  region: string;
+  phone: string;
+  bio: string;
+};
+
+const initialProfile: ProfileDetails = {
+  name: currentUser.name,
+  email: currentUser.email,
+  region: currentUser.region ?? "",
+  phone: "+234 803 555 0102",
+  bio: "Owner of family properties in Bengaluru and Pune. Active in community verification.",
+};
+
 const roleContext = createContext<{
   role: Role;
   setRole: (role: Role) => void;
   signOut: () => void;
-}>({ role: "citizen", setRole: () => undefined, signOut: () => undefined });
+  profile: ProfileDetails;
+  updateProfile: (profile: ProfileDetails) => void;
+}>({
+  role: "citizen",
+  setRole: () => undefined,
+  signOut: () => undefined,
+  profile: initialProfile,
+  updateProfile: () => undefined,
+});
 
 export function AccessControlProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<Role>("citizen");
+  const [profile, setProfile] = useState<ProfileDetails>(initialProfile);
 
   useEffect(() => {
     const savedRole = window.localStorage.getItem(ROLE_STORAGE_KEY);
@@ -32,10 +58,15 @@ export function AccessControlProvider({ children }: { children: ReactNode }) {
 
   const signOut = () => {
     setRoleState("citizen");
+    setProfile(initialProfile);
     window.localStorage.removeItem(ROLE_STORAGE_KEY);
   };
 
-  return <roleContext.Provider value={{ role, setRole, signOut }}>{children}</roleContext.Provider>;
+  return (
+    <roleContext.Provider value={{ role, setRole, signOut, profile, updateProfile: setProfile }}>
+      {children}
+    </roleContext.Provider>
+  );
 }
 
 export function useAccessControl() {

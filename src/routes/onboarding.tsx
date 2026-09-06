@@ -48,12 +48,12 @@ function Page() {
             ))}
           </ol>
           <div className="mt-6 flex justify-end gap-2">
-            <Link to="/dashboard">
-              <Button variant="outline">Skip for now</Button>
-            </Link>
-            <Link to="/complete-profile">
-              <Button>Begin onboarding</Button>
-            </Link>
+            <Button asChild variant="outline">
+              <Link to="/dashboard">Skip for now</Link>
+            </Button>
+            <Button asChild>
+              <Link to="/complete-profile">Begin onboarding</Link>
+            </Button>
           </div>
         </div>
       </main>

@@ -106,11 +106,11 @@ function Page() {
                     </li>
                   ))}
                 </ul>
-                <Link to="/register" className="mt-4">
-                  <Button className="w-full" variant={p.popular ? "default" : "outline"}>
+                <Button asChild className="mt-4 w-full" variant={p.popular ? "default" : "outline"}>
+                  <Link to="/register">
                     {p.name === "Institution" ? "Contact sales" : "Get started"}
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             ))}
           </div>
