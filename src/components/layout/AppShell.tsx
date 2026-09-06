@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Map, FileBadge, Sparkles, Users2, Briefcase,
   Building2, BarChart3, ShieldCheck, Bell, User, Settings, HelpCircle, LogOut,
   Search, MessageSquare, FileText, Gavel, ShieldAlert, Banknote, LifeBuoy,
-  Brain, ScanLine, Activity, Leaf, Compass, Satellite, ListChecks, Lightbulb,
+  Brain, ScanLine, Activity, Compass, ListChecks, Lightbulb,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -32,8 +32,6 @@ const nav = [
     { to: "/ai-risk", label: "Risk analysis", icon: Activity },
     { to: "/ai-confidence", label: "Confidence score", icon: ShieldCheck },
     { to: "/ai-boundary", label: "Boundary detection", icon: Compass },
-    { to: "/ai-satellite", label: "Satellite compare", icon: Satellite },
-    { to: "/ai-land-health", label: "Land health", icon: Leaf },
     { to: "/ai-timeline", label: "Ownership timeline", icon: ListChecks },
     { to: "/ai-recommendations", label: "Recommendations", icon: Lightbulb },
     { to: "/ai-summary", label: "Document summary", icon: FileText },

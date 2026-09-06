@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { AIInsightCard, ScoreRing, AIBadge, ConfidenceMeter } from "@/components/ai/AIPrimitives";
 import { SectionTitle, Pill } from "@/components/ui-ext/Scaffold";
-import { Brain, Sparkles, Satellite, Leaf, ShieldAlert, FileText, Activity, Compass, ListChecks, Lightbulb, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { Brain, Sparkles, ShieldAlert, FileText, Activity, Compass, ListChecks, Lightbulb, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
 import { valuationHistory } from "@/lib/ai-mock";
 
@@ -20,8 +20,6 @@ const modules = [
   { to: "/ai-risk", icon: Activity, title: "Risk Analysis", desc: "Title, boundary, climate, market, fraud composite.", stat: "Low / 22", tag: "Stable" },
   { to: "/ai-confidence", icon: ShieldCheck, title: "Confidence Score", desc: "Calibrated trust certainty per signal source.", stat: "92%", tag: "Calibrated" },
   { to: "/ai-boundary", icon: Compass, title: "Boundary Detection", desc: "AI-extracted parcel polygons vs. survey ground truth.", stat: "0.4m drift", tag: "Within tol." },
-  { to: "/ai-satellite", icon: Satellite, title: "Satellite Comparison", desc: "Multi-temporal imagery change detection.", stat: "12 epochs", tag: "Fresh 4d" },
-  { to: "/ai-land-health", icon: Leaf, title: "Land Health Score", desc: "NDVI, moisture, erosion, soil carbon, slope.", stat: "B+ / 78", tag: "Healthy" },
   { to: "/ai-recommendations", icon: Lightbulb, title: "AI Recommendations", desc: "Prioritized actions to lift trust score this week.", stat: "5 actions", tag: "+13 pts" },
   { to: "/ai-summary", icon: FileText, title: "Document Summary", desc: "1-paragraph human briefing per uploaded doc.", stat: "Auto", tag: "Plain-English" },
   { to: "/ai-suggestions", icon: Sparkles, title: "Verification Suggestions", desc: "Next verification steps with expected lift.", stat: "5 paths", tag: "Smart" },
@@ -36,7 +34,6 @@ function AIOverview() {
         <AIInsightCard icon={<Brain className="h-3 w-3 text-primary" />} title="Composite Trust" value="92" delta={{ value: 4, label: "vs last week" }} hint="Across 12 properties" tone="primary" />
         <AIInsightCard icon={<Sparkles className="h-3 w-3 text-primary" />} title="Portfolio AV" value="₹1.84B" delta={{ value: 6, label: "QoQ" }} hint="AI-modeled valuation" tone="accent" />
         <AIInsightCard icon={<ShieldAlert className="h-3 w-3 text-warning-foreground" />} title="Open fraud signals" value="3" hint="2 medium · 1 low" tone="warning" />
-        <AIInsightCard icon={<Activity className="h-3 w-3 text-success" />} title="Land health avg." value="78" delta={{ value: 2, label: "MoM" }} hint="NDVI + moisture composite" tone="success" />
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_320px]">
