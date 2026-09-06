@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { AIBadge, ConfidenceMeter, AIInsightCard, ReasoningTrace, VerdictBanner } from "@/components/ai/AIPrimitives";
 import { SectionTitle, Pill } from "@/components/ui-ext/Scaffold";
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, CheckCircle2 } from "lucide-react";
+import { Upload, FileText, CheckCircle2, LockKeyhole } from "lucide-react";
 import { ocrFields, recommendationsForDoc } from "@/lib/ai-mock";
 
 export const Route = createFileRoute("/ai-ocr")({
@@ -16,22 +16,31 @@ function OCRPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState("Certificate of Occupancy.pdf");
   const [selectedField, setSelectedField] = useState<string | null>(null);
-  const [uploadMessage, setUploadMessage] = useState("Ready for a document upload.");
+  const [uploadState, setUploadState] = useState<"ready" | "uploaded" | "verified">("ready");
 
   const jumpTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "center" });
   const handleFile = (file?: File) => {
     if (!file) return;
     setSelectedFile(file.name);
-    setUploadMessage(`Queued ${file.name} for OCR extraction.`);
+    setUploadState("uploaded");
+    window.setTimeout(() => setUploadState("verified"), 900);
   };
+  const uploadMessage = uploadState === "verified"
+    ? "Uploaded · verified and validated."
+    : uploadState === "uploaded"
+      ? "Uploaded · verification in progress."
+      : "Ready for a document upload.";
 
   return (
     <AppShell
       title="Document OCR & Extraction"
       subtitle="Pull structured fields out of any title document — verified line by line."
       actions={<>
-        <input ref={fileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" onChange={event => handleFile(event.target.files?.[0])} />
-        <Button variant="outline" onClick={() => fileInputRef.current?.click()}><Upload className="h-4 w-4" /> Upload</Button>
+        <input ref={fileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" disabled={uploadState === "verified"} onChange={event => handleFile(event.target.files?.[0])} />
+        <Button variant="outline" disabled={uploadState === "verified"} onClick={() => fileInputRef.current?.click()}>
+          {uploadState === "verified" ? <LockKeyhole className="h-4 w-4" /> : <Upload className="h-4 w-4" />}
+          {uploadState === "verified" ? "Upload locked" : "Upload"}
+        </Button>
       </>}
     >
       <div className="grid gap-4 md:grid-cols-4">
@@ -44,12 +53,13 @@ function OCRPage() {
       <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 text-sm text-muted-foreground">
         <FileText className="h-4 w-4 text-primary" />
         <span className="font-medium text-foreground">{selectedFile}</span>
-        <span>· {uploadMessage}</span>
+        <span className={uploadState === "verified" ? "text-success" : ""}>· {uploadMessage}</span>
+        {uploadState === "verified" && <LockKeyhole className="ml-auto h-4 w-4 text-success" aria-label="Upload locked" />}
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_440px]">
         <div id="ocr-source" className="surface-card p-6">
-          <SectionTitle eyebrow="Source · page 2" title={selectedFile} action={<AIBadge>OCR v3.1</AIBadge>} />
+          <SectionTitle eyebrow="Source · page 2" title={selectedFile} action={<AIBadge>OCR 0.1A</AIBadge>} />
           <div className="relative overflow-hidden rounded-xl border border-border bg-[oklch(0.985_0.005_95)] p-6">
             <div className="absolute right-4 top-4"><Pill tone="success"><CheckCircle2 className="h-3 w-3" /> Stamped & valid</Pill></div>
             <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Lagos State Land Bureau</p>
