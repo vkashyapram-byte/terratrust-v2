@@ -29,13 +29,25 @@ import {
   Compass,
   ListChecks,
   Lightbulb,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { notifications } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { canAccessPath, useAccessControl } from "@/lib/access-control";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { canAccessPath, useAccessControl, ROLE_PROFILES } from "@/lib/access-control";
 import { canAccessNavItem } from "@/lib/navAccessConfig";
 
 const nav = [
@@ -114,7 +126,7 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
-  const { role, signOut, profile } = useAccessControl();
+  const { role, setRole, signOut, profile } = useAccessControl();
   const unread = notifications.filter((n) => !n.read).length;
   const canAccess = canAccessPath(role, pathname);
   const [searchTerm, setSearchTerm] = useState("");
@@ -213,22 +225,79 @@ export function AppShell({
                 <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />
               )}
             </Link>
-            <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-2 py-1 pr-3">
-              <Avatar className="h-7 w-7">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                  {profile.name
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")
-                    .slice(0, 2)
-                    .toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden text-left md:block">
-                <p className="text-xs font-medium leading-tight">{profile.name}</p>
-                <p className="text-[10px] capitalize text-muted-foreground">{role}</p>
-              </div>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="flex items-center gap-2 rounded-full border border-border bg-surface px-2 py-1 pr-3 transition hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                >
+                  <Avatar className="h-7 w-7">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                      {profile.name
+                        .split(" ")
+                        .map((part) => part[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden text-left md:block">
+                    <p className="text-xs font-medium leading-tight">{profile.name}</p>
+                    <p className="text-[10px] capitalize text-muted-foreground">{role}</p>
+                  </div>
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground ml-0.5 hidden md:block" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col gap-0.5">
+                    <p className="text-xs font-semibold text-foreground">{profile.name}</p>
+                    <p className="text-[11px] text-muted-foreground">{profile.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider px-2 py-1">
+                    Switch Account / Role
+                  </DropdownMenuLabel>
+                  {(["citizen", "surveyor", "officer", "verifier", "bank", "admin"] as const).map((r) => {
+                    const item = ROLE_PROFILES[r];
+                    const isCurrent = role === r;
+                    return (
+                      <DropdownMenuItem
+                        key={r}
+                        onClick={() => {
+                          setRole(r);
+                          toast.success(`Switched to ${item.name} (${item.roleLabel})`);
+                        }}
+                        className="flex items-center justify-between cursor-pointer px-2 py-1.5"
+                      >
+                        <div className="min-w-0 pr-2">
+                          <p className="text-xs font-medium truncate">{item.roleLabel}</p>
+                          <p className="text-[10px] text-muted-foreground truncate">{item.email}</p>
+                        </div>
+                        {isCurrent && <Check className="h-3.5 w-3.5 text-primary shrink-0" />}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/profile" className="flex items-center gap-2 text-xs">
+                    <User className="h-3.5 w-3.5" /> View Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    signOut();
+                    navigate({ to: "/login" });
+                  }}
+                  className="flex items-center gap-2 text-xs text-destructive focus:text-destructive cursor-pointer"
+                >
+                  <LogOut className="h-3.5 w-3.5" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 

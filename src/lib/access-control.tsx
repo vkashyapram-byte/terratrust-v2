@@ -21,12 +21,55 @@ export type ProfileDetails = {
   bio: string;
 };
 
-const initialProfile: ProfileDetails = {
-  name: currentUser.name,
-  email: currentUser.email,
-  region: currentUser.region ?? "",
-  phone: "+234 803 555 0102",
-  bio: "Owner of family properties in Bengaluru and Pune. Active in community verification.",
+export const ROLE_PROFILES: Record<Role, ProfileDetails & { roleLabel: string }> = {
+  citizen: {
+    roleLabel: "Citizen",
+    name: "Ananya Sharma",
+    email: "ananya@terratrust.ai",
+    region: "Bengaluru, India",
+    phone: "+91 98765 43210",
+    bio: "Owner of family properties in Bengaluru and Pune. Active in community verification.",
+  },
+  surveyor: {
+    roleLabel: "Surveyor",
+    name: "Rohan Verma",
+    email: "rohan@surveyor.in",
+    region: "Pune, India",
+    phone: "+91 98765 43211",
+    bio: "Licensed Land Surveyor with 10+ years experience in drone photogrammetry and boundary audits.",
+  },
+  officer: {
+    roleLabel: "Gov. Officer",
+    name: "Kavya Patel",
+    email: "kavya@delhi.gov.in",
+    region: "New Delhi, India",
+    phone: "+91 98765 43212",
+    bio: "Senior Land Revenue Officer managing digital registry & title authentication.",
+  },
+  admin: {
+    roleLabel: "Administrator",
+    name: "System Admin",
+    email: "admin@terratrust.ai",
+    region: "HQ, India",
+    phone: "+91 98765 43215",
+    bio: "TerraTrust AI system administrator with full governance and security permissions.",
+  },
+  verifier: {
+    roleLabel: "Verifier",
+    name: "Tara Sen",
+    email: "tara@verify.community",
+    region: "Mumbai, India",
+    phone: "+91 98765 43213",
+    bio: "Certified Community Verifier validating title deeds & field reports.",
+  },
+  bank: {
+    roleLabel: "Bank",
+    name: "Access Bank Ops",
+    email: "ops@accessbank.com",
+    region: "Financial District, India",
+    phone: "+91 98765 43214",
+    bio: "Mortgage risk analyst evaluating property valuation & collateral trust scores.",
+  },
 };
 
 const roleContext = createContext<{
@@ -39,27 +82,31 @@ const roleContext = createContext<{
   role: "citizen",
   setRole: () => undefined,
   signOut: () => undefined,
-  profile: initialProfile,
+  profile: ROLE_PROFILES.citizen,
   updateProfile: () => undefined,
 });
 
 export function AccessControlProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<Role>("citizen");
-  const [profile, setProfile] = useState<ProfileDetails>(initialProfile);
+  const [profile, setProfile] = useState<ProfileDetails>(ROLE_PROFILES.citizen);
 
   useEffect(() => {
     const savedRole = window.localStorage.getItem(ROLE_STORAGE_KEY);
-    if (savedRole && isRole(savedRole)) setRoleState(savedRole);
+    if (savedRole && isRole(savedRole)) {
+      setRoleState(savedRole);
+      setProfile(ROLE_PROFILES[savedRole]);
+    }
   }, []);
 
   const setRole = (nextRole: Role) => {
     setRoleState(nextRole);
+    setProfile(ROLE_PROFILES[nextRole]);
     window.localStorage.setItem(ROLE_STORAGE_KEY, nextRole);
   };
 
   const signOut = () => {
     setRoleState("citizen");
-    setProfile(initialProfile);
+    setProfile(ROLE_PROFILES.citizen);
     window.localStorage.removeItem(ROLE_STORAGE_KEY);
   };
 

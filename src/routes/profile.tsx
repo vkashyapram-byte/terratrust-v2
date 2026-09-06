@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -19,17 +19,30 @@ function ProfilePage() {
   const { role, profile, updateProfile } = useAccessControl();
   const [draft, setDraft] = useState<ProfileDetails>(profile);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setDraft(profile);
+  }, [profile]);
+
   const unavailable = () =>
     toast.error(
       "Profile updates require the authenticated profiles service, which is not configured in this build.",
     );
+
+  const initials = profile.name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <AppShell title="Profile" subtitle="Your identity, verification status, and contact info.">
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <div className="surface-card flex flex-col items-center p-6 text-center">
           <Avatar className="h-24 w-24">
             <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-2xl text-primary-foreground">
-              AO
+              {initials}
             </AvatarFallback>
           </Avatar>
           <p className="mt-4 font-display text-2xl">{profile.name}</p>
