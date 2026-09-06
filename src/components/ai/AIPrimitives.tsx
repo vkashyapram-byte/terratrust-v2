@@ -105,7 +105,7 @@ export function RiskGauge({ value, label = "Risk Score" }: { value: number; labe
 
 /* ---------------- AI Insight Card ---------------- */
 export function AIInsightCard({
-  icon, title, value, delta, hint, tone = "primary",
+  icon, title, value, delta, hint, tone = "primary", onClick,
 }: {
   icon?: ReactNode;
   title: string;
@@ -113,6 +113,7 @@ export function AIInsightCard({
   delta?: { value: number; label?: string };
   hint?: string;
   tone?: "primary" | "success" | "warning" | "danger" | "accent";
+  onClick?: () => void;
 }) {
   const ring = {
     primary: "ring-primary/15 from-primary/8",
@@ -122,7 +123,13 @@ export function AIInsightCard({
     accent: "ring-accent/30 from-accent/15",
   }[tone];
   return (
-    <div className={cn("relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br to-transparent p-5 ring-1", ring)}>
+    <div
+      className={cn("relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br to-transparent p-5 ring-1", ring, onClick && "cursor-pointer text-left transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-elev)]")}
+      onClick={onClick}
+      onKeyDown={event => { if (onClick && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); onClick(); } }}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           {icon ?? <Sparkles className="h-3 w-3 text-primary" />} {title}

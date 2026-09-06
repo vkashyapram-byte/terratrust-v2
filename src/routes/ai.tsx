@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { AIInsightCard, ScoreRing, AIBadge, ConfidenceMeter } from "@/components/ai/AIPrimitives";
 import { SectionTitle, Pill } from "@/components/ui-ext/Scaffold";
-import { Brain, Sparkles, Satellite, Leaf, ShieldAlert, ScanLine, Activity, Compass, ListChecks, Lightbulb, FileText, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { Brain, Sparkles, Satellite, Leaf, ShieldAlert, FileText, Activity, Compass, ListChecks, Lightbulb, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
 import { valuationHistory } from "@/lib/ai-mock";
 
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/ai")({
 const modules = [
   { to: "/ai-passport", icon: FileBadge2, title: "AI Property Passport", desc: "Composite, explainable identity for every parcel.", stat: "96 / 100", tag: "Trusted" },
   { to: "/ai-valuation", icon: Sparkles, title: "AI Valuation Engine", desc: "Defensible land values with comp & macro signals.", stat: "₦312M", tag: "+8.4% YoY" },
-  { to: "/ai-ocr", icon: ScanLine, title: "Document OCR", desc: "Extract & verify fields from any title document.", stat: "8 fields", tag: "94% conf." },
+  { to: "/ai-ocr", icon: FileText, title: "Document OCR", desc: "Extract & verify fields from any title document.", stat: "8 fields", tag: "94% conf." },
   { to: "/ai-fraud", icon: ShieldAlert, title: "Fraud Detection", desc: "Duplicate boundaries, forged stamps, signature clusters.", stat: "3 flags", tag: "Live" },
   { to: "/ai-timeline", icon: ListChecks, title: "Ownership Timeline", desc: "Reconstructed chain of custody from 1998.", stat: "4 events", tag: "Verified" },
   { to: "/ai-risk", icon: Activity, title: "Risk Analysis", desc: "Title, boundary, climate, market, fraud composite.", stat: "Low / 22", tag: "Stable" },

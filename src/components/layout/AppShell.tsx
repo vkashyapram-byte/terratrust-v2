@@ -27,7 +27,7 @@ const nav = [
     { to: "/ai", label: "AI Overview", icon: Brain },
     { to: "/ai-passport", label: "AI Passport", icon: FileBadge },
     { to: "/ai-valuation", label: "Valuation engine", icon: Sparkles },
-    { to: "/ai-ocr", label: "Document OCR", icon: ScanLine },
+    { to: "/ai-ocr", label: "Document OCR", icon: FileText },
     { to: "/ai-fraud", label: "Fraud detection", icon: ShieldAlert },
     { to: "/ai-risk", label: "Risk analysis", icon: Activity },
     { to: "/ai-confidence", label: "Confidence score", icon: ShieldCheck },
