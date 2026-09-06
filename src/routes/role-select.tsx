@@ -4,24 +4,26 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Users2, Briefcase, Building2, ShieldCheck, Banknote, HeartHandshake } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAccessControl } from "@/lib/access-control";
+import type { Role } from "@/lib/types";
 
 export const Route = createFileRoute("/role-select")({
   head: () => ({ meta: [{ title: "Choose your role — TerraTrust AI" }] }),
   component: RoleSelect,
 });
 
-const roles = [
+const roles: Array<{ id: Role; icon: typeof Users2; t: string; d: string }> = [
   { id: "citizen", icon: Users2, t: "Citizen", d: "Manage and verify your own land." },
   { id: "surveyor", icon: Briefcase, t: "Surveyor", d: "Capture GIS boundaries on assignment." },
   { id: "officer", icon: Building2, t: "Government officer", d: "Operate registries and resolve disputes." },
   { id: "verifier", icon: HeartHandshake, t: "Community verifier", d: "Attest occupancy in your neighborhood." },
   { id: "admin", icon: ShieldCheck, t: "Administrator", d: "Manage platform operations and policy." },
-  { id: "bank", icon: Banknote, t: "Bank (coming soon)", d: "Lend against verified collateral." },
 ];
 
 function RoleSelect() {
-  const [picked, setPicked] = useState("citizen");
+  const [picked, setPicked] = useState<Role>("citizen");
   const navigate = useNavigate();
+  const { setRole } = useAccessControl();
   return (
     <AuthLayout title="Pick your role" subtitle="This shapes the workspace we build for you. You can change it later.">
       <div className="grid gap-3">
@@ -41,7 +43,7 @@ function RoleSelect() {
           </button>
         ))}
       </div>
-      <Button className="mt-6 h-11 w-full" onClick={() => navigate({ to: "/complete-profile" })}>Continue</Button>
+      <Button className="mt-6 h-11 w-full" onClick={() => { setRole(picked); navigate({ to: "/complete-profile" }); }}>Continue</Button>
     </AuthLayout>
   );
 }

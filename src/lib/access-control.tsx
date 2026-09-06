@@ -1,0 +1,52 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { Role } from "./types";
+
+const ROLE_STORAGE_KEY = "terratrust.role";
+
+const protectedAreas: Array<{ prefix: string; roles: Role[] }> = [
+  { prefix: "/surveyor", roles: ["surveyor"] },
+  { prefix: "/government", roles: ["officer"] },
+  { prefix: "/bank", roles: ["bank"] },
+  { prefix: "/admin", roles: ["admin"] },
+];
+
+const roleContext = createContext<{
+  role: Role;
+  setRole: (role: Role) => void;
+  signOut: () => void;
+}>({ role: "citizen", setRole: () => undefined, signOut: () => undefined });
+
+export function AccessControlProvider({ children }: { children: ReactNode }) {
+  const [role, setRoleState] = useState<Role>("citizen");
+
+  useEffect(() => {
+    const savedRole = window.localStorage.getItem(ROLE_STORAGE_KEY);
+    if (savedRole && isRole(savedRole)) setRoleState(savedRole);
+  }, []);
+
+  const setRole = (nextRole: Role) => {
+    setRoleState(nextRole);
+    window.localStorage.setItem(ROLE_STORAGE_KEY, nextRole);
+  };
+
+  const signOut = () => {
+    setRoleState("citizen");
+    window.localStorage.removeItem(ROLE_STORAGE_KEY);
+  };
+
+  return <roleContext.Provider value={{ role, setRole, signOut }}>{children}</roleContext.Provider>;
+}
+
+export function useAccessControl() {
+  return useContext(roleContext);
+}
+
+export function canAccessPath(role: Role, pathname: string) {
+  if (role === "admin") return true;
+  const area = protectedAreas.find(({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+  return !area || area.roles.includes(role);
+}
+
+function isRole(value: string): value is Role {
+  return ["citizen", "surveyor", "officer", "verifier", "admin", "bank"].includes(value);
+}

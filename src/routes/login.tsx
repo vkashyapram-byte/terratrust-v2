@@ -4,6 +4,8 @@ import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAccessControl } from "@/lib/access-control";
+import type { Role } from "@/lib/types";
 
 
 export const Route = createFileRoute("/login")({
@@ -12,24 +14,29 @@ export const Route = createFileRoute("/login")({
 });
 
 const demoAccounts = [
-  { role: "Citizen", email: "amara@terratrust.ai", pass: "Terra@2026", to: "/dashboard" as const },
-  { role: "Surveyor", email: "idris@surveyor.ng", pass: "Survey@2026", to: "/surveyor" as const },
-  { role: "Gov. officer", email: "kbello@lagos.gov.ng", pass: "Gov@2026", to: "/government" as const },
-  { role: "Administrator", email: "admin@terratrust.ai", pass: "Admin@2026", to: "/admin" as const },
-  { role: "Bank", email: "ops@accessbank.com", pass: "Bank@2026", to: "/bank" as const },
+  { role: "Citizen", accessRole: "citizen" as Role, email: "amara@terratrust.ai", pass: "Terra@2026", to: "/dashboard" as const },
+  { role: "Surveyor", accessRole: "surveyor" as Role, email: "idris@surveyor.ng", pass: "Survey@2026", to: "/surveyor" as const },
+  { role: "Gov. officer", accessRole: "officer" as Role, email: "kbello@lagos.gov.ng", pass: "Gov@2026", to: "/government" as const },
+  { role: "Administrator", accessRole: "admin" as Role, email: "admin@terratrust.ai", pass: "Admin@2026", to: "/admin" as const },
+  { role: "Bank", accessRole: "bank" as Role, email: "ops@accessbank.com", pass: "Bank@2026", to: "/bank" as const },
 ];
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { setRole } = useAccessControl();
   const [email, setEmail] = useState(demoAccounts[0].email);
   const [password, setPassword] = useState(demoAccounts[0].pass);
+  const signIn = (account: typeof demoAccounts[number]) => {
+    setRole(account.accessRole);
+    navigate({ to: account.to });
+  };
   return (
     <AuthLayout
       title="Welcome back"
       subtitle="Sign in to manage your Property Passports and verifications."
       footer={<>Don't have an account? <Link to="/register" className="font-medium text-primary">Create one</Link></>}
     >
-      <form onSubmit={(e) => { e.preventDefault(); navigate({ to: "/dashboard" }); }} className="grid gap-4">
+      <form onSubmit={(e) => { e.preventDefault(); const account = demoAccounts.find(a => a.email === email && a.pass === password) ?? demoAccounts[0]; signIn(account); }} className="grid gap-4">
         <Button type="button" variant="outline" className="h-11">
           <GoogleIcon /> Continue with Google
         </Button>
@@ -66,7 +73,7 @@ function LoginPage() {
                 size="sm"
                 variant="outline"
                 className="shrink-0 rounded-full"
-                onClick={() => { setEmail(a.email); setPassword(a.pass); navigate({ to: a.to }); }}
+                onClick={() => { setEmail(a.email); setPassword(a.pass); signIn(a); }}
               >
                 Use
               </Button>

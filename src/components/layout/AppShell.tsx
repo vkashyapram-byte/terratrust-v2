@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { currentUser, notifications } from "@/lib/mock-data";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { canAccessPath, useAccessControl } from "@/lib/access-control";
 
 const nav = [
   { group: "Workspace", items: [
@@ -75,7 +76,9 @@ export function AppShell({
   actions?: ReactNode;
 }) {
   const pathname = useRouterState({ select: s => s.location.pathname });
+  const { role, signOut } = useAccessControl();
   const unread = notifications.filter(n => !n.read).length;
+  const canAccess = canAccessPath(role, pathname);
 
   return (
     <div className="grid min-h-screen w-full grid-cols-[260px_1fr] bg-background">
@@ -88,7 +91,7 @@ export function AppShell({
             <div key={group.group}>
               <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{group.group}</p>
               <div className="flex flex-col gap-0.5">
-                {group.items.map(item => {
+                {group.items.filter(item => canAccessPath(role, item.to)).map(item => {
                   const active = pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(item.to));
                   return (
                     <Link key={item.to} to={item.to}
@@ -109,7 +112,7 @@ export function AppShell({
           ))}
         </nav>
         <div className="border-t border-border p-3">
-          <Link to="/login" className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted">
+          <Link to="/login" onClick={signOut} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted">
             <LogOut className="h-4 w-4" /> Sign out
           </Link>
         </div>
@@ -132,7 +135,7 @@ export function AppShell({
               </Avatar>
               <div className="hidden text-left md:block">
                 <p className="text-xs font-medium leading-tight">{currentUser.name}</p>
-                <p className="text-[10px] capitalize text-muted-foreground">{currentUser.role}</p>
+                <p className="text-[10px] capitalize text-muted-foreground">{role}</p>
               </div>
             </div>
           </div>
@@ -148,8 +151,25 @@ export function AppShell({
           </div>
         </div>
 
-        <main className="min-w-0 flex-1 px-8 py-8">{children}</main>
+        <main className="min-w-0 flex-1 px-8 py-8">
+          {canAccess ? children : <AccessDenied role={role} />}
+        </main>
       </div>
+    </div>
+  );
+}
+
+function AccessDenied({ role }: { role: string }) {
+  return (
+    <div className="surface-card mx-auto max-w-xl p-8 text-center">
+      <ShieldCheck className="mx-auto h-8 w-8 text-primary" />
+      <h2 className="font-display mt-4 text-3xl text-foreground">Workspace restricted</h2>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        Your current {role} account does not have access to this workspace. Switch to an authorized account to continue.
+      </p>
+      <Link to="/login" className="mt-6 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+        Switch account
+      </Link>
     </div>
   );
 }
