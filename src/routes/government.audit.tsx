@@ -11,7 +11,7 @@ const rows = [
   { at: "2024-09-25 14:21", actor: "Officer K. Bello", action: "Approved permit PMT-44021", target: "TT-8421-LG", ip: "102.89.x.x" },
   { at: "2024-09-25 13:08", actor: "TerraTrust AI", action: "Flagged duplicate deed", target: "TT-5512-AB", ip: "system" },
   { at: "2024-09-25 11:42", actor: "Officer T. Owolabi", action: "Reassigned dispute D-3318 to mediator", target: "D-3318", ip: "102.89.x.x" },
-  { at: "2024-09-24 16:30", actor: "Officer A. Nwosu", action: "Bulk import 1,402 parcels", target: "Rivers State", ip: "102.89.x.x" },
+  { at: "2024-09-24 16:30", actor: "Officer A. Rao", action: "Bulk import 1,402 parcels", target: "Karnataka", ip: "103.89.x.x" },
   { at: "2024-09-24 09:15", actor: "Admin", action: "Granted verifier role", target: "u_8821", ip: "102.89.x.x" },
 ];
 

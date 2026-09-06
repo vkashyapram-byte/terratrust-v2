@@ -5,19 +5,19 @@ type LandUse = "residential" | "agricultural" | "commercial" | "industrial" | "m
 type Status = "verified" | "pending" | "disputed" | "review";
 
 const REGIONS = [
-  { name: "Lagos",     country: "Nigeria",       lat: 6.5244,  lng: 3.3792,  prefix: "LG" },
-  { name: "FCT Abuja", country: "Nigeria",       lat: 9.0765,  lng: 7.3986,  prefix: "AB" },
-  { name: "Kano",      country: "Nigeria",       lat: 12.0022, lng: 8.5919,  prefix: "KN" },
-  { name: "Oyo",       country: "Nigeria",       lat: 7.8526,  lng: 3.9319,  prefix: "OY" },
-  { name: "Kaduna",    country: "Nigeria",       lat: 10.5105, lng: 7.4165,  prefix: "KD" },
-  { name: "Rivers",    country: "Nigeria",       lat: 4.8156,  lng: 7.0498,  prefix: "RV" },
-  { name: "Nairobi",   country: "Kenya",         lat: -1.2921, lng: 36.8219, prefix: "NB" },
-  { name: "Accra",     country: "Ghana",         lat: 5.6037,  lng: -0.1870, prefix: "AC" },
-  { name: "Kigali",    country: "Rwanda",        lat: -1.9706, lng: 30.1044, prefix: "KG" },
+  { name: "Bengaluru", country: "India", lat: 12.9716, lng: 77.5946, prefix: "BLR" },
+  { name: "Mumbai", country: "India", lat: 19.0760, lng: 72.8777, prefix: "MUM" },
+  { name: "Delhi", country: "India", lat: 28.6139, lng: 77.2090, prefix: "DEL" },
+  { name: "Hyderabad", country: "India", lat: 17.3850, lng: 78.4867, prefix: "HYD" },
+  { name: "Pune", country: "India", lat: 18.5204, lng: 73.8567, prefix: "PUN" },
+  { name: "Chennai", country: "India", lat: 13.0827, lng: 80.2707, prefix: "CHE" },
+  { name: "Kolkata", country: "India", lat: 22.5726, lng: 88.3639, prefix: "KOL" },
+  { name: "Ahmedabad", country: "India", lat: 23.0225, lng: 72.5714, prefix: "AMD" },
+  { name: "Jaipur", country: "India", lat: 26.9124, lng: 75.7873, prefix: "JAI" },
 ] as const;
 
-const FIRST = ["Amara","Tunde","Chinwe","Ifeoma","Kemi","Adaeze","Sani","Yusuf","Hadiza","Bukola","Ngozi","Femi","Tariq","Aisha","Obinna","Funke","Zainab","Ade","Bisi","Olayinka","Chima","Rashid","Salim","Halima","Uche","Damilola","Wairimu","Kwame","Akosua","Eric"];
-const LAST  = ["Okonkwo","Adebayo","Eze","Bello","Hassan","Abubakar","Olawale","Idris","Mensah","Owusu","Mwangi","Karanja","Diop","Yusuf","Mukasa","Nwosu","Achebe","Kamau","Njoroge","Ouma","Boateng","Asante","Tijani","Olatunji","Etim"];
+const FIRST = ["Ananya","Rohan","Priya","Arjun","Ishita","Vikram","Neha","Aarav","Kavya","Aditya","Meera","Rahul","Aisha","Ira","Kabir","Nisha","Dev","Saanvi","Karan","Tara","Mihir","Diya","Varun","Anika","Amit","Riya","Siddharth","Pooja","Reyansh","Maya"];
+const LAST  = ["Sharma","Mehta","Patel","Reddy","Iyer","Nair","Kapoor","Singh","Verma","Joshi","Malhotra","Bose","Chopra","Deshmukh","Kulkarni","Menon","Rao","Bhat","Gupta","Chauhan","Saxena","Pillai","Ghosh","Mishra","Kohli"];
 
 const USES: LandUse[]   = ["residential","agricultural","commercial","industrial","mixed"];
 const STATUSES: Status[] = ["verified","verified","verified","pending","pending","review","disputed"];

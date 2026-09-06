@@ -10,8 +10,8 @@ export const Route = createFileRoute("/api-tokens")({
 });
 
 const rows = [
-  { name: "My desktop app", token: "tt_pk_LIVE_amara_882f…01", scopes: ["passport:read"], created: "2024-07-01", last: "2024-09-24" },
-  { name: "Mobile prototype", token: "tt_pk_TEST_amara_991a…22", scopes: ["passport:read","documents:write"], created: "2024-09-12", last: "—" },
+  { name: "My desktop app", token: "tt_pk_LIVE_ananya_882f…01", scopes: ["passport:read"], created: "2024-07-01", last: "2024-09-24" },
+  { name: "Mobile prototype", token: "tt_pk_TEST_ananya_991a…22", scopes: ["passport:read","documents:write"], created: "2024-09-12", last: "—" },
 ];
 
 function Page() {

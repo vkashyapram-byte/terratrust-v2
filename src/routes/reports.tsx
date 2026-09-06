@@ -10,12 +10,12 @@ export const Route = createFileRoute("/reports")({
 });
 
 const reports = [
-  { id: "R-2241", title: "Lagos regional valuation Q3 2024", kind: "Valuation", scope: "Lagos", generated: "2024-09-22", size: "2.4 MB", status: "Ready" },
-  { id: "R-2240", title: "Boundary integrity audit — Bodija Estate", kind: "GIS", scope: "Oyo", generated: "2024-09-20", size: "1.1 MB", status: "Ready" },
+  { id: "R-2241", title: "Bengaluru regional valuation Q3 2024", kind: "Valuation", scope: "Bengaluru", generated: "2024-09-22", size: "2.4 MB", status: "Ready" },
+  { id: "R-2240", title: "Boundary integrity audit — Whitefield Estate", kind: "GIS", scope: "Karnataka", generated: "2024-09-20", size: "1.1 MB", status: "Ready" },
   { id: "R-2239", title: "Fraud watch — September 2024", kind: "Fraud", scope: "National", generated: "2024-09-18", size: "3.8 MB", status: "Ready" },
   { id: "R-2237", title: "Citizen portfolio statement", kind: "Portfolio", scope: "Personal", generated: "2024-09-15", size: "640 KB", status: "Ready" },
-  { id: "R-2233", title: "Mortgage eligibility — TT-8421-LG", kind: "Bank", scope: "Lekki Phase 1", generated: "2024-09-10", size: "880 KB", status: "Ready" },
-  { id: "R-2231", title: "Dispute resolution log", kind: "Disputes", scope: "FCT Abuja", generated: "2024-09-08", size: "1.6 MB", status: "Archived" },
+  { id: "R-2233", title: "Mortgage eligibility — TT-8421-LG", kind: "Bank", scope: "Indiranagar", generated: "2024-09-10", size: "880 KB", status: "Ready" },
+  { id: "R-2231", title: "Dispute resolution log", kind: "Disputes", scope: "Delhi Delhi", generated: "2024-09-08", size: "1.6 MB", status: "Archived" },
 ];
 
 function Page() {

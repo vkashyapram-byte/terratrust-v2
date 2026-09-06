@@ -19,21 +19,21 @@ type Msg =
 
 const seed: Msg[] = [
   { role: "assistant", reply: {
-    text: `Hi Amara — I'm **Terra**, your property assistant. I'm grounded in the same engines as your passport: confidence, fraud, valuation, intel. Try a question, or pick a property below.`,
+    text: `Hi Ananya — I'm **Terra**, your property assistant. I'm grounded in the same engines as your passport: confidence, fraud, valuation, intel. Try a question, or pick a property below.`,
     suggestions: [
-      "What's the trust score on my Lekki property?",
+      "What's the trust score on my Indiranagar property?",
       "Any fraud signals on my portfolio?",
-      "What documents am I missing for Kaduna farmland?",
-      "Estimate the value of my Abuja plot",
+      "What documents am I missing for my Pune parcel?",
+      "Estimate the value of my Delhi plot",
     ],
   } },
 ];
 
 const examplePrompts = [
-  "Why is my Kaduna farmland confidence below 80?",
-  "Walk me through the next step for the Abuja plot",
-  "Any encumbrances on Lekki Phase 1?",
-  "How was the AI valuation calculated for Bodija?",
+  "Why is my Pune parcel confidence below 80?",
+  "Walk me through the next step for the Delhi plot",
+  "Any encumbrances on Indiranagar?",
+  "How was the AI valuation calculated for Whitefield?",
 ];
 
 function AssistantPage() {

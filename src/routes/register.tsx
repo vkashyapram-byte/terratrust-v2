@@ -24,10 +24,10 @@ function RegisterPage() {
           <span className="absolute left-0 top-1/2 h-px w-full bg-border" />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="grid gap-2"><Label>First name</Label><Input className="h-11" defaultValue="Amara" /></div>
-          <div className="grid gap-2"><Label>Last name</Label><Input className="h-11" defaultValue="Okonkwo" /></div>
+          <div className="grid gap-2"><Label>First name</Label><Input className="h-11" defaultValue="Ananya" /></div>
+          <div className="grid gap-2"><Label>Last name</Label><Input className="h-11" defaultValue="Sharma" /></div>
         </div>
-        <div className="grid gap-2"><Label>Email</Label><Input type="email" className="h-11" defaultValue="amara@terratrust.ai" /></div>
+        <div className="grid gap-2"><Label>Email</Label><Input type="email" className="h-11" defaultValue="ananya@terratrust.ai" /></div>
         <div className="grid gap-2"><Label>Password</Label><Input type="password" className="h-11" defaultValue="demo-password" /></div>
         <Button type="submit" className="h-11">Continue</Button>
         <p className="text-center text-xs text-muted-foreground">By continuing you agree to our Terms and Privacy.</p>

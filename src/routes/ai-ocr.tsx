@@ -62,7 +62,7 @@ function OCRPage() {
           <SectionTitle eyebrow="Source · page 2" title={selectedFile} action={<AIBadge>OCR 0.1A</AIBadge>} />
           <div className="relative overflow-hidden rounded-xl border border-border bg-[oklch(0.985_0.005_95)] p-6">
             <div className="absolute right-4 top-4"><Pill tone="success"><CheckCircle2 className="h-3 w-3" /> Stamped & valid</Pill></div>
-            <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Lagos State Land Bureau</p>
+            <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Bengaluru Land Records</p>
             <p className="mt-1 text-center font-display text-2xl">Certificate of Occupancy</p>
             <p className="mt-1 text-center text-xs text-muted-foreground">Ref. LSLB-2024-00831</p>
             <div className="mt-6 space-y-3 text-sm">
@@ -79,7 +79,7 @@ function OCRPage() {
         </div>
 
         <div className="space-y-6">
-          <VerdictBanner verdict="trusted" headline="All 8 fields extracted & cross-validated." detail="Stamp matches issuance window. NIN, BVN and bureau ref. align with registry." />
+          <VerdictBanner verdict="trusted" headline="All 8 fields extracted & cross-validated." detail="Stamp matches issuance window. Aadhaar, PAN and land-record reference align with registry." />
           <div id="ocr-confidence" className="surface-card p-5">
             <SectionTitle eyebrow="Per-field confidence" title="Extraction quality" />
             <div className="space-y-3">

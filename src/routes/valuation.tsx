@@ -21,8 +21,8 @@ function ValuationPage() {
           <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-primary" /><p className="font-medium">Estimate a property</p></div>
           <form className="mt-5 grid gap-4">
             <div className="grid gap-2"><Label>Region</Label>
-              <Select defaultValue="lagos"><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
-                <SelectItem value="lagos">Lagos</SelectItem><SelectItem value="abuja">Abuja</SelectItem><SelectItem value="oyo">Oyo</SelectItem><SelectItem value="kaduna">Kaduna</SelectItem>
+              <Select defaultValue="bengaluru"><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
+                <SelectItem value="bengaluru">Bengaluru</SelectItem><SelectItem value="delhi">Delhi</SelectItem><SelectItem value="telangana">Telangana</SelectItem><SelectItem value="pune">Pune</SelectItem>
               </SelectContent></Select></div>
             <div className="grid gap-2"><Label>Property type</Label>
               <Select defaultValue="residential"><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>

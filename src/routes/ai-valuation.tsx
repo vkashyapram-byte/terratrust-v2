@@ -20,7 +20,7 @@ const comps = [
   { id: "C-2", addr: "21 Fola Osibo Rd", area: 560, price: 322, dist: 0.4 },
   { id: "C-3", addr: "4 Bisi Williams Rd", area: 495, price: 281, dist: 0.6 },
   { id: "C-4", addr: "16 Olukunle St", area: 600, price: 348, dist: 0.7 },
-  { id: "C-5", addr: "11 Yusuf Adesoji", area: 530, price: 305, dist: 0.9 },
+  { id: "C-5", addr: "11 Joshi Adesoji", area: 530, price: 305, dist: 0.9 },
 ];
 
 function ValuationEnginePage() {
@@ -35,8 +35,8 @@ function ValuationEnginePage() {
           <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-primary" /><p className="font-medium">Estimate a parcel</p></div>
           <form className="mt-5 grid gap-4">
             <div className="grid gap-2"><Label>Region</Label>
-              <Select defaultValue="lagos"><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
-                <SelectItem value="lagos">Lagos</SelectItem><SelectItem value="abuja">Abuja</SelectItem><SelectItem value="kaduna">Kaduna</SelectItem>
+              <Select defaultValue="bengaluru"><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
+                <SelectItem value="bengaluru">Bengaluru</SelectItem><SelectItem value="delhi">Delhi</SelectItem><SelectItem value="pune">Pune</SelectItem>
               </SelectContent></Select></div>
             <div className="grid gap-2"><Label>Type</Label>
               <Select defaultValue="residential"><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
@@ -109,7 +109,7 @@ function ValuationEnginePage() {
             <SectionTitle eyebrow="Reasoning" title="How the engine arrived at ₹312M" />
             <ReasoningTrace steps={[
               { label: "Pull comparable sales", detail: "12 candidates → 5 retained after recency, type & distance filters." },
-              { label: "Geographic adjustment", detail: "Lekki Phase 1 corridor premium: +18% over Lagos median." },
+              { label: "Geographic adjustment", detail: "Indiranagar corridor premium: +18% over Bengaluru median." },
               { label: "Document trust adjustment", detail: "+3% for verified C-of-O and clean survey chain." },
               { label: "Macro overlay", detail: "Applied -3.1% currency volatility damper (60-day local-currency volatility)." },
               { label: "Calibration", detail: "Model RMSE 4.2% on holdout comps. Final: ₹312M ±₹14M." },

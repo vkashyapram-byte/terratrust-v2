@@ -11,7 +11,7 @@ export const Route = createFileRoute("/support/$id")({
 
 const thread = [
   { who: "You", at: "2024-09-23 10:02", text: "Trying to upload a 14MB Survey Plan and the upload stalls at 78%. Tried Chrome and Safari." },
-  { who: "TerraTrust Support · Joy", at: "2024-09-23 10:48", text: "Hi Amara — thanks for the report. We just rolled out a fix for files over 12MB. Could you retry and let us know?" },
+  { who: "TerraTrust Support · Joy", at: "2024-09-23 10:48", text: "Hi Ananya — thanks for the report. We just rolled out a fix for files over 12MB. Could you retry and let us know?" },
   { who: "You", at: "2024-09-23 13:12", text: "Worked this time — uploaded in 11 seconds. Thanks!" },
 ];
 

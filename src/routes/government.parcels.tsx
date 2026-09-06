@@ -10,12 +10,12 @@ export const Route = createFileRoute("/government/parcels")({
 });
 
 const rows = [
-  { id: "TT-8421-LG", region: "Lagos", lga: "Eti-Osa", area: "540 sqm", owner: "Amara Okonkwo", status: "Verified" },
-  { id: "TT-7188-LG", region: "Lagos", lga: "Ikoyi", area: "1,240 sqm", owner: "B. Adetola", status: "Verified" },
-  { id: "TT-5512-AB", region: "FCT", lga: "Wuse", area: "1,800 sqm", owner: "Disputed", status: "Disputed" },
-  { id: "TT-2210-KD", region: "Kaduna", lga: "Birnin Gwari", area: "1.24 ha", owner: "Amara Okonkwo", status: "Pending" },
-  { id: "TT-9930-OY", region: "Oyo", lga: "Ibadan North", area: "880 sqm", owner: "Amara Okonkwo", status: "Verified" },
-  { id: "TT-4422-RV", region: "Rivers", lga: "Port Harcourt", area: "620 sqm", owner: "K. Fubara", status: "Verified" },
+  { id: "TT-8421-LG", region: "Bengaluru", lga: "Indiranagar", area: "540 sqm", owner: "Ananya Sharma", status: "Verified" },
+  { id: "TT-7188-LG", region: "Bengaluru", lga: "Koramangala", area: "1,240 sqm", owner: "B. Patel", status: "Verified" },
+  { id: "TT-5512-AB", region: "Delhi", lga: "Vasant Kunj", area: "1,800 sqm", owner: "Disputed", status: "Disputed" },
+  { id: "TT-2210-KD", region: "Pune", lga: "Mulshi", area: "1.24 ha", owner: "Ananya Sharma", status: "Pending" },
+  { id: "TT-9930-HY", region: "Hyderabad", lga: "Banjara Hills", area: "880 sqm", owner: "Ananya Sharma", status: "Verified" },
+  { id: "TT-4422-MUM", region: "Mumbai", lga: "Andheri", area: "620 sqm", owner: "K. Reddy", status: "Verified" },
 ];
 
 function Page() {

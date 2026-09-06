@@ -10,9 +10,9 @@ export const Route = createFileRoute("/admin/api-keys")({
 });
 
 const rows = [
-  { name: "Lagos Land Bureau", token: "tt_live_LG_8f9a…3c21", scopes: ["registry:read","registry:write"], created: "2024-01-12", last: "2024-09-25 12:08" },
+  { name: "Bengaluru Land Records", token: "tt_live_BLR_8f9a…3c21", scopes: ["registry:read","registry:write"], created: "2024-01-12", last: "2024-09-25 12:08" },
   { name: "Access Bank Origination", token: "tt_live_BK_a112…44ee", scopes: ["passport:read"], created: "2024-05-30", last: "2024-09-25 14:01" },
-  { name: "FCT Land Registry", token: "tt_live_AB_77bc…21de", scopes: ["registry:read","disputes:write"], created: "2024-02-08", last: "2024-09-24 19:44" },
+  { name: "Delhi Land Records", token: "tt_live_DEL_77bc…21de", scopes: ["registry:read","disputes:write"], created: "2024-02-08", last: "2024-09-24 19:44" },
   { name: "Open Data Portal", token: "tt_live_OD_e221…9911", scopes: ["public:read"], created: "2024-07-04", last: "2024-09-25 13:50" },
 ];
 

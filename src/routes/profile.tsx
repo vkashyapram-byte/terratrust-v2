@@ -27,7 +27,7 @@ export const Route = createFileRoute("/profile")({
             <div className="grid gap-2"><Label>Email</Label><Input defaultValue={currentUser.email} /></div>
             <div className="grid gap-2"><Label>Phone</Label><Input defaultValue="+234 803 555 0102" /></div>
             <div className="grid gap-2"><Label>Region</Label><Input defaultValue={currentUser.region} /></div>
-            <div className="grid gap-2 md:col-span-2"><Label>Bio</Label><Textarea rows={3} defaultValue="Owner of family properties in Lagos and Oyo. Active in community verification." /></div>
+            <div className="grid gap-2 md:col-span-2"><Label>Bio</Label><Textarea rows={3} defaultValue="Owner of family properties in Bengaluru and Pune. Active in community verification." /></div>
             <div className="md:col-span-2"><Button>Save changes</Button></div>
           </form>
         </div>

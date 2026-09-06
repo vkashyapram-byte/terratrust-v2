@@ -20,9 +20,9 @@ const webhookRequest = `{
   "propertyId": "p_001",
   "passportId": "TT-8421-LG",
   "property": {
-    "title": "Lekki Phase 1 Residence",
-    "address": "...", "region": "Lagos", "country": "Nigeria",
-    "type": "residential", "area": 640, "owner": "Amara Okonkwo",
+    "title": "Indiranagar Residence",
+    "address": "...", "region": "Bengaluru", "country": "India",
+    "type": "residential", "area": 640, "owner": "Ananya Sharma",
     "status": "verified", "boundaryVertices": 6
   },
   "documents": [

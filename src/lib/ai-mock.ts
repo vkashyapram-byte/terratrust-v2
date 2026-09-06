@@ -1,7 +1,7 @@
 // Mock data for AI-powered feature screens.
 
 export const valuationFactors = [
-  { label: "Location desirability (Lekki Phase 1)", weight: 32, direction: "up" as const, note: "Top 5% premium corridor in Lagos coastal zone." },
+  { label: "Location desirability (Indiranagar)", weight: 32, direction: "up" as const, note: "Top 5% premium corridor in Bengaluru urban zone." },
   { label: "Recent comparable sales (12 nearby)", weight: 24, direction: "up" as const, note: "Median sale ₹125M · 90-day window." },
   { label: "Verified title chain", weight: 14, direction: "up" as const, note: "Unbroken transfer history since 2002." },
   { label: "Macro headwinds (FX volatility)", weight: -9, direction: "down" as const, note: "Currency swings reduce local-currency value." },
@@ -13,8 +13,8 @@ export const fraudSignals = [
   { label: "Duplicate boundary overlap", weight: 38, direction: "down" as const, note: "Polygon shares 12% area with TT-7710-LG (filed 2021)." },
   { label: "Document fingerprint mismatch", weight: 21, direction: "down" as const, note: "Survey plan watermark inconsistent with bureau template v2023." },
   { label: "Signature anomaly score", weight: 14, direction: "down" as const, note: "92% match to known forgery cluster #FC-204." },
-  { label: "Bureau cross-validation", weight: 10, direction: "up" as const, note: "Lagos Bureau acknowledges parcel exists." },
-  { label: "Owner verified ID", weight: 8, direction: "up" as const, note: "NIN + BVN matched." },
+  { label: "Bureau cross-validation", weight: 10, direction: "up" as const, note: "Bengaluru Land Records acknowledges parcel exists." },
+  { label: "Owner verified ID", weight: 8, direction: "up" as const, note: "Aadhaar + PAN matched." },
 ];
 
 export const valuationHistory = [
@@ -41,28 +41,28 @@ export const ndviSeries = [
 
 export const ownershipChain = [
   { year: 1998, owner: "Federal Land Registry", event: "Original allocation", confidence: 88 },
-  { year: 2002, owner: "Adebayo Estates Ltd.", event: "Corporate acquisition", confidence: 91 },
+  { year: 2002, owner: "Patel Estates Ltd.", event: "Corporate acquisition", confidence: 91 },
   { year: 2011, owner: "Chinedu Okafor", event: "Private transfer", confidence: 94 },
-  { year: 2019, owner: "Amara Okonkwo", event: "Verified deed transfer", confidence: 96 },
+  { year: 2019, owner: "Ananya Sharma", event: "Verified deed transfer", confidence: 96 },
 ];
 
 export const aiRecommendations = [
-  { id: "r1", priority: "high" as const, title: "Upload tax clearance for Kaduna Farmland", impact: "+13 trust pts", reason: "Closes the documentation gap and unlocks bank-collateral eligibility.", cta: "Upload now" },
+  { id: "r1", priority: "high" as const, title: "Upload property tax receipt for Pune Parcel", impact: "+13 trust pts", reason: "Closes the documentation gap and unlocks bank-collateral eligibility.", cta: "Upload now" },
   { id: "r2", priority: "high" as const, title: "Resolve 0.4m boundary overlap with TT-2210-KD", impact: "Removes dispute risk", reason: "AI detected polygon intersection with neighbor parcel — re-survey recommended.", cta: "Open survey request" },
   { id: "r3", priority: "medium" as const, title: "Refresh satellite scan (last: 47 days ago)", impact: "+4 confidence pts", reason: "Newer imagery improves boundary detection accuracy by ~6%.", cta: "Refresh imagery" },
-  { id: "r4", priority: "medium" as const, title: "Add second attestor to Abuja plot", impact: "Reaches community gold tier", reason: "Properties with ≥3 community attestations clear bureau review 2.3× faster.", cta: "Invite attestor" },
+  { id: "r4", priority: "medium" as const, title: "Add second attestor to Delhi plot", impact: "Reaches community gold tier", reason: "Properties with ≥3 community attestations clear land-records review 2.3× faster.", cta: "Invite attestor" },
   { id: "r5", priority: "low" as const, title: "Enable monthly AI passport refresh", impact: "Automated trust drift alerts", reason: "Get notified when any score drops more than 5 points.", cta: "Enable" },
 ];
 
 export const ocrFields = [
-  { label: "Owner name", value: "Amara N. Okonkwo", confidence: 98 },
+  { label: "Owner name", value: "Ananya Sharma", confidence: 98 },
   { label: "Plot number", value: "Block 14 / Plot 7B", confidence: 96 },
   { label: "Survey ref.", value: "LG/SUR/2023/8421", confidence: 99 },
   { label: "Area (sqm)", value: "540.20", confidence: 94 },
   { label: "Issued date", value: "14 March 2024", confidence: 92 },
-  { label: "Issuing authority", value: "Lagos State Land Bureau", confidence: 97 },
-  { label: "Bureau stamp ID", value: "LSLB-2024-00831", confidence: 88 },
-  { label: "Coordinates (centroid)", value: "6.4413° N, 3.4709° E", confidence: 91 },
+  { label: "Issuing authority", value: "Bengaluru Land Records", confidence: 97 },
+  { label: "Bureau stamp ID", value: "BLR-2024-00831", confidence: 88 },
+  { label: "Coordinates (centroid)", value: "12.9716° N, 77.5946° E", confidence: 91 },
 ];
 
 export const verificationSuggestions = [
@@ -87,8 +87,8 @@ export const landHealth = {
 };
 
 export const recommendationsForDoc = [
-  "Owner name matches NIN registry — high confidence.",
-  "Survey reference cross-validates with Lagos Bureau dataset.",
+  "Owner name matches Aadhaar registry — high confidence.",
+  "Survey reference cross-validates with Bengaluru Land Records dataset.",
   "Plot coordinates within stated boundary polygon (0.4m drift).",
   "Stamp ID matches valid issuance window (Q1 2024).",
 ];

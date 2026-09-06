@@ -11,12 +11,12 @@ export const Route = createFileRoute("/admin/users")({
 });
 
 const rows = [
-  { name: "Amara Okonkwo", email: "amara@terratrust.ai", role: "Citizen", region: "Lagos", joined: "2024-03-12", status: "Active" },
-  { name: "Idris Alabi", email: "idris@surveyor.ng", role: "Surveyor", region: "Lagos", joined: "2023-11-04", status: "Active" },
-  { name: "Officer K. Bello", email: "kbello@lagos.gov.ng", role: "Officer", region: "Lagos", joined: "2022-08-19", status: "Active" },
-  { name: "Mediator J. Adeyemi", email: "jadeyemi@fct.gov.ng", role: "Verifier", region: "FCT", joined: "2024-01-22", status: "Active" },
-  { name: "Access Bank Origination", email: "ops@accessbank.com", role: "Bank", region: "National", joined: "2024-05-30", status: "Active" },
-  { name: "S. Bello", email: "sbello@example.com", role: "Citizen", region: "FCT", joined: "2024-09-05", status: "Suspended" },
+  { name: "Ananya Sharma", email: "ananya@terratrust.ai", role: "Citizen", region: "Bengaluru", joined: "2024-03-12", status: "Active" },
+  { name: "Rohan Mehta", email: "rohan@surveyor.in", role: "Surveyor", region: "Bengaluru", joined: "2023-11-04", status: "Active" },
+  { name: "Officer Kavya Rao", email: "kavya@bengalurulr.gov.in", role: "Officer", region: "Bengaluru", joined: "2022-08-19", status: "Active" },
+  { name: "Mediator J. Iyer", email: "jiyer@delhi.gov.in", role: "Verifier", region: "Delhi", joined: "2024-01-22", status: "Active" },
+  { name: "HDFC Bank Origination", email: "ops@hdfcbank.com", role: "Bank", region: "India", joined: "2024-05-30", status: "Active" },
+  { name: "S. Patel", email: "spatel@example.com", role: "Citizen", region: "Pune", joined: "2024-09-05", status: "Suspended" },
 ];
 
 function Page() {

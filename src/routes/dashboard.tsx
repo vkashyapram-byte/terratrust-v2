@@ -16,7 +16,7 @@ export const Route = createFileRoute("/dashboard")({
 function Dashboard() {
   return (
     <AppShell
-      title="Good morning, Amara"
+      title="Good morning, Ananya"
       subtitle="Here's what's happening across your properties today."
       actions={
         <>
@@ -134,9 +134,9 @@ function Dashboard() {
         <div className="surface-card flex flex-col gap-4 p-5">
           <div className="flex items-center gap-2"><Bell className="h-4 w-4 text-primary" /><p className="font-medium">Actions for you</p></div>
           {[
-            ["Upload tax clearance", "Kaduna Farmland · raises trust by +12"],
-            ["Confirm boundary walk", "Lekki Phase 1 · surveyor visit Sat"],
-            ["Respond to dispute", "Abuja Commercial Plot · 3 days left"],
+            ["Upload property tax receipt", "Pune Parcel · raises trust by +12"],
+            ["Confirm boundary walk", "Indiranagar · surveyor visit Sat"],
+            ["Respond to dispute", "Delhi Commercial Plot · 3 days left"],
           ].map(([t, d]) => (
             <button key={t} className="flex items-start justify-between rounded-lg border border-border p-3 text-left hover:bg-muted">
               <div>

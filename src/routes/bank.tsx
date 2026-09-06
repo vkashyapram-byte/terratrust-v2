@@ -8,10 +8,10 @@ export const Route = createFileRoute("/bank")({
 });
 
 const pipeline = [
-  { id: "MTG-7821", parcel: "TT-8421-LG", borrower: "Amara Okonkwo", amount: "₹184,000", ltv: "65%", trust: 96, decision: "Approved" },
-  { id: "MTG-7815", parcel: "TT-7188-LG", borrower: "B. Adetola", amount: "₹220,000", ltv: "60%", trust: 92, decision: "Approved" },
-  { id: "MTG-7809", parcel: "TT-2210-KD", borrower: "M. Yusuf", amount: "₹32,000", ltv: "70%", trust: 71, decision: "Review" },
-  { id: "MTG-7795", parcel: "TT-5512-AB", borrower: "S. Bello", amount: "₹420,000", ltv: "68%", trust: 42, decision: "Declined" },
+  { id: "MTG-7821", parcel: "TT-8421-LG", borrower: "Ananya Sharma", amount: "₹184,000", ltv: "65%", trust: 96, decision: "Approved" },
+  { id: "MTG-7815", parcel: "TT-7188-LG", borrower: "B. Patel", amount: "₹220,000", ltv: "60%", trust: 92, decision: "Approved" },
+  { id: "MTG-7809", parcel: "TT-2210-KD", borrower: "M. Joshi", amount: "₹32,000", ltv: "70%", trust: 71, decision: "Review" },
+  { id: "MTG-7795", parcel: "TT-5512-AB", borrower: "S. Patel", amount: "₹420,000", ltv: "68%", trust: 42, decision: "Declined" },
 ];
 
 function Page() {

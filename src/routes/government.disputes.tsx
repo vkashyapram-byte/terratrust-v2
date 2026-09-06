@@ -8,10 +8,10 @@ export const Route = createFileRoute("/government/disputes")({
 });
 
 const rows = [
-  { id: "D-3318", parcel: "TT-5512-AB", kind: "Ownership overlap", region: "FCT", filed: "2024-07-30", days: 61, status: "Mediation" },
-  { id: "D-3301", parcel: "TT-8814-KD", kind: "Boundary marker", region: "Kaduna", filed: "2024-09-05", days: 24, status: "Open" },
-  { id: "D-3289", parcel: "TT-1132-LG", kind: "Suspected fraud", region: "Lagos", filed: "2024-08-12", days: 48, status: "Resolved" },
-  { id: "D-3276", parcel: "TT-2401-OY", kind: "Inheritance share", region: "Oyo", filed: "2024-06-19", days: 102, status: "Awaiting hearing" },
+  { id: "D-3318", parcel: "TT-5512-AB", kind: "Ownership overlap", region: "Delhi", filed: "2024-07-30", days: 61, status: "Mediation" },
+  { id: "D-3301", parcel: "TT-8814-PUN", kind: "Boundary marker", region: "Pune", filed: "2024-09-05", days: 24, status: "Open" },
+  { id: "D-3289", parcel: "TT-1132-BLR", kind: "Suspected fraud", region: "Bengaluru", filed: "2024-08-12", days: 48, status: "Resolved" },
+  { id: "D-3276", parcel: "TT-2401-HYD", kind: "Inheritance share", region: "Hyderabad", filed: "2024-06-19", days: 102, status: "Awaiting hearing" },
 ];
 
 function Page() {

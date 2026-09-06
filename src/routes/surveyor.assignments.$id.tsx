@@ -12,7 +12,7 @@ export const Route = createFileRoute("/surveyor/assignments/$id")({
 function Page() {
   const { id } = Route.useParams();
   return (
-    <AppShell title={`Assignment ${id}`} subtitle="Parcel TT-7188-LG · Ikoyi Family Compound"
+    <AppShell title={`Assignment ${id}`} subtitle="Parcel TT-7188-LG · Koramangala Family Compound"
       actions={<><Button variant="outline"><Upload className="h-4 w-4" /> Upload survey</Button><Button><CheckCircle2 className="h-4 w-4" /> Mark complete</Button></>}>
       <Crumbs items={[{ label: "Assignments", to: "/surveyor/assignments" }, { label: id }]} />
       <KpiRow items={[
@@ -40,7 +40,7 @@ function Page() {
           </div>
         </div>
         <div className="surface-card p-5">
-          <p className="flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3 w-3" /> 7 Bourdillon Rd, Ikoyi</p>
+          <p className="flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3 w-3" /> 7 Bourdillon Rd, Koramangala</p>
           <svg viewBox="0 0 200 160" className="mt-3 h-44 w-full rounded-lg bg-muted/40">
             <pattern id="sp" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="oklch(0.9 0.01 250)" /></pattern>
             <rect width="200" height="160" fill="url(#sp)" />

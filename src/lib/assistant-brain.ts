@@ -107,7 +107,7 @@ export function answer(q: string): AssistantResponse {
     return {
       text:
         target.status === "disputed"
-          ? `**${target.title}** has an active dispute. To file a response, head to **Disputes → New filing**, attach your deed and survey, and the bureau auto-routes to the FCT mediation desk.`
+          ? `**${target.title}** has an active dispute. To file a response, head to **Disputes → New filing**, attach your deed and survey, and the land-records team routes it to the Delhi mediation desk.`
           : `No active dispute on **${target.title}**. If you want to *raise* one against another parcel, use **Disputes → New filing** with the conflicting passport ID.`,
     };
   }
@@ -144,7 +144,7 @@ export function answer(q: string): AssistantResponse {
     suggestions: [
       `What's the trust score on ${properties[0].title}?`,
       "What documents am I missing?",
-      "Estimate the value of my Abuja plot",
+      "Estimate the value of my Delhi plot",
       "Any fraud signals on my portfolio?",
     ],
   };

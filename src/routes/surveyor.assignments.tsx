@@ -8,11 +8,11 @@ export const Route = createFileRoute("/surveyor/assignments")({
 });
 
 const rows = [
-  { id: "S-2241", parcel: "TT-7188-LG", region: "Lagos", due: "2024-10-02", priority: "High", status: "In progress" },
-  { id: "S-2240", parcel: "TT-9930-OY", region: "Oyo", due: "2024-10-05", priority: "Medium", status: "Scheduled" },
-  { id: "S-2238", parcel: "TT-2210-KD", region: "Kaduna", due: "2024-10-09", priority: "Low", status: "Scheduled" },
-  { id: "S-2236", parcel: "TT-8421-LG", region: "Lagos", due: "2024-09-28", priority: "High", status: "Awaiting review" },
-  { id: "S-2230", parcel: "TT-5512-AB", region: "FCT", due: "2024-09-22", priority: "High", status: "Completed" },
+  { id: "S-2241", parcel: "TT-7188-LG", region: "Bengaluru", due: "2024-10-02", priority: "High", status: "In progress" },
+  { id: "S-2240", parcel: "TT-9930-OY", region: "Hyderabad", due: "2024-10-05", priority: "Medium", status: "Scheduled" },
+  { id: "S-2238", parcel: "TT-2210-KD", region: "Pune", due: "2024-10-09", priority: "Low", status: "Scheduled" },
+  { id: "S-2236", parcel: "TT-8421-LG", region: "Bengaluru", due: "2024-09-28", priority: "High", status: "Awaiting review" },
+  { id: "S-2230", parcel: "TT-5512-AB", region: "Delhi", due: "2024-09-22", priority: "High", status: "Completed" },
 ];
 
 function Page() {

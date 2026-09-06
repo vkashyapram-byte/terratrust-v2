@@ -9,10 +9,10 @@ export const Route = createFileRoute("/about")({
 });
 
 const team = [
-  { name: "Dr. Adaora Eze", role: "CEO · GIS scientist", bio: "20y in cadastral systems across West Africa." },
-  { name: "Tunde Akinwale", role: "CTO · AI", bio: "Ex-Google Maps, built TerraTrust's Geo-LLM." },
-  { name: "Hauwa Bello", role: "Head of Policy", bio: "Former senior advisor to the Nigerian Land Bureau." },
-  { name: "Chinwe Okafor", role: "Head of Design", bio: "Shipped fintech products to 30M+ users." },
+  { name: "Dr. Aditi Rao", role: "CEO · GIS scientist", bio: "20y in cadastral systems across India." },
+  { name: "Rohan Mehta", role: "CTO · AI", bio: "Ex-Google Maps, built TerraTrust's Geo-LLM." },
+  { name: "Kavya Rao", role: "Head of Policy", bio: "Former senior advisor to India's land-records modernization program." },
+  { name: "Priya Iyer", role: "Head of Design", bio: "Shipped fintech products to 30M+ users." },
 ];
 
 function Page() {

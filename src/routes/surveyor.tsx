@@ -30,7 +30,7 @@ export const Route = createFileRoute("/surveyor")({
         <div className="surface-card p-5">
           <p className="font-medium">Boundary captures awaiting review</p>
           <ul className="mt-4 space-y-3">
-            {["Kaduna Farmland — 14 boundary points","Ibadan Compound — 8 boundary points","Wuse II Commercial — 12 boundary points"].map(x => (
+            {["Pune Agricultural Parcel — 14 boundary points", "Hyderabad Family Home — 8 boundary points", "Vasant Kunj Commercial — 12 boundary points"].map(x => (
               <li key={x} className="flex items-center justify-between rounded-lg border border-border p-3 text-sm">{x}<Button size="sm" variant="ghost">Review</Button></li>
             ))}
           </ul>

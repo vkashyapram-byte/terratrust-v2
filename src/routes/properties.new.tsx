@@ -23,7 +23,7 @@ function Page() {
         {s === 0 && (
           <div className="space-y-4">
             <div className="grid gap-3 md:grid-cols-2">
-              <Field label="Property title"><Input placeholder="e.g. Lekki Phase 1 Residence" /></Field>
+              <Field label="Property title"><Input placeholder="e.g. Indiranagar Residence" /></Field>
               <Field label="Property type"><Input defaultValue="Residential" /></Field>
               <Field label="Area (sqm)"><Input defaultValue="540" /></Field>
               <Field label="Estimated value (INR)"><Input defaultValue="280000" /></Field>
@@ -33,10 +33,10 @@ function Page() {
         )}
         {s === 1 && (
           <div className="grid gap-3 md:grid-cols-2">
-            <Field label="Country"><Input defaultValue="Nigeria" /></Field>
-            <Field label="Region/State"><Input defaultValue="Lagos" /></Field>
-            <Field label="Address" hint="Full street address"><Input defaultValue="12 Admiralty Way, Lekki Phase 1" /></Field>
-            <Field label="GPS coordinates"><Input defaultValue="6.4413, 3.4709" /></Field>
+            <Field label="Country"><Input defaultValue="India" /></Field>
+            <Field label="Region/State"><Input defaultValue="Karnataka" /></Field>
+            <Field label="Address" hint="Full street address"><Input defaultValue="12 100 Feet Road, Indiranagar" /></Field>
+            <Field label="GPS coordinates"><Input defaultValue="12.9716, 77.5946" /></Field>
           </div>
         )}
         {s === 2 && (

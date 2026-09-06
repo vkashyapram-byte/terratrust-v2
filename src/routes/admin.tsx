@@ -13,11 +13,11 @@ export const Route = createFileRoute("/admin")({
 });
 
 const users = [
-  { n: "Amara Okonkwo", e: "amara@terratrust.ai", r: "Citizen", s: "active" },
-  { n: "Idris Adekunle", e: "idris@surveyors.ng", r: "Surveyor", s: "active" },
-  { n: "Hauwa Bello", e: "hauwa@lagosbureau.gov", r: "Officer", s: "active" },
-  { n: "Tunde Akin", e: "tunde@verify.community", r: "Verifier", s: "suspended" },
-  { n: "Operator Ada", e: "ada@terratrust.ai", r: "Admin", s: "active" },
+  { n: "Ananya Sharma", e: "ananya@terratrust.ai", r: "Citizen", s: "active" },
+  { n: "Rohan Mehta", e: "rohan@surveyor.in", r: "Surveyor", s: "active" },
+  { n: "Kavya Rao", e: "kavya@bengalurulr.gov.in", r: "Officer", s: "active" },
+  { n: "Tara Iyer", e: "tara@verify.community", r: "Verifier", s: "suspended" },
+  { n: "Operator Arjun", e: "arjun@terratrust.ai", r: "Admin", s: "active" },
 ];
 
 function AdminPage() {

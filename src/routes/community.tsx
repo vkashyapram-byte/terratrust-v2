@@ -10,10 +10,10 @@ export const Route = createFileRoute("/community")({
 });
 
 const items = [
-  { passport: "TT-7188-LG", title: "Ikoyi Family Compound", region: "Lagos", neighbours: 7, attestations: 5, owner: "B. Adetola", years: 22 },
-  { passport: "TT-5610-OY", title: "Bodija Mixed-use Plot", region: "Oyo", neighbours: 9, attestations: 6, owner: "C. Olawale", years: 14 },
-  { passport: "TT-4422-KD", title: "Birnin Gwari Farmstead", region: "Kaduna", neighbours: 5, attestations: 3, owner: "M. Yusuf", years: 31 },
-  { passport: "TT-9981-RV", title: "Port Harcourt Townhouse", region: "Rivers", neighbours: 8, attestations: 7, owner: "K. Fubara", years: 9 },
+  { passport: "TT-7188-LG", title: "Koramangala Family Compound", region: "Bengaluru", neighbours: 7, attestations: 5, owner: "B. Patel", years: 22 },
+  { passport: "TT-5610-OY", title: "Kothrud Mixed-use Plot", region: "Pune", neighbours: 9, attestations: 6, owner: "C. Iyer", years: 14 },
+  { passport: "TT-4422-PUN", title: "Mulshi Farmstead", region: "Pune", neighbours: 5, attestations: 3, owner: "M. Joshi", years: 31 },
+  { passport: "TT-9981-HYD", title: "Hitech City Townhouse", region: "Hyderabad", neighbours: 8, attestations: 7, owner: "K. Reddy", years: 9 },
 ];
 
 function Page() {

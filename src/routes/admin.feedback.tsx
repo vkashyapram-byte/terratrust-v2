@@ -9,10 +9,10 @@ export const Route = createFileRoute("/admin/feedback")({
 });
 
 const items = [
-  { name: "Tunde A.", role: "Citizen", rating: 5, text: "The Property Passport got my Lekki place verified in 4 days. Wild.", at: "2024-09-23" },
+  { name: "Rahul P.", role: "Citizen", rating: 5, text: "The Property Passport got my Indiranagar home verified in 4 days. Wild.", at: "2024-09-23" },
   { name: "Surveyor I. A.", role: "Surveyor", rating: 4, text: "The mobile GeoJSON uploader is fast but I'd love offline mode.", at: "2024-09-22" },
   { name: "K. Bello", role: "Officer", rating: 5, text: "Dispute mediation queue cut our backlog by 60% this quarter.", at: "2024-09-20" },
-  { name: "M. Yusuf", role: "Citizen", rating: 3, text: "Trust score logic isn't clear enough. Needs a plain-language explanation.", at: "2024-09-19" },
+  { name: "M. Joshi", role: "Citizen", rating: 3, text: "Trust score logic isn't clear enough. Needs a plain-language explanation.", at: "2024-09-19" },
 ];
 
 function Page() {

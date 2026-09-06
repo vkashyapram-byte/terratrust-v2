@@ -16,9 +16,9 @@ export const Route = createFileRoute("/integrations")({
 });
 
 const integrations = [
-  { icon: Database, name: "Lagos State Registry", desc: "Two-way sync of cadastral records.", connected: true },
+  { icon: Database, name: "Bengaluru Land Records", desc: "Two-way sync of cadastral records.", connected: true },
   { icon: Banknote, name: "Access Bank", desc: "Share passports for mortgage origination.", connected: true },
-  { icon: Building2, name: "FCT Land Bureau", desc: "Submit permits and receive approvals.", connected: false },
+  { icon: Building2, name: "Delhi Land Bureau", desc: "Submit permits and receive approvals.", connected: false },
   { icon: Globe, name: "OpenStreetMap", desc: "Sync roads and POI within 5km of parcels.", connected: true },
   { icon: MessageSquare, name: "WhatsApp Business", desc: "Notifications for verification milestones.", connected: false },
   { icon: BellRing, name: "Slack", desc: "Alerts for surveyor team channels.", connected: false },

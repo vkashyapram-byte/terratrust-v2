@@ -12,7 +12,7 @@ export const Route = createFileRoute("/search")({
   component: SearchPage,
 });
 
-const filters = ["All", "Residential", "Commercial", "Agricultural", "Verified", "Disputed", "Lagos", "Abuja", "Kaduna"];
+const filters = ["All", "Residential", "Commercial", "Agricultural", "Verified", "Disputed", "Bengaluru", "Delhi", "Pune"];
 
 type SearchMode = "auto" | "passport" | "gps" | "owner" | "survey" | "address";
 
@@ -90,7 +90,7 @@ function SearchPage() {
               value={q}
               onChange={e => setQ(e.target.value)}
               className="h-12 pl-10 pr-32 text-base"
-              placeholder="Try TT-8421-LG · 6.4413, 3.4709 · Amara Okonkwo · LG/SUR/2023/8421"
+              placeholder="Try TT-8421-LG · 6.4413, 3.4709 · Ananya Sharma · LG/SUR/2023/8421"
             />
             <span className="absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] text-primary ring-1 ring-primary/20">
               <ModeIcon className="h-3 w-3" /> {modeMeta.label}

@@ -50,7 +50,7 @@ export function getEncumbrances(p: Property): Encumbrance[] {
   const s = seed(p.id);
   const list: Encumbrance[] = [];
   if (p.status === "disputed") {
-    list.push({ id: "e1", kind: "caveat", status: "active", party: "FCT Land Registry",
+    list.push({ id: "e1", kind: "caveat", status: "active", party: "Delhi Land Records",
       filedAt: "2024-07-30", note: "Caveat lodged pending boundary overlap resolution." });
   }
   if (p.valuation > 200000 && p.status === "verified") {
@@ -63,7 +63,7 @@ export function getEncumbrances(p: Property): Encumbrance[] {
       filedAt: "2017-02-18", note: "Underground service corridor along southern boundary (1.2m)." });
   }
   if (p.type === "agricultural" && p.status !== "verified") {
-    list.push({ id: "e4", kind: "tax-arrears", status: "active", party: "Kaduna IRS",
+    list.push({ id: "e4", kind: "tax-arrears", status: "active", party: "Pune Municipal Revenue",
       amount: Math.round(p.area * 0.12), filedAt: "2024-01-10",
       note: "Land use charge unpaid for FY2024 — settle to lift encumbrance." });
   }
@@ -71,12 +71,12 @@ export function getEncumbrances(p: Property): Encumbrance[] {
 }
 
 const POOLS: Record<NearbyInfra["category"], string[]> = {
-  school:   ["Greenwood International School", "Children's Aid College", "St. Saviour's Primary", "Lekki British"],
-  hospital: ["Reddington Hospital", "Lagoon Specialist Centre", "Federal Medical Centre"],
-  transit:  ["BRT Lekki Phase 1 Station", "Ikoyi Ferry Terminal", "Lagos Light Rail – Blue Line"],
-  road:     ["Lekki–Epe Expressway", "Admiralty Way", "Ahmadu Bello Way"],
-  market:   ["Lekki Market", "Wuse Market", "Bodija Market"],
-  utility:  ["IKEDC 33kV substation", "Lagos Water Corp pump station"],
+  school:   ["National Public School", "Indus International School", "Vidyashilp Academy", "Delhi Public School"],
+  hospital: ["Manipal Hospital", "Apollo Clinic", "Sassoon General Hospital"],
+  transit:  ["Indiranagar Metro Station", "Baiyappanahalli Metro", "Bengaluru Suburban Rail"],
+  road:     ["Outer Ring Road", "100 Feet Road", "Hosur Road"],
+  market:   ["Indiranagar Market", "Khan Market", "Pune Central Market"],
+  utility:  ["BESCOM 33kV substation", "BWSSB water treatment plant"],
 };
 
 export function getNearbyInfra(p: Property): NearbyInfra[] {
@@ -139,6 +139,6 @@ export function getOwnershipHistory(p: Property): OwnershipRecord[] {
     { year: mid2, owner: "Chinedu A. Okafor", event: "Deed transfer", confidence: 93,
       evidence: "Stamp duty paid · LSLB-2014-04421" },
     { year: since, owner: p.owner, event: "Current owner", confidence: 96,
-      evidence: "Bureau-endorsed transfer · NIN/BVN matched" },
+      evidence: "Bureau-endorsed transfer · Aadhaar/PAN matched" },
   ];
 }

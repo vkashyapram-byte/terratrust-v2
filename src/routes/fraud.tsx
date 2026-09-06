@@ -10,11 +10,11 @@ export const Route = createFileRoute("/fraud")({
 });
 
 const cases = [
-  { id: "F-9821", parcel: "TT-5512-AB", region: "FCT Abuja", risk: 92, kind: "Duplicate deed", flagged: "2024-09-21", status: "Open" },
-  { id: "F-9784", parcel: "TT-7710-KN", region: "Kano", risk: 78, kind: "Boundary overlap", flagged: "2024-09-18", status: "Investigating" },
-  { id: "F-9740", parcel: "TT-4421-RV", region: "Rivers", risk: 64, kind: "Forged signature (OCR)", flagged: "2024-09-15", status: "Open" },
-  { id: "F-9712", parcel: "TT-2200-LG", region: "Lagos", risk: 55, kind: "Owner identity mismatch", flagged: "2024-09-12", status: "Under review" },
-  { id: "F-9698", parcel: "TT-1188-OY", region: "Oyo", risk: 33, kind: "Stale survey plan", flagged: "2024-09-10", status: "Closed" },
+  { id: "F-9821", parcel: "TT-5512-AB", region: "Delhi", risk: 92, kind: "Duplicate deed", flagged: "2024-09-21", status: "Open" },
+  { id: "F-9784", parcel: "TT-7710-MUM", region: "Mumbai", risk: 78, kind: "Boundary overlap", flagged: "2024-09-18", status: "Investigating" },
+  { id: "F-9740", parcel: "TT-4421-HYD", region: "Hyderabad", risk: 64, kind: "Forged signature (OCR)", flagged: "2024-09-15", status: "Open" },
+  { id: "F-9712", parcel: "TT-2200-BLR", region: "Bengaluru", risk: 55, kind: "Owner identity mismatch", flagged: "2024-09-12", status: "Under review" },
+  { id: "F-9698", parcel: "TT-1188-OY", region: "Telangana", risk: 33, kind: "Stale survey plan", flagged: "2024-09-10", status: "Closed" },
 ];
 
 function FraudPage() {

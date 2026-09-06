@@ -27,9 +27,9 @@ function PassportPage() {
           <div className="relative">
             <AIBadge tone="primary">Signed · 2026-06-29</AIBadge>
             <p className="mt-3 font-display text-3xl text-foreground">TT-8421-LG</p>
-            <p className="text-sm text-muted-foreground">Lekki Phase 1 Residence · 540 m²</p>
+            <p className="text-sm text-muted-foreground">Indiranagar Residence · 540 m²</p>
             <div className="mt-5 grid place-items-center">
-              <ScoreRing value={96} label="Composite" sublabel="Verified · Lagos Bureau" />
+              <ScoreRing value={96} label="Composite" sublabel="Verified · Bengaluru Land Records" />
             </div>
             <dl className="mt-6 space-y-2 text-sm">
               {[
@@ -65,7 +65,7 @@ function PassportPage() {
               <SectionTitle eyebrow="AI" title="How we built this passport" />
               <ReasoningTrace steps={[
                 { label: "Ingest source documents", detail: "Parsed 3 PDFs · 12 pages · OCR @ 99.1% accuracy.", status: "done" },
-                { label: "Cross-reference Bureau registry", detail: "Matched parcel ID, owner NIN, and stamp ID.", status: "done" },
+                { label: "Cross-reference land registry", detail: "Matched parcel ID, owner Aadhaar, and stamp ID.", status: "done" },
                 { label: "Reconstruct ownership chain", detail: "4 events resolved from 1998 → 2019.", status: "done" },
                 { label: "Verify boundary with satellite", detail: "Polygon drift 0.4m — within ±1.0m tolerance.", status: "done" },
                 { label: "Score & sign passport", detail: "Composite 96. Signed by TerraTrust Trust Authority.", status: "done" },

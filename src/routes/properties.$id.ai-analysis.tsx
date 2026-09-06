@@ -9,7 +9,7 @@ export const Route = createFileRoute("/properties/$id/ai-analysis")({
 });
 
 const factors = [
-  { label: "Location score", value: 94, note: "Premium corridor — Lekki Phase 1" },
+  { label: "Location score", value: 94, note: "Premium corridor — Indiranagar" },
   { label: "Document completeness", value: 100, note: "Deed, survey, tax, ID all on file" },
   { label: "Boundary integrity", value: 97, note: "GIS match within 0.4m of registry" },
   { label: "Ownership clarity", value: 99, note: "Single owner since 2019" },

@@ -14,9 +14,9 @@ export const Route = createFileRoute("/login")({
 });
 
 const demoAccounts = [
-  { role: "Citizen", accessRole: "citizen" as Role, email: "amara@terratrust.ai", pass: "Terra@2026", to: "/dashboard" as const },
-  { role: "Surveyor", accessRole: "surveyor" as Role, email: "idris@surveyor.ng", pass: "Survey@2026", to: "/surveyor" as const },
-  { role: "Gov. officer", accessRole: "officer" as Role, email: "kbello@lagos.gov.ng", pass: "Gov@2026", to: "/government" as const },
+  { role: "Citizen", accessRole: "citizen" as Role, email: "ananya@terratrust.ai", pass: "Terra@2026", to: "/dashboard" as const },
+  { role: "Surveyor", accessRole: "surveyor" as Role, email: "rohan@surveyor.in", pass: "Survey@2026", to: "/surveyor" as const },
+  { role: "Gov. officer", accessRole: "officer" as Role, email: "kavya@delhi.gov.in", pass: "Gov@2026", to: "/government" as const },
   { role: "Administrator", accessRole: "admin" as Role, email: "admin@terratrust.ai", pass: "Admin@2026", to: "/admin" as const },
   { role: "Bank", accessRole: "bank" as Role, email: "ops@accessbank.com", pass: "Bank@2026", to: "/bank" as const },
 ];

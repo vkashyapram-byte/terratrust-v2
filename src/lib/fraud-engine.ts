@@ -59,8 +59,8 @@ export function getFraudReport(p: Property): FraudReport {
     if (r(3) > 0.7) signals.push({
       id: "f4", kind: "signature-anomaly", severity: "low", score: 18,
       title: "Signature drift",
-      detail: "Owner signature 88% match to NIN registry capture (threshold 80%).",
-      evidence: ["NIN biometric cross-check", "Notary witness on file"],
+      detail: "Owner signature 88% match to Aadhaar registry capture (threshold 80%).",
+      evidence: ["Aadhaar biometric cross-check", "Notary witness on file"],
     });
   }
 

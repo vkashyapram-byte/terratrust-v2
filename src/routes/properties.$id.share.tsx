@@ -24,7 +24,7 @@ function Page() {
         </div>
         <div className="surface-card space-y-3 p-6">
           <p className="font-display text-lg">Send to institution</p>
-          {[{ icon: Banknote, name: "Access Bank — Mortgage" }, { icon: Building2, name: "Lagos Land Bureau" }, { icon: Mail, name: "Custom email" }].map(o => (
+          {[{ icon: Banknote, name: "HDFC Bank — Mortgage" }, { icon: Building2, name: "Bengaluru Land Records" }, { icon: Mail, name: "Custom email" }].map(o => (
             <button key={o.name} className="flex w-full items-center gap-3 rounded-xl border border-border p-3 text-left text-sm hover:bg-muted">
               <o.icon className="h-4 w-4 text-primary" />{o.name}
             </button>
