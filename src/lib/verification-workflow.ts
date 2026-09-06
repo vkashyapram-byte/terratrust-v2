@@ -6,6 +6,7 @@ import type { Property } from "./types";
 import { computeConfidence } from "./confidence-engine";
 import { getFraudReport } from "./fraud-engine";
 import { getRiskIndicators } from "./property-intel";
+import { analyzeBoundaries, demoBoundaryFeatures, type BoundaryAnalysis, type BoundaryFeature } from "./gis";
 
 export type WorkflowStepStatus = "queued" | "running" | "completed" | "failed" | "attention";
 
@@ -66,6 +67,11 @@ export interface VerificationPayload {
     aiConfidence: number;
     valuation: number;
   };
+  gis: {
+    registeredBoundary: BoundaryFeature;
+    submittedBoundary: BoundaryFeature;
+    boundaryAnalysis: BoundaryAnalysis;
+  };
 }
 
 export const STEP_NAMES = [
@@ -90,7 +96,10 @@ export function activeProvider(): WorkflowProvider {
   return getWebhookUrl() ? "n8n" : "demo";
 }
 
-export function buildPayload(p: Property): VerificationPayload {
+export function buildPayload(p: Property, gis?: VerificationPayload["gis"]): VerificationPayload {
+  const defaultBoundaries = demoBoundaryFeatures(p);
+  const registeredBoundary = gis?.registeredBoundary ?? defaultBoundaries.registeredBoundary;
+  const submittedBoundary = gis?.submittedBoundary ?? defaultBoundaries.submittedBoundary;
   return {
     propertyId: p.id,
     passportId: p.passportId,
@@ -110,6 +119,11 @@ export function buildPayload(p: Property): VerificationPayload {
       trustScore: p.trustScore,
       aiConfidence: p.aiConfidence,
       valuation: p.valuation,
+    },
+    gis: gis ?? {
+      registeredBoundary,
+      submittedBoundary,
+      boundaryAnalysis: analyzeBoundaries(registeredBoundary, submittedBoundary),
     },
   };
 }
@@ -227,7 +241,7 @@ export interface RunOutcome {
 }
 
 /** Calls the n8n webhook when configured; otherwise runs the deterministic simulation. */
-export async function runVerification(p: Property, signal?: AbortSignal): Promise<RunOutcome> {
+export async function runVerification(p: Property, signal?: AbortSignal, gis?: VerificationPayload["gis"]): Promise<RunOutcome> {
   const url = getWebhookUrl();
   if (!url) return { result: computeVerification(p, "demo") };
 
@@ -235,7 +249,7 @@ export async function runVerification(p: Property, signal?: AbortSignal): Promis
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload(p)),
+      body: JSON.stringify(buildPayload(p, gis)),
       signal,
     });
     if (!res.ok) throw new Error(`Webhook responded ${res.status}`);

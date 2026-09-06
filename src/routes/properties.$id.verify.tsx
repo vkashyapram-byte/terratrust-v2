@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { Crumbs, Pill, SectionTitle } from "@/components/ui-ext/Scaffold";
@@ -15,6 +15,9 @@ import {
   type WorkflowStep,
 } from "@/lib/verification-workflow";
 import { MapPin, Play, RotateCcw, Ruler, User2, Workflow } from "lucide-react";
+import { PropertyMap } from "@/components/ui-ext/PropertyMap";
+import { analyzeBoundaries, demoBoundaryFeatures, type BoundaryFeature } from "@/lib/gis";
+import { useAccessControl } from "@/lib/access-control";
 
 export const Route = createFileRoute("/properties/$id/verify")({
   head: () => ({
@@ -34,6 +37,10 @@ export const Route = createFileRoute("/properties/$id/verify")({
 function Page() {
   const { property } = Route.useLoaderData();
   const provider = activeProvider();
+  const { role } = useAccessControl();
+  const demoBoundaries = useMemo(() => demoBoundaryFeatures(property), [property]);
+  const [submittedBoundary, setSubmittedBoundary] = useState<BoundaryFeature>(demoBoundaries.submittedBoundary);
+  const boundaryAnalysis = useMemo(() => analyzeBoundaries(demoBoundaries.registeredBoundary, submittedBoundary), [demoBoundaries.registeredBoundary, submittedBoundary]);
   const [running, setRunning] = useState(false);
   const [visible, setVisible] = useState<WorkflowStep[]>([]);
   const [result, setResult] = useState<VerificationResult | null>(null);
@@ -50,7 +57,11 @@ function Page() {
     setVisible([]);
     setFallbackReason(undefined);
 
-    const outcome = await runVerification(property);
+    const outcome = await runVerification(property, undefined, {
+      registeredBoundary: demoBoundaries.registeredBoundary,
+      submittedBoundary,
+      boundaryAnalysis,
+    });
     setFallbackReason(outcome.fallbackReason);
 
     outcome.result.steps.forEach((step, i) => {
@@ -112,6 +123,34 @@ function Page() {
         </div>
       </div>
 
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
+        <PropertyMap
+          propertyId={property.id}
+          registeredBoundary={demoBoundaries.registeredBoundary}
+          submittedBoundary={submittedBoundary}
+          latitude={property.coords.lat}
+          longitude={property.coords.lng}
+          editable={role === "surveyor" || role === "officer" || role === "admin"}
+          analysis={boundaryAnalysis}
+          onBoundaryChange={setSubmittedBoundary}
+          onSaveBoundary={setSubmittedBoundary}
+        />
+        <div className="surface-card p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Boundary verification</p>
+          <p className="mt-3 font-display text-4xl text-foreground">{boundaryAnalysis.boundaryScore}/100</p>
+          <p className={boundaryAnalysis.boundaryVerified ? "mt-1 text-sm text-success" : "mt-1 text-sm text-destructive"}>
+            {boundaryAnalysis.boundaryVerified ? "Verified within tolerance" : "Review required"}
+          </p>
+          <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+            <Metric label="Overlap" value={`${boundaryAnalysis.overlapPercentage}%`} />
+            <Metric label="Displacement" value={`${boundaryAnalysis.centroidDisplacementMeters ?? 0}m`} />
+            <Metric label="Registered area" value={`${Math.round(boundaryAnalysis.registeredArea ?? 0)}m²`} />
+            <Metric label="Difference" value={`${Math.round(boundaryAnalysis.differenceArea ?? 0)}m²`} />
+          </div>
+          {boundaryAnalysis.conflicts.length > 0 && <div className="mt-5 rounded-lg bg-destructive/5 p-3 text-xs text-destructive">{boundaryAnalysis.conflicts[0].message}</div>}
+        </div>
+      </div>
+
       <div className="mt-6">
         <VerificationWorkflowPanel
           result={result}
@@ -134,8 +173,12 @@ function Page() {
 
       <div className="mt-6 surface-card overflow-hidden">
         <div className="border-b border-border bg-muted/40 px-4 py-2 font-mono text-xs">POST $VITE_N8N_WEBHOOK_URL · request payload</div>
-        <pre className="overflow-x-auto p-5 font-mono text-xs leading-relaxed"><code>{JSON.stringify(buildPayload(property), null, 2)}</code></pre>
+        <pre className="overflow-x-auto p-5 font-mono text-xs leading-relaxed"><code>{JSON.stringify(buildPayload(property, { registeredBoundary: demoBoundaries.registeredBoundary, submittedBoundary, boundaryAnalysis }), null, 2)}</code></pre>
       </div>
     </AppShell>
   );
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return <div className="rounded-lg bg-muted/60 p-3"><p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p><p className="mt-1 font-medium text-foreground">{value}</p></div>;
 }

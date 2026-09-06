@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, StatusBadge } from "@/components/layout/AppShell";
-import { MapMock } from "@/components/ui-ext/MapMock";
+import { PropertyMap } from "@/components/ui-ext/PropertyMap";
+import { analyzeBoundaries, demoBoundaryFeatures } from "@/lib/gis";
 import { properties } from "@/lib/mock-data";
 import { useState } from "react";
 import { Layers, Filter, Plus, Search } from "lucide-react";
@@ -38,7 +39,15 @@ function MapPage() {
         </aside>
 
         <div className="grid gap-4">
-          <MapMock properties={properties} highlightId={sel.id} onSelect={setSel} height={560} />
+          <PropertyMap
+            propertyId={sel.id}
+            registeredBoundary={demoBoundaryFeatures(sel).registeredBoundary}
+            submittedBoundary={demoBoundaryFeatures(sel).submittedBoundary}
+            latitude={sel.coords.lat}
+            longitude={sel.coords.lng}
+            analysis={analyzeBoundaries(demoBoundaryFeatures(sel).registeredBoundary, demoBoundaryFeatures(sel).submittedBoundary)}
+            className="min-h-[560px]"
+          />
           <div className="surface-card flex items-center justify-between p-4">
             <div>
               <p className="text-xs uppercase tracking-wider text-muted-foreground">Selected parcel</p>

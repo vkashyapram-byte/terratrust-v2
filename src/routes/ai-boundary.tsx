@@ -4,7 +4,8 @@ import { AIBadge, AIInsightCard, ConfidenceMeter, ReasoningTrace, VerdictBanner 
 import { SectionTitle, Pill } from "@/components/ui-ext/Scaffold";
 import { Button } from "@/components/ui/button";
 import { Compass, RefreshCw, Ruler } from "lucide-react";
-import { MapMock } from "@/components/ui-ext/MapMock";
+import { PropertyMap } from "@/components/ui-ext/PropertyMap";
+import { analyzeBoundaries, demoBoundaryFeatures } from "@/lib/gis";
 import { properties } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/ai-boundary")({
@@ -20,6 +21,9 @@ const vertices = [
 ];
 
 function BoundaryPage() {
+  const property = properties[0];
+  const boundaries = demoBoundaryFeatures(property);
+  const analysis = analyzeBoundaries(boundaries.registeredBoundary, boundaries.submittedBoundary);
   return (
     <AppShell
       title="AI Boundary Detection"
@@ -36,7 +40,7 @@ function BoundaryPage() {
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_380px]">
         <div className="surface-card p-6">
           <SectionTitle eyebrow="Overlay" title="Detected polygon vs registered" action={<AIBadge>Vision v5.0</AIBadge>} />
-          <MapMock properties={properties} highlightId="p_001" />
+          <PropertyMap propertyId={property.id} registeredBoundary={boundaries.registeredBoundary} submittedBoundary={boundaries.submittedBoundary} latitude={property.coords.lat} longitude={property.coords.lng} analysis={analysis} />
           <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
             <div className="rounded-lg bg-primary/8 p-3 ring-1 ring-primary/20">
               <p className="font-semibold text-primary">AI-detected polygon</p>

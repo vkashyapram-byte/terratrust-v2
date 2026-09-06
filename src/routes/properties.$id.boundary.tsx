@@ -1,25 +1,38 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { Crumbs, KpiRow } from "@/components/ui-ext/Scaffold";
 import { Button } from "@/components/ui/button";
+import { PropertyMap } from "@/components/ui-ext/PropertyMap";
+import { analyzeBoundaries, demoBoundaryFeatures } from "@/lib/gis";
+import { properties } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/properties/$id/boundary")({
   head: () => ({ meta: [{ title: "Boundary comparison — TerraTrust AI" }] }),
+  loader: ({ params }) => {
+    const property = properties.find(item => item.id === params.id);
+    if (!property) throw notFound();
+    return { property };
+  },
   component: Page,
 });
 
 function Page() {
-  const { id } = Route.useParams();
+  const { property } = Route.useLoaderData();
+  const { registeredBoundary, submittedBoundary } = demoBoundaryFeatures(property);
+  const analysis = analyzeBoundaries(registeredBoundary, submittedBoundary);
   return (
     <AppShell title="Boundary comparison" subtitle="Compare claimed boundary, registry boundary, and live satellite imagery."
-      actions={<Button variant="outline">Download GeoJSON</Button>}>
-      <Crumbs items={[{ label: "Properties", to: "/properties" }, { label: id, to: "/properties/$id" }, { label: "Boundary" }]} />
+      actions={<Button variant="outline" onClick={() => downloadGeoJson(submittedBoundary, property.passportId)}>Download GeoJSON</Button>}>
+      <Crumbs items={[{ label: "Properties", to: "/properties" }, { label: property.passportId, to: "/properties/$id" }, { label: "Boundary" }]} />
       <KpiRow items={[
-        { label: "Registry match", value: "99.6%" },
-        { label: "Satellite match", value: "98.1%" },
-        { label: "Max deviation", value: "0.4m" },
-        { label: "Confidence", value: "High" },
+        { label: "Registry match", value: `${analysis.overlapPercentage}%` },
+        { label: "Submitted area", value: `${Math.round(analysis.submittedArea ?? 0)}m²` },
+        { label: "Max deviation", value: `${analysis.centroidDisplacementMeters ?? 0}m` },
+        { label: "Boundary score", value: `${analysis.boundaryScore}/100` },
       ]} />
+      <div className="mt-6">
+        <PropertyMap propertyId={property.id} registeredBoundary={registeredBoundary} submittedBoundary={submittedBoundary} latitude={property.coords.lat} longitude={property.coords.lng} analysis={analysis} />
+      </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {[
           { label: "Claimed boundary", color: "oklch(0.55 0.18 250)" },
@@ -45,8 +58,18 @@ function Page() {
           <polygon points="122,62 292,58 308,178 142,186" fill="none" stroke="oklch(0.55 0.18 150)" strokeWidth="2" strokeDasharray="6 4" />
           <polygon points="121,61 291,59 309,179 141,187" fill="none" stroke="oklch(0.65 0.18 60)" strokeWidth="2" strokeDasharray="2 3" />
         </svg>
-        <p className="mt-3 text-xs text-muted-foreground">All three boundaries align within tolerance. No anomalies detected.</p>
+        <p className="mt-3 text-xs text-muted-foreground">{analysis.boundaryVerified ? "Boundaries align within configured tolerance. No anomalies detected." : "Boundary conflict detected. Escalate this parcel for surveyor or officer review."}</p>
       </div>
     </AppShell>
   );
+}
+
+function downloadGeoJson(boundary: ReturnType<typeof demoBoundaryFeatures>["submittedBoundary"], passportId: string) {
+  const blob = new Blob([JSON.stringify(boundary, null, 2)], { type: "application/geo+json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `${passportId}-boundary.geojson`;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }

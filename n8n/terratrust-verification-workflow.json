@@ -17,7 +17,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const p = $json.body ?? $json;\nreturn [{ json: { propertyId: p.propertyId, passportId: p.passportId, property: p.property, documents: p.documents ?? [], existingScores: p.existingScores ?? {} } }];"
+        "jsCode": "const p = $json.body ?? $json;\nreturn [{ json: { propertyId: p.propertyId, passportId: p.passportId, property: p.property, documents: p.documents ?? [], existingScores: p.existingScores ?? {}, gis: p.gis ?? {} } }];"
       },
       "id": "normalize",
       "name": "Normalize Payload",
@@ -47,7 +47,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const v = $json.property.boundaryVertices ?? 0;\nconst boundaryScore = v >= 3 ? 94 : 55;\nreturn [{ json: { ...$json, boundaryScore, boundaryVerified: v >= 3 && boundaryScore >= 70 } }];"
+        "jsCode": "const supplied = $json.gis?.boundaryAnalysis ?? {};\nconst boundaryScore = Number.isFinite(supplied.boundaryScore) ? supplied.boundaryScore : (($json.property.boundaryVertices ?? 0) >= 3 ? 70 : 0);\nconst overlapPercentage = Number.isFinite(supplied.overlapPercentage) ? supplied.overlapPercentage : 0;\nconst boundaryVerified = supplied.boundaryVerified === true && boundaryScore >= 75 && overlapPercentage >= 85;\nreturn [{ json: { ...$json, boundaryScore, overlapPercentage, boundaryVerified, boundaryConflicts: supplied.conflicts ?? [] } }];"
       },
       "id": "boundary",
       "name": "Boundary Verification",

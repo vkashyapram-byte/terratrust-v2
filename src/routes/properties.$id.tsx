@@ -5,7 +5,8 @@ import { TrustScore } from "@/components/ui-ext/TrustScore";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { properties, valuationTrend } from "@/lib/mock-data";
-import { MapMock } from "@/components/ui-ext/MapMock";
+import { PropertyMap } from "@/components/ui-ext/PropertyMap";
+import { analyzeBoundaries, demoBoundaryFeatures } from "@/lib/gis";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { Download, FileText, History, MapPinned, QrCode, Share2, ShieldCheck, Sparkles, Users2, CheckCircle2, AlertTriangle, Workflow } from "lucide-react";
 import { computeConfidence } from "@/lib/confidence-engine";
@@ -71,7 +72,7 @@ function PassportPage() {
             <h2 className="font-display mt-3 text-4xl">{p.title}</h2>
             <p className="text-sm text-muted-foreground">{p.address}</p>
             <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <KV k="AI valuation" v={`$${p.valuation.toLocaleString()}`} tone="primary" />
+              <KV k="AI valuation" v={`₹${p.valuation.toLocaleString()}`} tone="primary" />
               <KV k="Area" v={`${p.area.toLocaleString()} m²`} />
               <KV k="Type" v={p.type} />
               <KV k="Owned since" v={new Date(p.ownerSince).toLocaleDateString("en", { month: "short", year: "numeric" })} />
@@ -173,7 +174,10 @@ function PassportPage() {
             </TabsContent>
 
             <TabsContent value="boundary" className="mt-4">
-              <MapMock properties={[p]} highlightId={p.id} height={420} />
+              {(() => {
+                const boundaries = demoBoundaryFeatures(p);
+                return <PropertyMap propertyId={p.id} registeredBoundary={boundaries.registeredBoundary} submittedBoundary={boundaries.submittedBoundary} latitude={p.coords.lat} longitude={p.coords.lng} analysis={analyzeBoundaries(boundaries.registeredBoundary, boundaries.submittedBoundary)} />;
+              })()}
             </TabsContent>
           </Tabs>
         </div>
