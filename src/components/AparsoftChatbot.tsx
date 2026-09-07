@@ -37,10 +37,10 @@ export default function AparsoftChatbot() {
       websocketUrl: "wss://www.aparsoft.com/ws/client-chatbot/",
       primaryColor: "#1d4ed8",
       secondaryColor: "#0f766e",
-      widgetTitle: "TerraTrust AI AI Assistant",
-      title: "TerraTrust AI AI Assistant",
+      widgetTitle: "TerraTrust AI Assistant",
+      title: "TerraTrust AI Assistant",
       widgetSubtitle: "Powered by Aparsoft AI",
-      welcomeMessage: "Hello! How can I help you today?",
+      welcomeMessage: "Hello! How can I assist you with TerraTrust land records and property verification today?",
     };
 
     const applyLoaderDataset = (script: HTMLScriptElement, runtimeConfig: LoaderConfig) => {
@@ -68,7 +68,9 @@ export default function AparsoftChatbot() {
       existingScript.remove();
     }
 
-    window.AparsoftChatbot?.destroy?.();
+    try {
+      window.AparsoftChatbot?.destroy?.();
+    } catch {}
     window.AparsoftChatbot = null;
 
     const script = document.createElement("script");
@@ -79,7 +81,9 @@ export default function AparsoftChatbot() {
 
     return () => {
       script.remove();
-      window.AparsoftChatbot?.destroy?.();
+      try {
+        window.AparsoftChatbot?.destroy?.();
+      } catch {}
       window.AparsoftChatbot = null;
     };
   }, []);

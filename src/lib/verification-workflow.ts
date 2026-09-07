@@ -41,14 +41,27 @@ export interface VerificationResult {
   communityScore: number | null;
   communityAttestations: number | null;
   communityCleared: boolean | null;
-  passportStatus: "ready" | "held";
+  passportStatus?: "verified" | "pending" | "rejected" | "minted" | "ready" | "held";
+  currency?: string;
+  valuation?: number;
   completedAt: string;
   steps: WorkflowStep[];
+  stateCode?: string;
+  cadastralIdentifiers?: Record<string, any>;
+  stateSources?: Record<string, any>;
+  normalizedEvidence?: any[];
 }
 
 export interface VerificationPayload {
   propertyId: string;
   passportId: string;
+  propertyUuid?: string | null;
+  userId?: string | null;
+  actorRole?: string;
+  recipientRole?: string;
+  stateCode?: string;
+  cadastralIdentifiers?: Record<string, any>;
+  stateSources?: Record<string, any>;
   property: {
     title: string;
     address: string;
@@ -64,6 +77,8 @@ export interface VerificationPayload {
     latitude?: number;
     longitude?: number;
     boundary: { lat: number; lng: number }[];
+    stateCode?: string;
+    cadastralIdentifiers?: Record<string, any>;
   };
   documents: { id: string; name: string; kind: string; verified: boolean }[];
   existingScores: {
@@ -75,32 +90,40 @@ export interface VerificationPayload {
 
 export const STEP_NAMES = [
   "Property submitted",
-  "Document / OCR check",
-  "Fraud analysis",
-  "Boundary verification",
-  "Government validation",
-  "Community verification",
+  "State registry profile resolved",
+  "Document / OCR evidence check",
+  "Fraud & anomaly analysis",
+  "Boundary & GIS verification",
+  "Official land source checks",
+  "Field surveyor attestation gate",
   "Risk analysis",
   "Confidence engine",
-  "Automated decision",
-  "Passport readiness",
+  "Government decision & passport",
 ] as const;
 
 /** Webhook URL is public config only — never a secret. */
-export function getWebhookUrl(): string | undefined {
+export function getWebhookUrl(): string {
   const raw = import.meta.env["VITE_N8N_WEBHOOK_URL"] as string | undefined;
   const v = raw?.trim();
-  return v ? v : undefined;
+  return v || "https://kushhhsanthosh.app.n8n.cloud/webhook/terratrust/verify";
 }
 
 export function activeProvider(): WorkflowProvider {
-  return getWebhookUrl() ? "n8n" : "demo";
+  return "n8n";
 }
 
-export function buildPayload(p: Property): VerificationPayload {
+export function buildPayload(p: Property, extra?: { userId?: string; propertyUuid?: string }): VerificationPayload {
+  const stateCode = p.stateCode || (p.region.toLowerCase().includes("maharashtra") ? "MH" : "KA");
   return {
     propertyId: p.id,
     passportId: p.passportId,
+    propertyUuid: extra?.propertyUuid || p.id,
+    userId: extra?.userId || null,
+    actorRole: "citizen",
+    recipientRole: "owner",
+    stateCode,
+    cadastralIdentifiers: p.cadastralIdentifiers || {},
+    stateSources: p.sourceChecks || {},
     property: {
       title: p.title,
       address: p.address,
@@ -116,6 +139,8 @@ export function buildPayload(p: Property): VerificationPayload {
       latitude: p.coords.lat,
       longitude: p.coords.lng,
       boundary: p.boundary,
+      stateCode,
+      cadastralIdentifiers: p.cadastralIdentifiers || {},
     },
     documents: p.documents.map((d) => ({
       id: d.id,
@@ -318,8 +343,14 @@ function coerceResult(raw: unknown, p: Property): VerificationResult {
     communityAttestations: r.communityAttestations ?? null,
     communityCleared: r.communityCleared ?? null,
     passportStatus: r.passportStatus ?? (status === "verified" ? "ready" : "held"),
+    currency: r.currency ?? "INR",
+    valuation: r.valuation ?? p.valuation,
     completedAt: r.completedAt ?? new Date().toISOString(),
     steps: Array.isArray(r.steps) && r.steps.length ? r.steps : [],
+    stateCode: r.stateCode ?? p.stateCode,
+    cadastralIdentifiers: r.cadastralIdentifiers ?? p.cadastralIdentifiers,
+    stateSources: r.stateSources ?? p.sourceChecks,
+    normalizedEvidence: Array.isArray(r.normalizedEvidence) ? r.normalizedEvidence : undefined,
   };
 }
 
@@ -347,6 +378,8 @@ function failedLiveResult(p: Property, reason: string): VerificationResult {
     communityAttestations: null,
     communityCleared: null,
     passportStatus: "held",
+    currency: "INR",
+    valuation: p.valuation,
     completedAt: new Date().toISOString(),
     steps: STEP_NAMES.map((name, index) => ({
       name,
@@ -363,7 +396,11 @@ export interface RunOutcome {
 }
 
 /** Calls the n8n webhook when configured; otherwise runs the deterministic simulation. */
-export async function runVerification(p: Property, signal?: AbortSignal): Promise<RunOutcome> {
+export async function runVerification(
+  p: Property,
+  signal?: AbortSignal,
+  extra?: { userId?: string; propertyUuid?: string }
+): Promise<RunOutcome> {
   const url = getWebhookUrl();
   if (!url) return { result: computeVerification(p, "demo") };
 
@@ -371,7 +408,7 @@ export async function runVerification(p: Property, signal?: AbortSignal): Promis
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload(p)),
+      body: JSON.stringify(buildPayload(p, extra)),
       signal,
     });
     if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
@@ -380,8 +417,7 @@ export async function runVerification(p: Property, signal?: AbortSignal): Promis
     if (
       !candidate ||
       typeof candidate !== "object" ||
-      !("propertyId" in candidate) ||
-      !("passportId" in candidate) ||
+      !("propertyId" in candidate || "passportId" in candidate) ||
       (!("decision" in candidate) && !("status" in candidate))
     ) {
       throw new Error("Webhook returned an invalid verification result");

@@ -6,7 +6,7 @@ import {
   Building2, BarChart3, ShieldCheck, Bell, User, Settings, HelpCircle, LogOut,
   Search, MessageSquare, FileText, Gavel, ShieldAlert, Banknote, LifeBuoy,
   Brain, ScanLine, Activity, Leaf, Compass, Satellite, ListChecks, Lightbulb,
-  PlusCircle, FolderLock, Shield, CheckCircle2, ChevronDown
+  PlusCircle, FolderLock, Shield, CheckCircle2, ChevronDown, Menu, X
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState, useEffect } from "react";
@@ -30,183 +30,233 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-export function getNavForRole(role: Role): NavGroup[] {
-  let roleWorkspace: NavGroup;
+export const citizenNav: NavGroup[] = [
+  {
+    group: "Property Portfolio",
+    items: [
+      { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/properties", label: "My Properties", icon: FileBadge },
+      { to: "/properties/new", label: "Add Property", icon: PlusCircle },
+      { to: "/map", label: "GIS Cadastral Map", icon: Map },
+      { to: "/ai-passport", label: "Digital Passport", icon: FileBadge },
+    ],
+  },
+  {
+    group: "AI Intelligence Suite",
+    items: [
+      { to: "/ai", label: "AI Intelligence Hub", icon: Brain },
+      { to: "/valuation", label: "AI Valuation", icon: Sparkles },
+      { to: "/ai-ocr", label: "Document OCR", icon: ScanLine },
+      { to: "/ai-boundary", label: "Boundary Detection", icon: Compass },
+      { to: "/ai-satellite", label: "Satellite Compare", icon: Satellite },
+      { to: "/ai-land-health", label: "Land Health", icon: Leaf },
+      { to: "/ai-risk", label: "Risk Analysis", icon: Activity },
+      { to: "/assistant", label: "AI Assistant", icon: MessageSquare },
+    ],
+  },
+  {
+    group: "Verification & Trust",
+    items: [
+      { to: "/verification", label: "Verification Status", icon: ShieldCheck },
+      { to: "/reports", label: "Reports & Certificates", icon: FileBadge },
+      { to: "/disputes", label: "Disputes & Claims", icon: Gavel },
+    ],
+  },
+  {
+    group: "Account & Support",
+    items: [
+      { to: "/notifications", label: "Notifications", icon: Bell },
+      { to: "/profile", label: "Profile", icon: User },
+      { to: "/settings", label: "Settings", icon: Settings },
+      { to: "/support", label: "Support / Help", icon: LifeBuoy },
+    ],
+  },
+];
 
+export const governmentNav: NavGroup[] = [
+  {
+    group: "Government Operations",
+    items: [
+      { to: "/government", label: "Government Dashboard", icon: Building2 },
+      { to: "/verification", label: "Review Queue & Verification", icon: ListChecks },
+      { to: "/surveyor/assignments", label: "Surveyor Assignments", icon: Briefcase },
+      { to: "/government/parcels", label: "Registry Parcels", icon: FileBadge },
+      { to: "/government/permits", label: "Permits & Conversions", icon: FileText },
+      { to: "/government/disputes", label: "Decisions & Disputes", icon: Gavel },
+      { to: "/government/audit", label: "Statutory Audit", icon: ShieldCheck },
+    ],
+  },
+  {
+    group: "Land Intelligence",
+    items: [
+      { to: "/map", label: "GIS / Parcels Map", icon: Map },
+      { to: "/search", label: "Property Search", icon: Search },
+      { to: "/fraud", label: "Registry Evidence & Fraud", icon: ShieldAlert },
+      { to: "/ai-ocr", label: "Documents & Evidence", icon: ScanLine },
+      { to: "/ai-boundary", label: "Boundary Review", icon: Compass },
+    ],
+  },
+  {
+    group: "Reporting & Governance",
+    items: [
+      { to: "/reports", label: "Official Reports", icon: FileBadge },
+      { to: "/analytics", label: "Jurisdiction Analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    group: "Account & Support",
+    items: [
+      { to: "/profile", label: "Government Profile", icon: User },
+      { to: "/notifications", label: "Notifications", icon: Bell },
+      { to: "/settings", label: "Settings", icon: Settings },
+      { to: "/support", label: "Support Desk", icon: LifeBuoy },
+    ],
+  },
+];
+
+export const surveyorNav: NavGroup[] = [
+  {
+    group: "Field Operations",
+    items: [
+      { to: "/surveyor", label: "Surveyor Dashboard", icon: LayoutDashboard },
+      { to: "/surveyor/assignments", label: "My Assignments", icon: Briefcase },
+      { to: "/surveyor/tools", label: "Field Tools", icon: Compass },
+      { to: "/ai-boundary", label: "Boundary Capture", icon: Map },
+    ],
+  },
+  {
+    group: "Property Verification",
+    items: [
+      { to: "/properties", label: "Assigned Properties", icon: FileBadge },
+      { to: "/map", label: "GIS Map", icon: Map },
+      { to: "/ai-satellite", label: "Satellite Compare", icon: Satellite },
+      { to: "/ai-ocr", label: "Document Review", icon: ScanLine },
+      { to: "/verification", label: "Verification Evidence", icon: ShieldCheck },
+    ],
+  },
+  {
+    group: "Reporting & History",
+    items: [
+      { to: "/reports", label: "Survey Reports", icon: FileBadge },
+    ],
+  },
+  {
+    group: "Account & Support",
+    items: [
+      { to: "/profile", label: "Surveyor Profile", icon: User },
+      { to: "/notifications", label: "Notifications", icon: Bell },
+      { to: "/settings", label: "Settings", icon: Settings },
+      { to: "/support", label: "Support Desk", icon: LifeBuoy },
+    ],
+  },
+];
+
+export const bankNav: NavGroup[] = [
+  {
+    group: "Bank Workspace",
+    items: [
+      { to: "/bank", label: "Bank Dashboard", icon: Banknote },
+      { to: "/search", label: "Property Search", icon: Search },
+      { to: "/properties", label: "Eligible Properties", icon: FileBadge },
+      { to: "/verification", label: "Verification Results", icon: ShieldCheck },
+      { to: "/ai-risk", label: "Collateral Review", icon: Activity },
+    ],
+  },
+  {
+    group: "Underwriting & Loans",
+    items: [
+      { to: "/bank/loans", label: "Active Loan Cases", icon: Banknote },
+      { to: "/valuation", label: "AI Valuation Engine", icon: Sparkles },
+      { to: "/ai-confidence", label: "Trust / Confidence", icon: ShieldCheck },
+      { to: "/ai-passport", label: "Property Passport", icon: FileBadge },
+    ],
+  },
+  {
+    group: "Reporting & Portfolio",
+    items: [
+      { to: "/analytics", label: "Portfolio Analytics", icon: BarChart3 },
+      { to: "/reports", label: "Audit Reports", icon: FileBadge },
+    ],
+  },
+  {
+    group: "Account & Support",
+    items: [
+      { to: "/profile", label: "Banker Profile", icon: User },
+      { to: "/notifications", label: "Notifications", icon: Bell },
+      { to: "/settings", label: "Settings", icon: Settings },
+      { to: "/support", label: "Support Desk", icon: LifeBuoy },
+    ],
+  },
+];
+
+export const adminNav: NavGroup[] = [
+  {
+    group: "Platform Administration",
+    items: [
+      { to: "/admin", label: "Admin Dashboard", icon: ShieldCheck },
+      { to: "/admin/users", label: "User Management", icon: User },
+      { to: "/admin/roles", label: "RBAC & Permissions", icon: Shield },
+      { to: "/admin/regions", label: "Jurisdictions & Regions", icon: Building2 },
+      { to: "/admin/system", label: "System Settings & Health", icon: Activity },
+      { to: "/integrations", label: "n8n & External Services", icon: Sparkles },
+      { to: "/admin/api-keys", label: "API Credentials", icon: FolderLock },
+    ],
+  },
+  {
+    group: "Operations & Audit",
+    items: [
+      { to: "/admin/audit", label: "System Audit Logs", icon: ListChecks },
+      { to: "/admin/feedback", label: "User Feedback", icon: MessageSquare },
+      { to: "/support", label: "Support Desk", icon: LifeBuoy },
+    ],
+  },
+  {
+    group: "Analytics & Security",
+    items: [
+      { to: "/analytics", label: "Platform Analytics", icon: BarChart3 },
+      { to: "/security", label: "Security Center", icon: ShieldAlert },
+    ],
+  },
+  {
+    group: "Account",
+    items: [
+      { to: "/profile", label: "Admin Profile", icon: User },
+      { to: "/notifications", label: "Notifications", icon: Bell },
+      { to: "/settings", label: "Settings", icon: Settings },
+    ],
+  },
+];
+
+export function getWorkspaceForRole(role: Role): string {
   switch (role) {
-    case "surveyor":
-      roleWorkspace = {
-        group: "Surveyor Workspace",
-        items: [
-          { to: "/surveyor", label: "Surveyor Dashboard", icon: LayoutDashboard },
-          { to: "/surveyor/assignments", label: "Assignments", icon: Briefcase },
-          { to: "/map", label: "GIS Map", icon: Map },
-          { to: "/ai-boundary", label: "Boundary Detection", icon: Compass },
-          { to: "/ai-satellite", label: "Satellite Compare", icon: Satellite },
-          { to: "/verification", label: "Property Verification", icon: Users2 },
-          { to: "/properties/p_001/documents", label: "Property Documents", icon: FileText },
-          { to: "/reports", label: "Reports & Logs", icon: FileBadge },
-          { to: "/ai-suggestions", label: "Verification AI", icon: Sparkles },
-          { to: "/ai-risk", label: "Risk Analysis", icon: Activity },
-          { to: "/profile", label: "Surveyor Profile", icon: User },
-          { to: "/notifications", label: "Notifications", icon: Bell },
-        ],
-      };
-      break;
-
     case "government":
-      roleWorkspace = {
-        group: "Government Registry",
-        items: [
-          { to: "/government", label: "Government Dashboard", icon: Building2 },
-          { to: "/government/parcels", label: "Cadastral Parcels", icon: FileBadge },
-          { to: "/verification", label: "Verification Queue", icon: Users2 },
-          { to: "/government/disputes", label: "Registry Disputes", icon: Gavel },
-          { to: "/fraud", label: "Fraud Cases", icon: ShieldAlert },
-          { to: "/government/audit", label: "Audit Ledger", icon: ListChecks },
-          { to: "/government/permits", label: "Building Permits", icon: FileText },
-          { to: "/reports", label: "Official Reports", icon: FileBadge },
-          { to: "/map", label: "GIS Cadastral Map", icon: Map },
-          { to: "/ai-risk", label: "Risk Intelligence", icon: Activity },
-          { to: "/analytics", label: "Jurisdiction Analytics", icon: BarChart3 },
-          { to: "/profile", label: "Officer Profile", icon: User },
-        ],
-      };
-      break;
-
-    case "community":
-      roleWorkspace = {
-        group: "Community Verifier",
-        items: [
-          { to: "/community", label: "Community Dashboard", icon: Users2 },
-          { to: "/verification", label: "Neighborhood Verification", icon: ShieldCheck },
-          { to: "/attestations", label: "Attestations Ledger", icon: ListChecks },
-          { to: "/disputes", label: "Community Disputes", icon: Gavel },
-          { to: "/map", label: "GIS Community Map", icon: Map },
-          { to: "/reports", label: "Evidence Reports", icon: FileText },
-          { to: "/notifications", label: "Community Alerts", icon: Bell },
-          { to: "/profile", label: "Verifier Profile", icon: User },
-          { to: "/support", label: "Help & Support", icon: LifeBuoy },
-        ],
-      };
-      break;
-
+      return "/government";
+    case "surveyor":
+      return "/surveyor";
     case "bank":
-      roleWorkspace = {
-        group: "Bank & Lending",
-        items: [
-          { to: "/bank", label: "Bank Dashboard", icon: Banknote },
-          { to: "/properties/p_001/verify", label: "Passport Verification", icon: ShieldCheck },
-          { to: "/ai-valuation", label: "Valuation Engine", icon: Sparkles },
-          { to: "/bank/loans", label: "Mortgage Underwriting", icon: Banknote },
-          { to: "/ai-risk", label: "Collateral Risk", icon: Activity },
-          { to: "/search", label: "Property Search", icon: Search },
-          { to: "/map", label: "GIS Collateral Map", icon: Map },
-          { to: "/reports", label: "Audit Reports", icon: FileBadge },
-          { to: "/ai-passport", label: "AI Passport Review", icon: FileBadge },
-          { to: "/profile", label: "Banker Profile", icon: User },
-        ],
-      };
-      break;
-
+      return "/bank";
     case "admin":
-      roleWorkspace = {
-        group: "Admin Operations",
-        items: [
-          { to: "/admin", label: "Admin Dashboard", icon: ShieldCheck },
-          { to: "/admin/users", label: "User Management", icon: User },
-          { to: "/admin/roles", label: "RBAC & Permissions", icon: Shield },
-          { to: "/admin/regions", label: "Jurisdictions & Regions", icon: Building2 },
-          { to: "/admin/audit", label: "System Audit Logs", icon: ListChecks },
-          { to: "/admin/system", label: "System Health & Nodes", icon: Activity },
-          { to: "/admin/api-keys", label: "API Credentials", icon: FolderLock },
-          { to: "/integrations", label: "n8n & External Services", icon: Sparkles },
-          { to: "/analytics", label: "System Analytics", icon: BarChart3 },
-          { to: "/security", label: "Security Center", icon: ShieldAlert },
-          { to: "/admin/feedback", label: "User Feedback", icon: MessageSquare },
-          { to: "/support", label: "Support Desk", icon: LifeBuoy },
-        ],
-      };
-      break;
-
+      return "/admin";
     case "citizen":
     default:
-      roleWorkspace = {
-        group: "Citizen Workspace",
-        items: [
-          { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-          { to: "/properties", label: "My Properties", icon: FileBadge },
-          { to: "/properties/new", label: "Add Property", icon: PlusCircle },
-          { to: "/map", label: "GIS Map", icon: Map },
-          { to: "/ai-passport", label: "AI Passport", icon: FileBadge },
-          { to: "/valuation", label: "AI Valuation", icon: Sparkles },
-          { to: "/verification", label: "Verification", icon: Users2 },
-          { to: "/assistant", label: "AI Assistant", icon: MessageSquare },
-          { to: "/properties/p_001/documents", label: "Property Documents", icon: FileText },
-          { to: "/reports", label: "Reports & Passport", icon: FileBadge },
-          { to: "/profile", label: "Profile", icon: User },
-          { to: "/notifications", label: "Notifications", icon: Bell },
-          { to: "/support", label: "Support", icon: LifeBuoy },
-        ],
-      };
-      break;
+      return "/dashboard";
   }
+}
 
-  return [
-    roleWorkspace,
-    {
-      group: "AI Intelligence",
-      items: [
-        { to: "/ai", label: "AI Overview", icon: Brain },
-        { to: "/ai-passport", label: "AI Passport", icon: FileBadge },
-        { to: "/ai-valuation", label: "Valuation Engine", icon: Sparkles },
-        { to: "/ai-ocr", label: "Document OCR", icon: ScanLine },
-        { to: "/ai-fraud", label: "Fraud Detection", icon: ShieldAlert },
-        { to: "/ai-risk", label: "Risk Analysis", icon: Activity },
-        { to: "/ai-confidence", label: "Confidence Score", icon: ShieldCheck },
-        { to: "/ai-boundary", label: "Boundary Detection", icon: Compass },
-        { to: "/ai-satellite", label: "Satellite Compare", icon: Satellite },
-        { to: "/ai-land-health", label: "Land Health", icon: Leaf },
-        { to: "/ai-timeline", label: "Ownership Timeline", icon: ListChecks },
-        { to: "/ai-recommendations", label: "Recommendations", icon: Lightbulb },
-        { to: "/ai-summary", label: "Document Summary", icon: FileText },
-        { to: "/ai-suggestions", label: "Verification AI", icon: Sparkles },
-      ],
-    },
-    {
-      group: "Trust & Governance",
-      items: [
-        { to: "/verification", label: "Verification", icon: Users2 },
-        { to: "/community", label: "Community", icon: Users2 },
-        { to: "/fraud", label: "Fraud Detection", icon: ShieldAlert },
-        { to: "/disputes", label: "Disputes", icon: Gavel },
-        { to: "/reports", label: "Reports", icon: FileText },
-      ],
-    },
-    {
-      group: "All Role Portals",
-      items: [
-        { to: "/dashboard", label: "Citizen Dashboard", icon: LayoutDashboard },
-        { to: "/surveyor", label: "Surveyor Portal", icon: Briefcase },
-        { to: "/government", label: "Government Registry", icon: Building2 },
-        { to: "/community", label: "Community Portal", icon: Users2 },
-        { to: "/bank", label: "Bank Underwriting", icon: Banknote },
-        { to: "/admin", label: "Admin Operations", icon: ShieldCheck },
-        { to: "/analytics", label: "Platform Analytics", icon: BarChart3 },
-        { to: "/impact", label: "National Impact", icon: Sparkles },
-      ],
-    },
-    {
-      group: "Account",
-      items: [
-        { to: "/profile", label: "Profile", icon: User },
-        { to: "/notifications", label: "Notifications", icon: Bell },
-        { to: "/settings", label: "Settings", icon: Settings },
-        { to: "/support", label: "Support", icon: LifeBuoy },
-        { to: "/help", label: "Help Center", icon: HelpCircle },
-      ],
-    },
-  ];
+export function getNavForRole(role: Role): NavGroup[] {
+  switch (role) {
+    case "government":
+      return governmentNav;
+    case "surveyor":
+      return surveyorNav;
+    case "bank":
+      return bankNav;
+    case "admin":
+      return adminNav;
+    case "citizen":
+    default:
+      return citizenNav;
+  }
 }
 
 export function StatusBadge({ status }: { status: string }) {
@@ -240,9 +290,13 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: s => s.location.pathname });
   const navigate = useNavigate();
-  const { user, profile, signOut, setDemoRole } = useAuth();
-  const [roleMenuOpen, setRoleMenuOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
   const unread = notifications.filter(n => !n.read).length;
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [pathname]);
 
   const currentRole: Role = normalizeRole(profile?.role || user?.user_metadata?.role || "citizen");
   const displayName = profile?.full_name || user?.user_metadata?.full_name || (user?.email ? user.email.split("@")[0] : "Kushal Santhosh");
@@ -267,64 +321,15 @@ export function AppShell({
     return allowed.includes(currentRole);
   };
 
-  const rolesList: { id: Role; label: string }[] = [
-    { id: "citizen", label: "Citizen / Property Owner" },
-    { id: "surveyor", label: "Licensed Land Surveyor" },
-    { id: "government", label: "Revenue & Land Officer" },
-    { id: "community", label: "Community Verifier" },
-    { id: "bank", label: "Mortgage / Bank Underwriter" },
-    { id: "admin", label: "System Administrator" },
-  ];
-
-  useEffect(() => {
-    if (requiredRole) {
-      const allowed = Array.isArray(requiredRole)
-        ? requiredRole.map(normalizeRole)
-        : [normalizeRole(requiredRole)];
-      if (!allowed.includes(currentRole)) {
-        setDemoRole?.(allowed[0]);
-      }
-    }
-  }, [requiredRole, currentRole, setDemoRole]);
-
   return (
     <div className="flex min-h-screen w-full flex-col md:grid md:grid-cols-[280px_1fr] bg-background">
       {/* Left Sidebar */}
       <aside className="hidden md:flex sticky top-0 h-screen border-r border-border bg-surface-elevated flex-col justify-between">
         <div className="flex flex-col h-[calc(100vh-4.5rem)]">
           <div className="flex h-16 items-center justify-between px-5 border-b border-border/40 shrink-0">
-            <Link to="/"><Logo /></Link>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setRoleMenuOpen(!roleMenuOpen)}
-                className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-semibold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition"
-              >
-                <span>{roleLabel}</span>
-                <ChevronDown className="h-3 w-3" />
-              </button>
-              {roleMenuOpen && (
-                <div className="absolute right-0 top-full mt-1.5 w-56 rounded-xl border border-border bg-popover p-1.5 shadow-xl z-50">
-                  <p className="px-2 py-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Switch Prototype Role</p>
-                  {rolesList.map(r => (
-                    <button
-                      key={r.id}
-                      type="button"
-                      onClick={() => {
-                        setDemoRole?.(r.id);
-                        setRoleMenuOpen(false);
-                      }}
-                      className={cn(
-                        "flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition",
-                        currentRole === r.id ? "bg-primary text-primary-foreground font-semibold" : "text-popover-foreground hover:bg-muted"
-                      )}
-                    >
-                      <span>{r.label}</span>
-                      {currentRole === r.id && <CheckCircle2 className="h-3.5 w-3.5" />}
-                    </button>
-                  ))}
-                </div>
-              )}
+            <Link to={getWorkspaceForRole(currentRole)}><Logo /></Link>
+            <div className="rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
+              <span>{roleLabel}</span>
             </div>
           </div>
           
@@ -379,9 +384,16 @@ export function AppShell({
       {/* Main Content Area */}
       <div className="flex min-w-0 flex-col">
         {/* Top Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/85 px-4 md:px-8 backdrop-blur-xl">
-          <div className="flex items-center md:hidden mr-1">
-            <Link to="/"><Logo /></Link>
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/85 px-4 md:px-8 backdrop-blur-xl">
+          <div className="flex items-center md:hidden mr-1 gap-2">
+            <button
+              onClick={() => setMobileNavOpen(true)}
+              className="p-1.5 rounded-lg border border-border text-foreground hover:bg-muted"
+              aria-label="Open mobile menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            <Link to={getWorkspaceForRole(currentRole)}><Logo /></Link>
           </div>
           <div className="relative w-full max-w-md">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -429,17 +441,8 @@ export function AppShell({
                 This workspace requires <span className="font-semibold text-foreground">{Array.isArray(requiredRole) ? requiredRole.join(", ") : requiredRole}</span> role authorization. You are currently signed in as a <span className="font-semibold text-primary">{roleLabel}</span>.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Button onClick={() => navigate({ to: "/dashboard" })}>
+                <Button onClick={() => navigate({ to: getWorkspaceForRole(currentRole) as any })}>
                   Return to my workspace
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    const target = Array.isArray(requiredRole) ? requiredRole[0] : requiredRole;
-                    if (target) setDemoRole?.(normalizeRole(target));
-                  }}
-                >
-                  Switch to {Array.isArray(requiredRole) ? requiredRole[0] : requiredRole}
                 </Button>
               </div>
             </div>
@@ -448,6 +451,97 @@ export function AppShell({
           )}
         </main>
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileNavOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileNavOpen(false)}
+          />
+
+          {/* Drawer content */}
+          <aside className="relative flex w-[290px] max-w-[85vw] flex-col justify-between bg-surface-elevated border-r border-border h-full shadow-2xl z-10">
+            <div className="flex flex-col h-[calc(100vh-4.5rem)]">
+              <div className="flex h-16 items-center justify-between px-5 border-b border-border/40 shrink-0">
+                <Link to={getWorkspaceForRole(currentRole)} onClick={() => setMobileNavOpen(false)}>
+                  <Logo />
+                </Link>
+                <div className="flex items-center gap-2">
+                  <div className="rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
+                    <span>{roleLabel}</span>
+                  </div>
+                  <button
+                    onClick={() => setMobileNavOpen(false)}
+                    className="p-1 rounded-md text-muted-foreground hover:text-foreground"
+                    aria-label="Close menu"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+                {getNavForRole(currentRole).map((group) => (
+                  <div key={group.group}>
+                    <p className="px-2 pb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/80">
+                      {group.group}
+                    </p>
+                    <div className="flex flex-col gap-0.5">
+                      {group.items.map((item) => {
+                        const active =
+                          pathname === item.to ||
+                          (item.to !== "/dashboard" && item.to !== "/" && pathname.startsWith(item.to));
+                        return (
+                          <Link
+                            key={item.to}
+                            to={item.to}
+                            onClick={() => setMobileNavOpen(false)}
+                            className={cn(
+                              "group flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition",
+                              active
+                                ? "bg-primary/10 text-primary font-semibold ring-1 ring-primary/25 shadow-sm"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            )}
+                          >
+                            <item.icon
+                              className={cn(
+                                "h-4 w-4 shrink-0",
+                                active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                              )}
+                            />
+                            <span className="truncate">{item.label}</span>
+                            {item.to === "/notifications" && unread > 0 && (
+                              <span className="ml-auto rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                                {unread}
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </nav>
+            </div>
+
+            {/* Mobile Sign Out */}
+            <div className="border-t border-border p-3 shrink-0 bg-surface">
+              <button
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  handleSignOut();
+                }}
+                className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition"
+              >
+                <LogOut className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <span className="font-medium">Sign Out</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }

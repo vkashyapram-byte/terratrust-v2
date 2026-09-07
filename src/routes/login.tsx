@@ -17,8 +17,7 @@ const demoAccounts = [
   { role: "Citizen", email: "citizen@terratrust.ai", pass: "Terra@2026", to: "/dashboard" as const },
   { role: "Surveyor", email: "surveyor@terratrust.ai", pass: "Survey@2026", to: "/surveyor" as const },
   { role: "Government officer", email: "government@terratrust.ai", pass: "Gov@2026", to: "/government" as const },
-  { role: "Community verifier", email: "community@terratrust.ai", pass: "Community@2026", to: "/community" as const },
-  { role: "Bank", email: "bank@terratrust.ai", pass: "Bank@2026", to: "/bank" as const },
+  { role: "Bank Underwriter", email: "bank@terratrust.ai", pass: "Bank@2026", to: "/bank" as const },
   { role: "Administrator", email: "admin@terratrust.ai", pass: "Admin@2026", to: "/admin" as const },
 ];
 
@@ -84,6 +83,8 @@ function LoginPage() {
           <Label htmlFor="login-email">Email</Label>
           <Input
             id="login-email"
+            name="email"
+            autoComplete="username"
             type="email"
             required
             placeholder="you@email.com"
@@ -99,6 +100,8 @@ function LoginPage() {
           </div>
           <Input
             id="login-password"
+            name="password"
+            autoComplete="current-password"
             type="password"
             required
             placeholder="••••••••"
@@ -112,32 +115,65 @@ function LoginPage() {
         </Button>
       </form>
 
-      <div className="mt-8 rounded-xl border border-border bg-surface/60 p-4">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Test credentials helper</p>
-        <p className="mt-1 text-xs text-muted-foreground">Fill in sample account details to authenticate against your Supabase project.</p>
+      <details open className="mt-8 rounded-xl border border-dashed border-border/80 bg-muted/20 p-3.5 text-xs text-muted-foreground group">
+        <summary className="cursor-pointer font-mono font-medium text-[11px] uppercase tracking-wider text-muted-foreground hover:text-foreground select-none list-none flex items-center justify-between">
+          <span>Role Testing &amp; Autofill Access</span>
+          <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">Click to Autofill</span>
+        </summary>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Select any role below to automatically populate credentials and sign into Supabase:
+        </p>
         <div className="mt-3 grid gap-2">
           {demoAccounts.map(a => (
-            <div key={a.email} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/60 px-3 py-2">
+            <div key={a.email} className="flex items-center justify-between gap-3 rounded-lg border border-border/70 bg-background/80 px-3 py-2">
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">{a.role}</p>
-                <p className="truncate text-xs text-muted-foreground">{a.email}</p>
+                <p className="truncate text-xs font-semibold text-foreground">{a.role}</p>
+                <p className="truncate text-[11px] font-mono text-muted-foreground">{a.email}</p>
               </div>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                className="shrink-0 rounded-full text-xs"
-                onClick={() => {
-                  setEmail(a.email);
-                  setPassword(a.pass);
-                }}
-              >
-                Autofill
-              </Button>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className="rounded-full text-xs h-7 px-3"
+                  onClick={() => {
+                    setEmail(a.email);
+                    setPassword(a.pass);
+                    setErrorMsg(null);
+                    toast.info(`Autofilled ${a.role}: ${a.email}`);
+                  }}
+                >
+                  Autofill
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  className="rounded-full text-xs h-7 px-3"
+                  disabled={submitting}
+                  onClick={async () => {
+                    setEmail(a.email);
+                    setPassword(a.pass);
+                    setErrorMsg(null);
+                    setSubmitting(true);
+                    const { error, role } = await signIn(a.email, a.pass);
+                    setSubmitting(false);
+                    if (error) {
+                      setErrorMsg(error);
+                      toast.error(error);
+                      return;
+                    }
+                    const destination = roleHome(role || "citizen");
+                    toast.success(`Signed in as ${a.role}`);
+                    navigate({ to: destination });
+                  }}
+                >
+                  Sign In
+                </Button>
+              </div>
             </div>
           ))}
         </div>
-      </div>
+      </details>
     </AuthLayout>
   );
 }
