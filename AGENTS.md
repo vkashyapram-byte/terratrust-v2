@@ -1,12 +1,12 @@
-<!-- LOVABLE:BEGIN -->
+# TerraTrust AI — Developer & Agent Guidelines
 
 > [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
+> **Project:** TerraTrust AI (GDTA'26 Smart City & Infrastructure Hackathon, SCI-01)  
+> **Author:** Kushal Santhosh  
+> **Target Repository:** `Kushh-Santhosh/TerraTrust-AI-PROTOTYPE`  
 
-<!-- LOVABLE:END -->
+## Architectural Principles
+1. **Real Infrastructure Over Mocks:** All data persistence is handled via Supabase PostgreSQL, Storage, and Supabase Auth.
+2. **Deterministic & Orchestrated Verification:** The verification engine runs against the live n8n workflow (`POST /webhook/terratrust/verify`).
+3. **Role-Based Access Control:** Strict Row Level Security (RLS) guarantees appropriate boundaries between Citizens, Surveyors, Government Officers, Community Verifiers, Banks, and Admins.
+4. **Security:** Never expose service-role keys or private credentials to the browser or in `.env` committed files.

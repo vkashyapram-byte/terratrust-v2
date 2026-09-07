@@ -60,10 +60,12 @@ import { Route as AiValuationRouteImport } from './routes/ai-valuation'
 import { Route as AiTimelineRouteImport } from './routes/ai-timeline'
 import { Route as AiSummaryRouteImport } from './routes/ai-summary'
 import { Route as AiSuggestionsRouteImport } from './routes/ai-suggestions'
+import { Route as AiSatelliteRouteImport } from './routes/ai-satellite'
 import { Route as AiRiskRouteImport } from './routes/ai-risk'
 import { Route as AiRecommendationsRouteImport } from './routes/ai-recommendations'
 import { Route as AiPassportRouteImport } from './routes/ai-passport'
 import { Route as AiOcrRouteImport } from './routes/ai-ocr'
+import { Route as AiLandHealthRouteImport } from './routes/ai-land-health'
 import { Route as AiFraudRouteImport } from './routes/ai-fraud'
 import { Route as AiConfidenceRouteImport } from './routes/ai-confidence'
 import { Route as AiBoundaryRouteImport } from './routes/ai-boundary'
@@ -362,6 +364,11 @@ const AiSuggestionsRoute = AiSuggestionsRouteImport.update({
   path: '/ai-suggestions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiSatelliteRoute = AiSatelliteRouteImport.update({
+  id: '/ai-satellite',
+  path: '/ai-satellite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AiRiskRoute = AiRiskRouteImport.update({
   id: '/ai-risk',
   path: '/ai-risk',
@@ -380,6 +387,11 @@ const AiPassportRoute = AiPassportRouteImport.update({
 const AiOcrRoute = AiOcrRouteImport.update({
   id: '/ai-ocr',
   path: '/ai-ocr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiLandHealthRoute = AiLandHealthRouteImport.update({
+  id: '/ai-land-health',
+  path: '/ai-land-health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiFraudRoute = AiFraudRouteImport.update({
@@ -601,10 +613,12 @@ export interface FileRoutesByFullPath {
   '/ai-boundary': typeof AiBoundaryRoute
   '/ai-confidence': typeof AiConfidenceRoute
   '/ai-fraud': typeof AiFraudRoute
+  '/ai-land-health': typeof AiLandHealthRoute
   '/ai-ocr': typeof AiOcrRoute
   '/ai-passport': typeof AiPassportRoute
   '/ai-recommendations': typeof AiRecommendationsRoute
   '/ai-risk': typeof AiRiskRoute
+  '/ai-satellite': typeof AiSatelliteRoute
   '/ai-suggestions': typeof AiSuggestionsRoute
   '/ai-summary': typeof AiSummaryRoute
   '/ai-timeline': typeof AiTimelineRoute
@@ -700,10 +714,12 @@ export interface FileRoutesByTo {
   '/ai-boundary': typeof AiBoundaryRoute
   '/ai-confidence': typeof AiConfidenceRoute
   '/ai-fraud': typeof AiFraudRoute
+  '/ai-land-health': typeof AiLandHealthRoute
   '/ai-ocr': typeof AiOcrRoute
   '/ai-passport': typeof AiPassportRoute
   '/ai-recommendations': typeof AiRecommendationsRoute
   '/ai-risk': typeof AiRiskRoute
+  '/ai-satellite': typeof AiSatelliteRoute
   '/ai-suggestions': typeof AiSuggestionsRoute
   '/ai-summary': typeof AiSummaryRoute
   '/ai-timeline': typeof AiTimelineRoute
@@ -800,10 +816,12 @@ export interface FileRoutesById {
   '/ai-boundary': typeof AiBoundaryRoute
   '/ai-confidence': typeof AiConfidenceRoute
   '/ai-fraud': typeof AiFraudRoute
+  '/ai-land-health': typeof AiLandHealthRoute
   '/ai-ocr': typeof AiOcrRoute
   '/ai-passport': typeof AiPassportRoute
   '/ai-recommendations': typeof AiRecommendationsRoute
   '/ai-risk': typeof AiRiskRoute
+  '/ai-satellite': typeof AiSatelliteRoute
   '/ai-suggestions': typeof AiSuggestionsRoute
   '/ai-summary': typeof AiSummaryRoute
   '/ai-timeline': typeof AiTimelineRoute
@@ -901,10 +919,12 @@ export interface FileRouteTypes {
     | '/ai-boundary'
     | '/ai-confidence'
     | '/ai-fraud'
+    | '/ai-land-health'
     | '/ai-ocr'
     | '/ai-passport'
     | '/ai-recommendations'
     | '/ai-risk'
+    | '/ai-satellite'
     | '/ai-suggestions'
     | '/ai-summary'
     | '/ai-timeline'
@@ -1000,10 +1020,12 @@ export interface FileRouteTypes {
     | '/ai-boundary'
     | '/ai-confidence'
     | '/ai-fraud'
+    | '/ai-land-health'
     | '/ai-ocr'
     | '/ai-passport'
     | '/ai-recommendations'
     | '/ai-risk'
+    | '/ai-satellite'
     | '/ai-suggestions'
     | '/ai-summary'
     | '/ai-timeline'
@@ -1099,10 +1121,12 @@ export interface FileRouteTypes {
     | '/ai-boundary'
     | '/ai-confidence'
     | '/ai-fraud'
+    | '/ai-land-health'
     | '/ai-ocr'
     | '/ai-passport'
     | '/ai-recommendations'
     | '/ai-risk'
+    | '/ai-satellite'
     | '/ai-suggestions'
     | '/ai-summary'
     | '/ai-timeline'
@@ -1199,10 +1223,12 @@ export interface RootRouteChildren {
   AiBoundaryRoute: typeof AiBoundaryRoute
   AiConfidenceRoute: typeof AiConfidenceRoute
   AiFraudRoute: typeof AiFraudRoute
+  AiLandHealthRoute: typeof AiLandHealthRoute
   AiOcrRoute: typeof AiOcrRoute
   AiPassportRoute: typeof AiPassportRoute
   AiRecommendationsRoute: typeof AiRecommendationsRoute
   AiRiskRoute: typeof AiRiskRoute
+  AiSatelliteRoute: typeof AiSatelliteRoute
   AiSuggestionsRoute: typeof AiSuggestionsRoute
   AiSummaryRoute: typeof AiSummaryRoute
   AiTimelineRoute: typeof AiTimelineRoute
@@ -1615,6 +1641,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiSuggestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-satellite': {
+      id: '/ai-satellite'
+      path: '/ai-satellite'
+      fullPath: '/ai-satellite'
+      preLoaderRoute: typeof AiSatelliteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ai-risk': {
       id: '/ai-risk'
       path: '/ai-risk'
@@ -1641,6 +1674,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-ocr'
       fullPath: '/ai-ocr'
       preLoaderRoute: typeof AiOcrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-land-health': {
+      id: '/ai-land-health'
+      path: '/ai-land-health'
+      fullPath: '/ai-land-health'
+      preLoaderRoute: typeof AiLandHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-fraud': {
@@ -2119,10 +2159,12 @@ const rootRouteChildren: RootRouteChildren = {
   AiBoundaryRoute: AiBoundaryRoute,
   AiConfidenceRoute: AiConfidenceRoute,
   AiFraudRoute: AiFraudRoute,
+  AiLandHealthRoute: AiLandHealthRoute,
   AiOcrRoute: AiOcrRoute,
   AiPassportRoute: AiPassportRoute,
   AiRecommendationsRoute: AiRecommendationsRoute,
   AiRiskRoute: AiRiskRoute,
+  AiSatelliteRoute: AiSatelliteRoute,
   AiSuggestionsRoute: AiSuggestionsRoute,
   AiSummaryRoute: AiSummaryRoute,
   AiTimelineRoute: AiTimelineRoute,

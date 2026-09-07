@@ -1,4 +1,5 @@
-export type Role = "citizen" | "surveyor" | "officer" | "verifier" | "admin" | "bank";
+export type CanonicalRole = "citizen" | "surveyor" | "government" | "community" | "bank" | "admin";
+export type Role = CanonicalRole | "officer" | "verifier";
 
 export interface User {
   id: string;
@@ -12,7 +13,13 @@ export interface User {
 }
 
 export type PropertyStatus = "verified" | "pending" | "disputed" | "draft";
-export type PropertyType = "residential" | "agricultural" | "commercial" | "industrial" | "vacant";
+export type PropertyType =
+  | "residential"
+  | "agricultural"
+  | "commercial"
+  | "industrial"
+  | "vacant"
+  | "forest";
 
 export interface PropertyBoundary {
   lat: number;
@@ -25,6 +32,7 @@ export interface PropertyDocument {
   kind: "deed" | "survey" | "tax" | "id" | "other";
   uploadedAt: string;
   verified: boolean;
+  storagePath?: string | null;
 }
 
 export interface VerificationEvent {
@@ -47,9 +55,10 @@ export interface Property {
   address: string;
   region: string;
   country: string;
+  description?: string;
   owner: string;
   ownerSince: string;
-  valuation: number; // INR
+  valuation: number; // INR (₹)
   aiConfidence: number; // 0-100
   coords: { lat: number; lng: number };
   boundary: PropertyBoundary[];

@@ -6,12 +6,6 @@ import type { Property } from "./types";
 import { computeConfidence } from "./confidence-engine";
 import { getFraudReport } from "./fraud-engine";
 import { getRiskIndicators } from "./property-intel";
-import {
-  analyzeBoundaries,
-  demoBoundaryFeatures,
-  type BoundaryAnalysis,
-  type BoundaryFeature,
-} from "./gis";
 
 export type WorkflowStepStatus = "queued" | "running" | "completed" | "failed" | "attention";
 
@@ -31,22 +25,22 @@ export interface VerificationResult {
   propertyId: string;
   passportId: string;
   status: VerificationStatus;
-  confidenceScore: number;
-  fraudScore: number;
-  fraudBand: string;
-  boundaryScore: number;
-  riskScore: number;
-  ocrConfidence: number;
-  documentsVerified: boolean;
-  boundaryVerified: boolean;
-  registryCrossCheck: boolean;
+  confidenceScore: number | null;
+  fraudScore: number | null;
+  fraudBand: string | null;
+  boundaryScore: number | null;
+  riskScore: number | null;
+  ocrConfidence: number | null;
+  documentsVerified: boolean | null;
+  boundaryVerified: boolean | null;
+  registryCrossCheck: boolean | null;
   decisionReason: string;
   reviewReasons: string[];
-  governmentScore: number;
-  governmentCleared: boolean;
-  communityScore: number;
-  communityAttestations: number;
-  communityCleared: boolean;
+  governmentScore: number | null;
+  governmentCleared: boolean | null;
+  communityScore: number | null;
+  communityAttestations: number | null;
+  communityCleared: boolean | null;
   passportStatus: "ready" | "held";
   completedAt: string;
   steps: WorkflowStep[];
@@ -65,17 +59,17 @@ export interface VerificationPayload {
     owner: string;
     status: string;
     boundaryVertices: number;
+    valuationInr: number;
+    description?: string;
+    latitude?: number;
+    longitude?: number;
+    boundary: { lat: number; lng: number }[];
   };
   documents: { id: string; name: string; kind: string; verified: boolean }[];
   existingScores: {
     trustScore: number;
     aiConfidence: number;
     valuation: number;
-  };
-  gis: {
-    registeredBoundary: BoundaryFeature;
-    submittedBoundary: BoundaryFeature;
-    boundaryAnalysis: BoundaryAnalysis;
   };
 }
 
@@ -84,6 +78,8 @@ export const STEP_NAMES = [
   "Document / OCR check",
   "Fraud analysis",
   "Boundary verification",
+  "Government validation",
+  "Community verification",
   "Risk analysis",
   "Confidence engine",
   "Automated decision",
@@ -101,10 +97,7 @@ export function activeProvider(): WorkflowProvider {
   return getWebhookUrl() ? "n8n" : "demo";
 }
 
-export function buildPayload(p: Property, gis?: VerificationPayload["gis"]): VerificationPayload {
-  const defaultBoundaries = demoBoundaryFeatures(p);
-  const registeredBoundary = gis?.registeredBoundary ?? defaultBoundaries.registeredBoundary;
-  const submittedBoundary = gis?.submittedBoundary ?? defaultBoundaries.submittedBoundary;
+export function buildPayload(p: Property): VerificationPayload {
   return {
     propertyId: p.id,
     passportId: p.passportId,
@@ -118,6 +111,11 @@ export function buildPayload(p: Property, gis?: VerificationPayload["gis"]): Ver
       owner: p.owner,
       status: p.status,
       boundaryVertices: p.boundary?.length ?? 0,
+      valuationInr: p.valuation,
+      description: p.description,
+      latitude: p.coords.lat,
+      longitude: p.coords.lng,
+      boundary: p.boundary,
     },
     documents: p.documents.map((d) => ({
       id: d.id,
@@ -129,11 +127,6 @@ export function buildPayload(p: Property, gis?: VerificationPayload["gis"]): Ver
       trustScore: p.trustScore,
       aiConfidence: p.aiConfidence,
       valuation: p.valuation,
-    },
-    gis: gis ?? {
-      registeredBoundary,
-      submittedBoundary,
-      boundaryAnalysis: analyzeBoundaries(registeredBoundary, submittedBoundary),
     },
   };
 }
@@ -289,74 +282,116 @@ export function computeVerification(
 }
 
 function coerceResult(raw: unknown, p: Property): VerificationResult {
-  const base = computeVerification(p, "n8n");
-  if (!raw || typeof raw !== "object") return base;
-  const r = (Array.isArray(raw) ? raw[0] : raw) as Partial<VerificationResult>;
+  const r = ((Array.isArray(raw) ? raw[0] : raw) ?? {}) as Partial<VerificationResult> & {
+    documentScore?: number;
+    fraudStatus?: string;
+    confidence?: number;
+    decision?: string;
+  };
+  const status =
+    r.status ??
+    (r.decision === "VERIFIED"
+      ? "verified"
+      : r.decision === "HUMAN_REVIEW_REQUIRED"
+        ? "manual_review"
+        : "rejected");
   return {
-    ...base,
-    ...r,
+    workflowId: r.workflowId ?? `WF-N8N-${p.passportId}`,
     provider: "n8n",
-    propertyId: r.propertyId ?? base.propertyId,
-    passportId: r.passportId ?? base.passportId,
-    reviewReasons: Array.isArray(r.reviewReasons) ? r.reviewReasons : base.reviewReasons,
-    steps: Array.isArray(r.steps) && r.steps.length ? r.steps : base.steps,
-    completedAt: r.completedAt ?? base.completedAt,
+    propertyId: r.propertyId ?? p.id,
+    passportId: r.passportId ?? p.passportId,
+    status,
+    confidenceScore: r.confidenceScore ?? r.confidence ?? null,
+    fraudScore: r.fraudScore ?? null,
+    fraudBand: r.fraudBand ?? r.fraudStatus ?? null,
+    boundaryScore: r.boundaryScore ?? null,
+    riskScore: r.riskScore ?? null,
+    ocrConfidence: r.ocrConfidence ?? r.documentScore ?? null,
+    documentsVerified: r.documentsVerified ?? null,
+    boundaryVerified: r.boundaryVerified ?? null,
+    registryCrossCheck: r.registryCrossCheck ?? null,
+    decisionReason: r.decisionReason ?? "Live n8n verification completed without an explanation.",
+    reviewReasons: Array.isArray(r.reviewReasons) ? r.reviewReasons : [],
+    governmentScore: r.governmentScore ?? null,
+    governmentCleared: r.governmentCleared ?? null,
+    communityScore: r.communityScore ?? null,
+    communityAttestations: r.communityAttestations ?? null,
+    communityCleared: r.communityCleared ?? null,
+    passportStatus: r.passportStatus ?? (status === "verified" ? "ready" : "held"),
+    completedAt: r.completedAt ?? new Date().toISOString(),
+    steps: Array.isArray(r.steps) && r.steps.length ? r.steps : [],
+  };
+}
+
+function failedLiveResult(p: Property, reason: string): VerificationResult {
+  return {
+    workflowId: `WF-N8N-${p.passportId}`,
+    provider: "n8n",
+    propertyId: p.id,
+    passportId: p.passportId,
+    status: "manual_review",
+    confidenceScore: null,
+    fraudScore: null,
+    fraudBand: null,
+    boundaryScore: null,
+    riskScore: null,
+    ocrConfidence: null,
+    documentsVerified: null,
+    boundaryVerified: null,
+    registryCrossCheck: null,
+    decisionReason: `Live n8n verification could not be completed: ${reason}`,
+    reviewReasons: ["Live verification did not return a usable decision."],
+    governmentScore: null,
+    governmentCleared: null,
+    communityScore: null,
+    communityAttestations: null,
+    communityCleared: null,
+    passportStatus: "held",
+    completedAt: new Date().toISOString(),
+    steps: STEP_NAMES.map((name, index) => ({
+      name,
+      status: index === 0 ? "completed" : "failed",
+      detail: index === 0 ? `${p.passportId} submitted` : "Awaiting a live n8n response",
+    })),
   };
 }
 
 export interface RunOutcome {
-  result?: VerificationResult;
-  /** A configured live workflow failed. No simulated result is returned in this case. */
-  error?: string;
+  result: VerificationResult;
+  /** Set when the live webhook was configured but could not be reached. */
+  fallbackReason?: string;
 }
 
-const WORKFLOW_TIMEOUT_MS = 30_000;
-
-/**
- * Calls the n8n webhook when configured. Demo simulation is limited to the
- * explicit no-webhook development state; a live workflow failure is surfaced
- * to the caller and is never represented as a successful verification.
- */
-export async function runVerification(
-  p: Property,
-  signal?: AbortSignal,
-  gis?: VerificationPayload["gis"],
-): Promise<RunOutcome> {
+/** Calls the n8n webhook when configured; otherwise runs the deterministic simulation. */
+export async function runVerification(p: Property, signal?: AbortSignal): Promise<RunOutcome> {
   const url = getWebhookUrl();
   if (!url) return { result: computeVerification(p, "demo") };
-
-  const timeout = new AbortController();
-  const timer = setTimeout(
-    () => timeout.abort(new DOMException("Verification request timed out", "TimeoutError")),
-    WORKFLOW_TIMEOUT_MS,
-  );
-  const abort = () => timeout.abort(signal?.reason);
-  signal?.addEventListener("abort", abort, { once: true });
 
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-TerraTrust-Request-Id": crypto.randomUUID(),
-      },
-      body: JSON.stringify(buildPayload(p, gis)),
-      signal: timeout.signal,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildPayload(p)),
+      signal,
     });
-    if (!res.ok)
-      throw new Error(
-        res.status === 401 || res.status === 403
-          ? "You are not authorized to run this verification."
-          : `Verification workflow responded ${res.status}.`,
-      );
-    const json = await res.json().catch(() => null);
-    if (!json) throw new Error("Verification workflow returned an invalid response.");
+    if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
+    const json = await res.json();
+    const candidate = Array.isArray(json) ? json[0] : json;
+    if (
+      !candidate ||
+      typeof candidate !== "object" ||
+      !("propertyId" in candidate) ||
+      !("passportId" in candidate) ||
+      (!("decision" in candidate) && !("status" in candidate))
+    ) {
+      throw new Error("Webhook returned an invalid verification result");
+    }
     return { result: coerceResult(json, p) };
   } catch (err) {
-    const error = err instanceof Error ? err.message : "Verification workflow is unreachable.";
-    return { error };
-  } finally {
-    clearTimeout(timer);
-    signal?.removeEventListener("abort", abort);
+    const reason = err instanceof Error ? err.message : "Webhook unreachable";
+    return {
+      result: failedLiveResult(p, reason),
+      fallbackReason: `Live n8n verification unavailable (${reason}).`,
+    };
   }
 }

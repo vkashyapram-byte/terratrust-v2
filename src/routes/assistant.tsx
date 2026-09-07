@@ -13,28 +13,27 @@ export const Route = createFileRoute("/assistant")({
   component: AssistantPage,
 });
 
-type Msg = { role: "user"; text: string } | { role: "assistant"; reply: AssistantResponse };
+type Msg =
+  | { role: "user"; text: string }
+  | { role: "assistant"; reply: AssistantResponse };
 
 const seed: Msg[] = [
-  {
-    role: "assistant",
-    reply: {
-      text: `Hi Ananya — I'm **Terra**, your property assistant. I'm grounded in the same engines as your passport: confidence, fraud, valuation, intel. Try a question, or pick a property below.`,
-      suggestions: [
-        "What's the trust score on my Indiranagar property?",
-        "Any fraud signals on my portfolio?",
-        "What documents am I missing for my Pune parcel?",
-        "Estimate the value of my Delhi plot",
-      ],
-    },
-  },
+  { role: "assistant", reply: {
+    text: `Namaste — I'm **Terra**, your Indian property intelligence assistant. I'm grounded in real verification workflows: trust scores, fraud forensic checks, sub-registrar valuations, and Bhoomi cadastral records. Pick a question below or enter your inquiry.`,
+    suggestions: [
+      "What's the trust score on my Bengaluru property?",
+      "Any fraud signals on my portfolio?",
+      "What documents am I missing for Mysuru farm?",
+      "Estimate the value of my Bengaluru residence",
+    ],
+  } },
 ];
 
 const examplePrompts = [
-  "Why is my Pune parcel confidence below 80?",
-  "Walk me through the next step for the Delhi plot",
-  "Any encumbrances on Indiranagar?",
-  "How was the AI valuation calculated for Whitefield?",
+  "Why is my Mysuru farm confidence below 80?",
+  "Walk me through the next step for the Gurugram plot",
+  "Any encumbrances on Indiranagar Residence?",
+  "How was the AI valuation calculated for Pune compound?",
 ];
 
 function AssistantPage() {
@@ -43,70 +42,63 @@ function AssistantPage() {
   const [busy, setBusy] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [msgs, busy]);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, busy]);
 
   const send = (t: string) => {
     const text = t.trim();
     if (!text || busy) return;
-    setMsgs((m) => [...m, { role: "user", text }]);
+    setMsgs(m => [...m, { role: "user", text }]);
     setInput("");
     setBusy(true);
     // small simulated latency to feel grounded, not instant
     setTimeout(() => {
       const reply = answer(text);
-      setMsgs((m) => [...m, { role: "assistant", reply }]);
+      setMsgs(m => [...m, { role: "assistant", reply }]);
       setBusy(false);
     }, 380);
   };
 
   return (
-    <AppShell
-      title="AI Assistant"
-      subtitle="Context-aware property intelligence — grounded in your real passport data."
-    >
-      <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
-        <div className="surface-card flex h-[72vh] flex-col">
-          <div className="flex-1 space-y-4 overflow-y-auto p-5">
+    <AppShell title="AI Assistant" subtitle="Ask grounded questions across your land records, valuations, and verification pipelines.">
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="surface-card flex h-[72vh] flex-col overflow-hidden">
+          {/* Messages */}
+          <div className="flex-1 space-y-4 overflow-y-auto p-6">
             {msgs.map((m, i) => (
-              <div key={i} className={`flex gap-3 ${m.role === "user" ? "justify-end" : ""}`}>
+              <div key={i} className={`flex items-start gap-3 ${m.role === "user" ? "justify-end" : ""}`}>
                 {m.role === "assistant" && (
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
                     <Bot className="h-4 w-4" />
                   </div>
                 )}
-                <div
-                  className={`max-w-[82%] rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}
-                >
+                <div className={`max-w-xl space-y-3 rounded-2xl p-4 text-sm leading-relaxed ${
+                  m.role === "user"
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "bg-surface border border-border text-foreground"
+                }`}>
                   {m.role === "user" ? (
                     <p>{m.text}</p>
                   ) : (
                     <>
-                      <div className="prose prose-sm max-w-none [&_p]:my-1 [&_strong]:text-foreground">
+                      <div className="prose prose-sm dark:prose-invert max-w-none">
                         <ReactMarkdown>{m.reply.text}</ReactMarkdown>
                       </div>
                       {m.reply.citations && m.reply.citations.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {m.reply.citations.map((c, k) => (
-                            <span
-                              key={k}
-                              className="inline-flex items-center gap-1 rounded-full bg-background/60 px-2 py-0.5 text-[10px] text-muted-foreground ring-1 ring-border"
-                            >
-                              <FileBadge className="h-3 w-3" />
-                              {c.label}
-                              {c.passportId ? ` · ${c.passportId}` : ""}
+                        <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/40">
+                          {m.reply.citations.map((c, idx) => (
+                            <span key={idx} className="inline-flex items-center gap-1 rounded-md bg-muted/60 px-2 py-0.5 text-[10px] text-muted-foreground font-mono">
+                              <FileBadge className="h-3 w-3" /> {c.label} {c.passportId && `(${c.passportId})`}
                             </span>
                           ))}
                         </div>
                       )}
                       {m.reply.suggestions && m.reply.suggestions.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {m.reply.suggestions.map((s) => (
+                        <div className="flex flex-wrap gap-1.5 pt-2">
+                          {m.reply.suggestions.map((s, idx) => (
                             <button
-                              key={s}
+                              key={idx}
                               onClick={() => send(s)}
-                              className="rounded-full border border-border bg-background/50 px-2.5 py-1 text-[11px] text-muted-foreground hover:bg-background"
+                              className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs text-primary hover:bg-primary/10 transition cursor-pointer"
                             >
                               {s}
                             </button>
@@ -117,90 +109,72 @@ function AssistantPage() {
                   )}
                 </div>
                 {m.role === "user" && (
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
+                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
                     <UserIcon className="h-4 w-4" />
                   </div>
                 )}
               </div>
             ))}
             {busy && (
-              <div className="flex gap-3 animate-fade-in">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Bot className="h-4 w-4" />
-                </div>
-                <div className="rounded-2xl bg-muted px-4 py-2.5 text-sm">
-                  <span className="inline-flex gap-1">
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60 [animation-delay:120ms]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/60 [animation-delay:240ms]" />
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Bot className="h-4 w-4 text-primary animate-pulse" />
+                <span>Terra is analyzing land intelligence records…</span>
               </div>
             )}
             <div ref={endRef} />
           </div>
-          <div className="border-t border-border p-3">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                send(input);
-              }}
-              className="flex gap-2"
-            >
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about a property, score, or document…"
-                className="h-11"
-              />
-              <Button type="submit" disabled={busy || !input.trim()} className="h-11">
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
-          </div>
+
+          {/* Prompt input */}
+          <form
+            onSubmit={e => { e.preventDefault(); send(input); }}
+            className="border-t border-border p-4 bg-surface-elevated flex items-center gap-2"
+          >
+            <Input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="Ask about trust scores, guideline valuations, missing deeds, or dispute status…"
+              className="flex-1"
+            />
+            <Button type="submit" disabled={busy || !input.trim()}>
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
         </div>
 
-        <aside className="space-y-3">
-          <div className="surface-card p-4">
-            <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              <Sparkles className="h-3 w-3" /> Try asking
-            </p>
-            <div className="mt-3 flex flex-col gap-2">
-              {examplePrompts.map((p) => (
+        {/* Prompts drawer */}
+        <div className="space-y-4">
+          <div className="surface-card p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Suggested Inquiries</p>
+            <div className="mt-3 space-y-2">
+              {examplePrompts.map((p, i) => (
                 <button
-                  key={p}
+                  key={i}
                   onClick={() => send(p)}
-                  className="rounded-lg border border-border bg-surface px-3 py-2 text-left text-xs hover:bg-muted"
+                  className="w-full text-left rounded-lg border border-border p-2.5 text-xs text-muted-foreground hover:bg-muted/60 hover:text-foreground transition cursor-pointer"
                 >
+                  <Sparkles className="h-3.5 w-3.5 text-primary inline mr-1.5" />
                   {p}
                 </button>
               ))}
             </div>
           </div>
-          <div className="surface-card p-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Connected properties
-            </p>
-            <ul className="mt-2 space-y-1.5">
-              {properties.map((p) => (
-                <li key={p.id}>
-                  <button
-                    onClick={() => send(`Summarize ${p.title}`)}
-                    className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-xs hover:bg-muted"
-                  >
-                    <span className="truncate">{p.title}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground">
-                      {p.passportId}
-                    </span>
-                  </button>
-                </li>
+
+          <div className="surface-card p-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Active Land Parcels</p>
+            <div className="mt-3 space-y-2">
+              {properties.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => send(`Explain trust score and risk indicators for ${p.title} (${p.passportId})`)}
+                  className="w-full text-left rounded-lg border border-border p-2 text-xs hover:border-primary/40 transition cursor-pointer"
+                >
+                  <p className="font-semibold text-foreground truncate">{p.title}</p>
+                  <p className="text-[10px] text-muted-foreground font-mono">{p.passportId} · {p.region}</p>
+                </button>
               ))}
-            </ul>
+            </div>
           </div>
-          <div className="surface-card p-4 text-[11px] text-muted-foreground">
-            Model: TerraTrust Geo-LLM v2.1 · Grounded in 4 properties, 12 documents, 2 disputes.
-          </div>
-        </aside>
+        </div>
       </div>
     </AppShell>
   );
