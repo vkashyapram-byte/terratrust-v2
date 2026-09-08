@@ -1,0 +1,652 @@
+import { supabase, supabaseConfigured } from "./supabase";
+import type { VerificationResult } from "./verification-workflow";
+import type { PropertyType, PropertyBoundary } from "./types";
+
+function isUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
+export type PersistenceOutcome<T = unknown> = {
+  error: string | null;
+  persisted: boolean;
+  data?: T;
+};
+
+export async function persistPropertyAIAnalysis(input: {
+  propertyId: string;
+  passportId: string;
+  model: string;
+  confidence: number | null;
+  result: object;
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: "Supabase not configured", persisted: false };
+
+  try {
+    const { data, error } = await supabase
+      .from("ai_property_analyses")
+      .insert({
+        property_id: input.propertyId,
+        passport_id: input.passportId,
+        model: input.model,
+        confidence: input.confidence,
+        result: input.result,
+      })
+      .select()
+      .single();
+
+    return { error: error?.message ?? null, persisted: !error, data };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to persist AI analysis",
+      persisted: false,
+    };
+  }
+}
+
+export async function loadLatestPropertyAIAnalysis(propertyId: string): Promise<{
+  error: string | null;
+  data?: {
+    id: string;
+    property_id: string;
+    passport_id: string;
+    model: string;
+    confidence: number | null;
+    result: Record<string, unknown>;
+    created_at: string;
+  };
+}> {
+  if (!supabaseConfigured) return { error: "Supabase not configured" };
+
+  const { data, error } = await supabase
+    .from("ai_property_analyses")
+    .select("id, property_id, passport_id, model, confidence, result, created_at")
+    .eq("property_id", propertyId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  return { error: error?.message ?? null, data: data ?? undefined };
+}
+
+/**
+ * Creates a new property record in the database
+ */
+export async function createProperty(input: {
+  ownerId: string;
+  propertyName: string;
+  passportId: string;
+  location?: {
+    address?: string;
+    region?: string;
+    country?: string;
+    propertyType?: PropertyType;
+    estimatedValueInr?: number;
+    description?: string;
+    latitude?: number;
+    longitude?: number;
+    boundary?: PropertyBoundary[];
+  };
+  area: number;
+  status?: "verified" | "pending" | "disputed" | "draft";
+  trustScore?: number;
+}): Promise<PersistenceOutcome<{ id: string; passport_id: string }>> {
+  if (!supabaseConfigured) {
+    return { error: null, persisted: false };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("properties")
+      .insert({
+        owner_id: input.ownerId,
+        property_name: input.propertyName,
+        passport_id: input.passportId,
+        location: input.location ?? {},
+        area: input.area,
+        status: input.status ?? "pending",
+        trust_score: input.trustScore ?? 0,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return { error: error.message, persisted: false };
+    }
+
+    return { error: null, persisted: true, data };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to create property",
+      persisted: false,
+    };
+  }
+}
+
+/**
+ * Stores document metadata attached to a property
+ */
+export async function savePropertyDocument(input: {
+  propertyId: string;
+  name: string;
+  kind: "deed" | "survey" | "tax" | "id" | "other";
+  storagePath?: string;
+  verified?: boolean;
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: null, persisted: false };
+
+  try {
+    const { data, error } = await supabase
+      .from("property_documents")
+      .insert({
+        property_id: input.propertyId,
+        name: input.name,
+        kind: input.kind,
+        storage_path: input.storagePath ?? null,
+        verified: input.verified ?? false,
+      })
+      .select()
+      .single();
+
+    if (error) return { error: error.message, persisted: false };
+    return { error: null, persisted: true, data };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to save document metadata",
+      persisted: false,
+    };
+  }
+}
+
+/**
+ * Uploads a document binary file to Supabase Storage bucket 'property-documents'
+ */
+export async function uploadPropertyDocumentBinary(input: {
+  userId: string;
+  propertyId: string;
+  file: File;
+}): Promise<{ storagePath: string | null; error: string | null }> {
+  if (!supabaseConfigured) {
+    return { storagePath: null, error: "Supabase not configured" };
+  }
+
+  try {
+    const cleanName = input.file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const uniqueStamp = Date.now().toString(36);
+    // Path conforms to RLS: <userId>/<propertyId>/<uniqueStamp>_<filename>
+    const storagePath = `${input.userId}/${input.propertyId}/${uniqueStamp}_${cleanName}`;
+
+    const { error } = await supabase.storage
+      .from("property-documents")
+      .upload(storagePath, input.file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (error) {
+      return { storagePath: null, error: error.message };
+    }
+
+    return { storagePath, error: null };
+  } catch (err) {
+    return {
+      storagePath: null,
+      error: err instanceof Error ? err.message : "Storage upload exception",
+    };
+  }
+}
+
+/**
+ * Records community verification decision via RPC
+ */
+export async function recordCommunityDecision(input: {
+  passportId: string;
+  decision: "attested" | "objected";
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: null, persisted: false };
+
+  try {
+    const { error } = await supabase.rpc("record_community_decision", {
+      p_passport_id: input.passportId,
+      p_decision: input.decision,
+    });
+    return { error: error?.message ?? null, persisted: !error };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "RPC execution failed",
+      persisted: false,
+    };
+  }
+}
+
+/**
+ * Records surveyor evidence via RPC
+ */
+export async function recordSurveyEvidence(input: {
+  passportId: string;
+  name: string;
+  kind: string;
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: null, persisted: false };
+
+  try {
+    const { error } = await supabase.rpc("record_survey_evidence", {
+      p_passport_id: input.passportId,
+      p_name: input.name,
+      p_kind: input.kind,
+    });
+    return { error: error?.message ?? null, persisted: !error };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "RPC execution failed",
+      persisted: false,
+    };
+  }
+}
+
+export async function createSurveyorAssignment(input: {
+  propertyId: string;
+  surveyorId: string;
+  assignedBy: string;
+  notes?: string;
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: "Supabase not configured", persisted: false };
+  const { data, error } = await supabase
+    .from("surveyor_assignments")
+    .insert({
+      property_id: input.propertyId,
+      surveyor_id: input.surveyorId,
+      assigned_by: input.assignedBy,
+      notes: input.notes ?? null,
+    })
+    .select("id, property_id, surveyor_id, status, created_at")
+    .single();
+  return { error: error?.message ?? null, persisted: !error, data };
+}
+
+/**
+ * Resolves property review by government officer via RPC
+ */
+export async function resolvePropertyReview(input: {
+  passportId: string;
+  resolution: "verified" | "pending" | "disputed";
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: null, persisted: false };
+
+  try {
+    const { error } = await supabase.rpc("resolve_property_review", {
+      p_passport_id: input.passportId,
+      p_resolution: input.resolution,
+    });
+    return { error: error?.message ?? null, persisted: !error };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "RPC execution failed",
+      persisted: false,
+    };
+  }
+}
+
+async function resolvePropertyId(
+  idOrPassport: string,
+): Promise<{ id: string | null; error: string | null }> {
+  const query = supabase.from("properties").select("id");
+  const { data, error } = isUuid(idOrPassport)
+    ? await query.eq("id", idOrPassport).maybeSingle()
+    : await query.eq("passport_id", idOrPassport).maybeSingle();
+
+  if (error) return { id: null, error: error.message };
+  if (!data) return { id: null, error: "Property not found" };
+  return { id: data.id, error: null };
+}
+
+/**
+ * Persists an n8n or simulated verification run outcome to Supabase
+ */
+export async function persistVerificationOutcome(input: {
+  propertyId: string;
+  passportId?: string;
+  userId?: string;
+  result: VerificationResult;
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) {
+    return { error: null, persisted: false };
+  }
+
+  try {
+    const target = await resolvePropertyId(input.passportId ?? input.propertyId);
+    if (!target.id) return { error: target.error, persisted: false };
+
+    const actualPropertyId = target.id;
+
+    // 1. Insert verification result record
+    const { error: resultErr } = await supabase.from("verification_results").insert({
+      property_id: actualPropertyId,
+      provider: input.result.provider ?? "n8n",
+      result: input.result,
+    });
+    if (resultErr) return { error: resultErr.message, persisted: false };
+
+    // 2. Handle review cases
+    if (input.result.status === "manual_review") {
+      const { data: existingCase } = await supabase
+        .from("review_cases")
+        .select("id")
+        .eq("property_id", actualPropertyId)
+        .in("status", ["open", "in_review"])
+        .maybeSingle();
+
+      const casePayload = {
+        status: "open" as const,
+        reason: input.result.decisionReason || "Manual review required by orchestrator",
+        updated_at: new Date().toISOString(),
+      };
+
+      if (existingCase) {
+        await supabase.from("review_cases").update(casePayload).eq("id", existingCase.id);
+      } else {
+        await supabase.from("review_cases").insert({
+          property_id: actualPropertyId,
+          ...casePayload,
+        });
+      }
+    } else if (input.result.status === "verified") {
+      // Resolve any open review cases
+      await supabase
+        .from("review_cases")
+        .update({ status: "resolved", updated_at: new Date().toISOString() })
+        .eq("property_id", actualPropertyId)
+        .in("status", ["open", "in_review"]);
+    }
+
+    // 3. Update property status, trust score, and INR valuation
+    const newStatus =
+      input.result.status === "verified"
+        ? "verified"
+        : input.result.status === "manual_review"
+          ? "pending"
+          : "disputed";
+
+    const updatePayload: Record<string, unknown> = {
+      status: newStatus,
+      trust_score: Math.max(0, Math.min(100, Math.round(input.result.confidenceScore ?? 0))),
+      updated_at: new Date().toISOString(),
+    };
+
+    if (input.result.valuation) {
+      const { data: currentProp } = await supabase
+        .from("properties")
+        .select("location")
+        .eq("id", actualPropertyId)
+        .maybeSingle();
+
+      const existingLoc =
+        currentProp?.location && typeof currentProp.location === "object"
+          ? currentProp.location
+          : {};
+      updatePayload.location = {
+        ...existingLoc,
+        estimatedValueInr: input.result.valuation,
+      };
+    }
+
+    const { error: propErr } = await supabase
+      .from("properties")
+      .update(updatePayload)
+      .eq("id", actualPropertyId);
+
+    if (propErr) return { error: propErr.message, persisted: false };
+
+    return { error: null, persisted: true };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to persist verification outcome",
+      persisted: false,
+    };
+  }
+}
+
+/**
+ * Persists a field surveyor's boundary inspection and decision without overwriting the citizen's original claimed boundary
+ */
+export async function recordSurveyorDecision(input: {
+  propertyId: string;
+  surveyorBoundary?: PropertyBoundary[];
+  decision: "verified" | "correction_required";
+  notes?: string;
+  fieldPhotos?: string[];
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: null, persisted: false };
+
+  try {
+    const target = await resolvePropertyId(input.propertyId);
+    if (!target.id) return { error: target.error, persisted: false };
+
+    const { data: prop } = await supabase
+      .from("properties")
+      .select("location, trust_score")
+      .eq("id", target.id)
+      .single();
+
+    const currentLoc = prop?.location && typeof prop.location === "object" ? prop.location : {};
+    const updatedLocation = {
+      ...currentLoc,
+      surveyorBoundary:
+        input.surveyorBoundary ?? currentLoc.surveyorBoundary ?? currentLoc.boundary,
+      surveyorDecision: input.decision,
+      surveyorNotes: input.notes ?? "Field survey boundary validated",
+      surveyorFieldPhotos: input.fieldPhotos ?? [],
+      surveyorSubmittedAt: new Date().toISOString(),
+    };
+
+    const newScore =
+      input.decision === "verified"
+        ? Math.max(prop?.trust_score ?? 60, 85)
+        : Math.min(prop?.trust_score ?? 60, 50);
+
+    const { error: updateErr } = await supabase
+      .from("properties")
+      .update({
+        location: updatedLocation,
+        trust_score: newScore,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", target.id);
+
+    if (updateErr) return { error: updateErr.message, persisted: false };
+
+    const { error: assignmentErr } = await supabase
+      .from("surveyor_assignments")
+      .update({ status: "submitted", updated_at: new Date().toISOString() })
+      .eq("property_id", target.id)
+      .in("status", ["assigned", "in_progress"]);
+    if (assignmentErr) return { error: assignmentErr.message, persisted: false };
+
+    const { error: caseErr } = await supabase.from("review_cases").insert({
+      property_id: target.id,
+      status: "open",
+      reason:
+        input.decision === "correction_required"
+          ? `Surveyor flagged boundary discrepancy: ${input.notes || "Correction required"}`
+          : `Surveyor submitted field evidence: ${input.notes || "Field verification completed"}`,
+    });
+    if (caseErr) return { error: caseErr.message, persisted: false };
+
+    return { error: null, persisted: true };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to record surveyor decision",
+      persisted: false,
+    };
+  }
+}
+
+/**
+ * Persists an authoritative government officer's verification resolution
+ */
+export async function recordGovernmentDecision(input: {
+  propertyId: string;
+  resolution: "approved" | "rejected" | "clarification_requested";
+  officerNotes?: string;
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: null, persisted: false };
+
+  try {
+    const target = await resolvePropertyId(input.propertyId);
+    if (!target.id) return { error: target.error, persisted: false };
+
+    const { data: prop } = await supabase
+      .from("properties")
+      .select("location, trust_score")
+      .eq("id", target.id)
+      .single();
+
+    const currentLoc = prop?.location && typeof prop.location === "object" ? prop.location : {};
+    const updatedLocation = {
+      ...currentLoc,
+      governmentDecision: input.resolution,
+      governmentOfficerNotes: input.officerNotes ?? "Official administrative review complete",
+      governmentDecidedAt: new Date().toISOString(),
+    };
+
+    const propertyStatus =
+      input.resolution === "approved"
+        ? "verified"
+        : input.resolution === "rejected"
+          ? "disputed"
+          : "pending";
+
+    const newScore =
+      input.resolution === "approved"
+        ? Math.max(prop?.trust_score ?? 70, 95)
+        : input.resolution === "rejected"
+          ? 25
+          : 55;
+
+    const { error: propErr } = await supabase
+      .from("properties")
+      .update({
+        status: propertyStatus,
+        trust_score: newScore,
+        location: updatedLocation,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", target.id);
+
+    if (propErr) return { error: propErr.message, persisted: false };
+
+    // Update open review cases
+    await supabase
+      .from("review_cases")
+      .update({
+        status: input.resolution === "approved" ? "resolved" : "open",
+        reason: input.officerNotes || `Government decision: ${input.resolution}`,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("property_id", target.id);
+
+    return { error: null, persisted: true };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to record government decision",
+      persisted: false,
+    };
+  }
+}
+
+/**
+ * Records a bank collateral underwriting case linked to property UUID
+ */
+export async function recordBankLoanApplication(input: {
+  propertyId: string;
+  requestedAmountInr: number;
+  ltvRatio: number;
+  bankName: string;
+  applicantName: string;
+  notes?: string;
+}): Promise<PersistenceOutcome> {
+  if (!supabaseConfigured) return { error: null, persisted: false };
+
+  try {
+    const target = await resolvePropertyId(input.propertyId);
+    if (!target.id) return { error: target.error, persisted: false };
+
+    const { data: session } = await supabase.auth.getSession();
+    if (!session.session?.user.id) return { error: "Bank session expired", persisted: false };
+
+    const { data: newLoan, error } = await supabase
+      .from("bank_loan_applications")
+      .insert({
+        property_id: target.id,
+        created_by: session.session.user.id,
+        bank_name: input.bankName,
+        requested_amount_inr: input.requestedAmountInr,
+        ltv_ratio: input.ltvRatio,
+        applicant_name: input.applicantName,
+        notes: input.notes || "Collateral assessed against verified Digital Property Passport",
+        status: "underwriting_approved",
+      })
+      .select(
+        "id, property_id, bank_name, requested_amount_inr, ltv_ratio, applicant_name, notes, status, created_at",
+      )
+      .single();
+
+    if (error) return { error: error.message, persisted: false };
+    return { error: null, persisted: true, data: newLoan };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to record loan application",
+      persisted: false,
+    };
+  }
+}
+
+/**
+ * Loads real platform admin metrics and user roster from Supabase
+ */
+export async function loadAdminPlatformData() {
+  if (!supabaseConfigured) {
+    return {
+      totalUsers: 0,
+      totalProperties: 0,
+      totalVerifications: 0,
+      systemStatus: "Supabase unavailable",
+      usersList: [],
+    };
+  }
+
+  try {
+    const [{ count: userCount, data: profilesData }, { count: propCount }, { count: verifCount }] =
+      await Promise.all([
+        supabase
+          .from("profiles")
+          .select("id, full_name, email, role, region", { count: "exact" })
+          .limit(10),
+        supabase.from("properties").select("*", { count: "exact", head: true }),
+        supabase.from("verification_results").select("*", { count: "exact", head: true }),
+      ]);
+
+    const activeUsers = (profilesData ?? []).map((p: Record<string, string | null>) => ({
+      name: p.full_name || p.email?.split("@")[0] || "User",
+      email: p.email || "user@terratrust.ai",
+      role: p.role ? p.role.charAt(0).toUpperCase() + p.role.slice(1) : "Citizen",
+      status: "active",
+      region: p.region || "Karnataka",
+    }));
+
+    return {
+      totalUsers: userCount ?? activeUsers.length,
+      totalProperties: propCount ?? 0,
+      totalVerifications: verifCount ?? 0,
+      systemStatus: "Operational (Online)",
+      usersList: activeUsers,
+    };
+  } catch {
+    return {
+      totalUsers: 0,
+      totalProperties: 0,
+      totalVerifications: 0,
+      systemStatus: "Supabase unavailable",
+      usersList: [],
+    };
+  }
+}
