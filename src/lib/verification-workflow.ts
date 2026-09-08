@@ -104,7 +104,7 @@ export const STEP_NAMES = [
 /** Webhook URL is public config only — never a secret. */
 export function getWebhookUrl(): string {
   const raw = import.meta.env["VITE_N8N_WEBHOOK_URL"] as string | undefined;
-  return raw?.trim() ?? "";
+  return raw?.trim() || "https://kashii17.app.n8n.cloud/webhook/terratrust/verify";
 }
 
 export function activeProvider(): WorkflowProvider {
@@ -410,9 +410,16 @@ export async function runVerification(
   }
 
   try {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    const authHeaderName = import.meta.env["VITE_N8N_WEBHOOK_HEADER_NAME"] as string | undefined;
+    const authHeaderValue = import.meta.env["VITE_N8N_WEBHOOK_HEADER_VALUE"] as string | undefined;
+    if (authHeaderName?.trim() && authHeaderValue?.trim()) {
+      headers[authHeaderName.trim()] = authHeaderValue.trim();
+    }
+
     const res = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(buildPayload(p, extra)),
       signal,
     });

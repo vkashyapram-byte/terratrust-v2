@@ -43,7 +43,7 @@ export interface AssistantResponse {
 
 export function getAssistantWebhookUrl(): string {
   const envUrl = import.meta.env.VITE_N8N_ASSISTANT_WEBHOOK_URL as string | undefined;
-  return envUrl?.trim() || "https://kushhhsanthosh.app.n8n.cloud/webhook/terratrust/assistant";
+  return envUrl?.trim() || "https://kashii17.app.n8n.cloud/webhook/terratrust/assistant";
 }
 
 /**
