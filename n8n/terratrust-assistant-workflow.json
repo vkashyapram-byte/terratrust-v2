@@ -12,7 +12,10 @@
       "name": "TerraTrust Assistant Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [0, 280],
+      "position": [
+        0,
+        280
+      ],
       "webhookId": "terratrust-assistant-webhook"
     },
     {
@@ -23,7 +26,10 @@
       "name": "Validate Request",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [220, 280]
+      "position": [
+        220,
+        280
+      ]
     },
     {
       "parameters": {
@@ -53,7 +59,10 @@
       "name": "Is Valid?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [440, 280]
+      "position": [
+        440,
+        280
+      ]
     },
     {
       "parameters": {
@@ -67,7 +76,10 @@
       "name": "Respond Error",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [660, 460]
+      "position": [
+        660,
+        460
+      ]
     },
     {
       "parameters": {
@@ -77,7 +89,10 @@
       "name": "Authorize & Assemble Context",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [660, 200]
+      "position": [
+        660,
+        200
+      ]
     },
     {
       "parameters": {
@@ -107,7 +122,10 @@
       "name": "Is Authorized?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [880, 200]
+      "position": [
+        880,
+        200
+      ]
     },
     {
       "parameters": {
@@ -121,7 +139,10 @@
       "name": "Respond Unauthorized",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1100, 380]
+      "position": [
+        1100,
+        380
+      ]
     },
     {
       "parameters": {
@@ -131,7 +152,10 @@
       "name": "AI Intelligence & Grounding Engine",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1100, 100]
+      "position": [
+        1100,
+        100
+      ]
     },
     {
       "parameters": {
@@ -145,7 +169,10 @@
       "name": "Respond 200 (AssistantResponse)",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1320, 100]
+      "position": [
+        1320,
+        100
+      ]
     }
   ],
   "connections": {
